@@ -3,6 +3,8 @@ import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import Map2D from './Map2D';
 import Map3D from './Map3D';
+import UserSettings from './UserSettings';
+
 
 
 export default class Dispatch extends React.Component {
@@ -62,7 +64,9 @@ export default class Dispatch extends React.Component {
       color: white;
       text-align: center;
       background-color: ${alarmColor};
-      border-radius: 15px 15px 0 0;
+        @media screen and (min-width: 1024px){
+          border-radius: 15px 15px 0 0;
+        }
 
     `;
 
@@ -114,11 +118,32 @@ export default class Dispatch extends React.Component {
       color: white;
       text-align: center;
       background-color: black;
-      min-width: 3%;
+      width: 10%;
       font-size: 1.25em;
       border-radius: 50%;
       margin: 2%;
-      padding: 1%;
+      padding: 2% 2% 2% 3%;
+      letter-spacing: 5px;
+    `;
+
+    const SettingsButton = styled.div`
+      background-color: firebrick;
+      height: 2em;
+      width: 8em;
+      margin: auto auto 2% auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 15px;
+      font-family: 'Podkova';
+      font-size: 2.5em;
+      color: white;
+       &:hover{
+         box-shadow: -3px -3px .7em darkgrey, 3px 3px .7em darkgrey;
+         color: goldenrod;
+         cursor: pointer;
+       }
+
     `;
 
 
@@ -167,6 +192,10 @@ export default class Dispatch extends React.Component {
         !this.state.destinationCoords ? null :
         <Map3D destinationCoords={this.state.destinationCoords}/>
         }
+
+        <SettingsButton>
+          USER SETTINGS
+        </SettingsButton>
 
       </DispatchContainer>
     )

@@ -21,7 +21,7 @@ export default class Map3D extends React.Component {
             lat: destinationLat,
             lng: destinationLng,
           },
-          mapTypeId: 'satellite',
+          mapTypeId: google.maps.MapTypeId.HYBRID,
           heading: 90,
           tilt: 45
         });

@@ -12,13 +12,13 @@ export default class Map2D extends React.Component {
   }
 
   componentDidMount(){
-    console.log(this.props)
-    const {lat, lng} = this.props.mapData;
+
+    const {userLat, userLng} = this.props.userCoords;
         map = new window.google.maps.Map(document.getElementById('map'), {
           zoom: 12,
           center: {
-            lat: lat,
-            lng: lng,
+            lat: userLat,
+            lng: userLng,
           },
           streetViewControl: false,
           mapTypeControl: false,
@@ -32,7 +32,8 @@ export default class Map2D extends React.Component {
   render() {
     const MapDiv = styled.div`
       width: 100%;
-      height: 30em;
+      height: 50em;
+      margin: 2em 0 2em 0;
     `;
 
     return (

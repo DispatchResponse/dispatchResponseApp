@@ -2,28 +2,44 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import Map2D from './Map2D';
+import Map3D from './Map3D';
 
 
 export default class Dispatch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mapData: null,
+      destinationCoords: null,
+      userCoords: null,
     };
-    this.setMapData = this.setMapData.bind(this);
+    this.getDestinationData = this.getDestinationData.bind(this);
+    this.getCurrentLocation = this.getCurrentLocation.bind(this);
   }
 
   componentDidMount(){
-    this.setMapData(this.props.dispatchData);
+    this.getDestinationData(this.props.dispatchData);
+    this.getCurrentLocation();
   }
 
-  setMapData(dispatchData){
-    let mapData = {
-      lat: parseFloat(dispatchData.latitude),
-      lng: parseFloat(dispatchData.latitude)
+  getCurrentLocation(){
+    navigator.geolocation.getCurrentPosition(position => {
+      let userCoords = {
+        userLat: position.coords.latitude,
+        userLng: position.coords.longitude
+      }
+      this.setState({userCoords: userCoords})
+    }, () => {
+      console.log('denied');
+    });
+  }
+
+  getDestinationData(dispatchData){
+    let destinationCoords = {
+      destinationLat: parseFloat(dispatchData.latitude),
+      destinationLng: parseFloat(dispatchData.longitude)
     }
 
-    this.setState({mapData: mapData})
+    this.setState({destinationCoords: destinationCoords})
   }
 
   render() {
@@ -77,11 +93,25 @@ export default class Dispatch extends React.Component {
 
       }
     `;
+    const ApparatusContainer = styled.li`
+      display: flex;
+      margin: 0 15% 0 15%;
+      justify-content: space-between;
+    `
+
+    const Apparatus = styled.div`
+      color: white;
+      text-align: center;
+      background-color: black;
+      min-width: 3%;
+      font-size: 1.25em;
+      border-radius: 50%;
+      margin: 2%;
+      padding: 1%;
+    `;
 
     return (
-      <div>
-        {
-          !this.state.mapData ? null : (
+
       <DispatchContainer>
 
         <Title>
@@ -90,12 +120,14 @@ export default class Dispatch extends React.Component {
         </Title>
 
         <DispatchDetails>
+          <li>Apparatus Assigned</li>
+          <ApparatusContainer>{ this.props.dispatchData.assignment.split(' ').map((apparatus)=>{
+            return <Apparatus>{apparatus}</Apparatus>
+          }) }</ApparatusContainer>
           <li>Description</li>
           <li>{this.props.dispatchData.call_description}</li>
           <li>Address</li>
           <li>{this.props.dispatchData.location + ", " + this.props.dispatchData.city}</li>
-          <li>Apparatus Assigned</li>
-          <li>{ this.props.dispatchData.assignment }</li>
           <li>Nearest Cross Streets</li>
           <li>{ this.props.dispatchData.cross_street }</li>
           <li>Radio Channel & Map Reference</li>
@@ -104,13 +136,25 @@ export default class Dispatch extends React.Component {
           <li>{ this.props.dispatchData.timeout }</li>
           <li>Misc. Details</li>
           <li>{this.props.dispatchData.cfs_remark}</li>
+          <li>Navigation</li>
+
         </DispatchDetails>
 
-        <Map2D mapData={this.state.mapData}/>
-
-      </DispatchContainer>  )
+        {
+        !this.state.userCoords ?  null :
+        <Map2D userCoords={this.state.userCoords}/>
         }
-      </div>
+
+        <DispatchDetails>
+          <li>Destination</li>
+        </DispatchDetails>
+
+        {
+        !this.state.destinationCoords ? null :
+        <Map3D destinationCoords={this.state.destinationCoords}/>
+        }
+
+      </DispatchContainer>
     )
 
   }

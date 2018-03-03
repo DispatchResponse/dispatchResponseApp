@@ -60,14 +60,14 @@ export default class App extends React.Component {
         margin -10px;
         /* #### Mobile Phones Portrait #### */
         @media screen and (max-device-width: 480px) and (orientation: portrait){
-          background-color: aliceblue;
+          background-color: white;
           width: 100vw;
           height: auto;
 
         }
         /* #### Tablets Portrait or Landscape #### */
         @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-          background-color: salmon;
+          background-color: white;
           width: 100vw;
           height: auto;
         }

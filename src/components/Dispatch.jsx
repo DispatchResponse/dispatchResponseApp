@@ -46,6 +46,7 @@ export default class Dispatch extends React.Component {
 
     const alarmColor = this.props.dispatchData.call_category.indexOf('MINOR') > -1 || this.props.dispatchData.call_category.indexOf('BOX') > -1 ? 'green' : 'firebrick';
 
+
     const DispatchContainer = styled.div`
       display: grid;
       grid-template-columns: 1fr;
@@ -60,22 +61,28 @@ export default class Dispatch extends React.Component {
                            '.. timeout     ..';
       color: white;
       text-align: center;
-      background-color: ${alarmColor}
+      background-color: ${alarmColor};
+      border-radius: 15px 15px 0 0;
+
     `;
 
     const Description = styled.div`
       grid-area: description;
-      font-size: 2.5em;
+      font-size: 3.5em;
+      font-family: 'Podkova';
     `;
 
     const Timeout = styled.div`
       grid-area: timeout;
-
+      font-size: 2.5em;
+      font-family: 'Anonymous Pro';
+      letter-spacing: 5px;
     `;
 
     const DispatchDetails = styled.ul`
       padding: 0;
       list-style: none;
+      font-family: 'Anonymous Pro';
 
       li:nth-child(odd) {
         color: firebrick;
@@ -84,12 +91,16 @@ export default class Dispatch extends React.Component {
         border-top: 2px solid white;
         border-bottom: 2px solid firebrick;
         padding: 5px 0 5px 10px;
+        font-size: 1.5em;
       }
 
       li:nth-child(even) {
         color: black;
+        font-weight: bold;
         background-color: white;
         padding: 10px 0 0 10px;
+        margin-bottom: 2%;
+        font-size: 1.75em;
 
       }
     `;
@@ -110,6 +121,7 @@ export default class Dispatch extends React.Component {
       padding: 1%;
     `;
 
+
     return (
 
       <DispatchContainer>
@@ -122,7 +134,7 @@ export default class Dispatch extends React.Component {
         <DispatchDetails>
           <li>Apparatus Assigned</li>
           <ApparatusContainer>{ this.props.dispatchData.assignment.split(' ').map((apparatus)=>{
-            return <Apparatus>{apparatus}</Apparatus>
+            return <Apparatus key={apparatus}>{apparatus}</Apparatus>
           }) }</ApparatusContainer>
           <li>Description</li>
           <li>{this.props.dispatchData.call_description}</li>

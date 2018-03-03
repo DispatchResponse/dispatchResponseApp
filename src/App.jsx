@@ -12,17 +12,27 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       dispatchData: {
-        timeout: '15:14  02-28',
-        description: 'AIRPORT',
-        district: 'GREENWICH',
-        location: '00001 RYE LAKE AV',
-        premise: 'WESTCHESTER COUNTY AIRPORT',
-        crossStreets: 'STATELINE &KING ST',
-        assignment: 'DC E3 E4 E8',
-        radioFreq: 'CH2B',
-        map: 'Map -438AP',
-        remarks: 'LEVEL 3 ALERT 40SOULS ON BOARD',
-        coordinates: null,
+        assignment: "DC E1 E2 E3 E4 R5 T1",
+        radio_freq: "CH1A",
+        apt_no: "",
+        call_category: "REPORTED STRUCTURE FIRE",
+        call_description: "REPORTED STRUCTURE FIRE",
+        call_type: "800",
+        cfs_no: "1800001052",
+        cfs_remark: "SMOKE IN STRUCTURE",
+        city: "BELLE HAVEN",
+        dispatch_fire: "2018-01-09T12:18:57.110",
+        latitude: "41.013021\r",
+        location: "00070 BUSH AV",
+        longitude: "-73.636978\r",
+        premise_name: "00070 BUSH AV",
+        priority_amb: "",
+        priority_fire: "FD Pri:1",
+        priority_pol: "",
+        timeout: "01-09-2018 12:17:31",
+        cross_street: "MEADOW WOOD DR&FIELD POINT RD",
+        map_ref: " Map -F22",
+        zip: ""
       }
     };
 
@@ -36,8 +46,6 @@ export default class App extends React.Component {
 
     //2nd iteratgion:
     //SSR with dispatch data ing single request
-
-    console.log(getCoordinates(this.state.dispatchData.location, this.state.dispatchData.district))
   }
 
   setDispatchState(){
@@ -66,9 +74,12 @@ export default class App extends React.Component {
 
         /* #### Desktops #### */
         @media screen and (min-width: 1024px){
-          background-color: goldenrod;
+          background-color: white;
           width: 100vw;
           height: auto;
+          max-width: 1200px;
+          margin: auto;
+          margin-top: 10%;
         }
 
     `;

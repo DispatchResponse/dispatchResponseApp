@@ -108,7 +108,7 @@ export default class Dispatch extends React.Component {
     `;
     const ApparatusContainer = styled.li`
       display: flex;
-      margin: 0 15% 0 15%;
+      ${'' /* margin: 0 15% 0 15%; */}
       justify-content: space-between;
     `
 
@@ -156,9 +156,15 @@ export default class Dispatch extends React.Component {
 
         <DispatchDetails>
           <li>Apparatus Assigned</li>
-          <ApparatusContainer>{ this.props.dispatchData.assignment.split(' ').map((apparatus)=>{
-            return <Apparatus key={apparatus}>{apparatus}</Apparatus>
-          }) }</ApparatusContainer>
+
+          <ApparatusContainer>
+            {
+              this.props.dispatchData.assignment.split(' ').map( (apparatus) => {
+                return <Apparatus key={apparatus}>{apparatus}</Apparatus>
+              })
+            }
+          </ApparatusContainer>
+
           <li>Description</li>
           <li>{this.props.dispatchData.call_description}</li>
           <li>Address</li>

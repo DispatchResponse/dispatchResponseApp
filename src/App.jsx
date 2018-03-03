@@ -80,6 +80,8 @@ export default class App extends React.Component {
           max-width: 1200px;
           margin: auto;
           margin-top: 10%;
+          box-shadow: -3px -3px .7em darkgrey, 3px 3px .7em darkgrey;
+          border-radius: 15px;
         }
 
     `;

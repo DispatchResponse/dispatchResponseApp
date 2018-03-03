@@ -96,7 +96,7 @@ export default class Dispatch extends React.Component {
 
       li:nth-child(even) {
         color: black;
-        font-weight: bold;
+        font-weight: bolder;
         background-color: white;
         padding: 10px 0 0 10px;
         margin-bottom: 2%;
@@ -153,8 +153,10 @@ export default class Dispatch extends React.Component {
         </DispatchDetails>
 
         {
-        !this.state.userCoords ?  null :
-        <Map2D userCoords={this.state.userCoords}/>
+        !this.state.userCoords || !this.state.destinationCoords ?  null :
+        <Map2D
+          userCoords={this.state.userCoords}
+          destinationCoords={this.state.destinationCoords}/>
         }
 
         <DispatchDetails>

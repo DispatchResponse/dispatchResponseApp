@@ -3,6 +3,8 @@ import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 
 let map;
+let userMarker;
+let destinationMarker
 
 export default class Map2D extends React.Component {
   constructor(props) {
@@ -14,6 +16,7 @@ export default class Map2D extends React.Component {
   componentDidMount(){
 
     const {userLat, userLng} = this.props.userCoords;
+    const {destinationLat, destinationLng} = this.props.destinationCoords;
         map = new window.google.maps.Map(document.getElementById('map'), {
           zoom: 12,
           center: {
@@ -23,9 +26,30 @@ export default class Map2D extends React.Component {
           streetViewControl: false,
           mapTypeControl: false,
           mapTypeId: 'roadmap',
-          //turn off all country names and labels
-
         });
+
+        userMarker = new google.maps.Marker({
+          position: {lat: userLat, lng: userLng},
+          map: map,
+          title: 'Current Location'
+        });
+
+        destinationMarker = new google.maps.Marker({
+          position: {lat: destinationLat, lng: destinationLng},
+          map: map,
+          title: 'Dispatch Destination'
+        });
+
+        let markers = [userMarker, destinationMarker];
+        let bounds = new google.maps.LatLngBounds();
+        for (let i = 0; i < markers.length; i++) {
+         bounds.extend(markers[i].getPosition());
+        }
+
+        map.fitBounds(bounds);
+
+        var trafficLayer = new google.maps.TrafficLayer();
+        trafficLayer.setMap(map)
   }
 
 

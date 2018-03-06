@@ -34,7 +34,8 @@ export default class App extends React.Component {
         cross_street: "MEADOW WOOD DR&FIELD POINT RD",
         map_ref: " Map -F22",
         zip: ""
-      }
+      },
+      userData: {}
     };
 
     this.setDispatchState = this.setDispatchState.bind(this);
@@ -45,7 +46,7 @@ export default class App extends React.Component {
     //1st iteration:
     //make axios request for dispatch data
 
-    //2nd iteratgion:
+    //2nd iteration:
     //SSR with dispatch data ing single request
   }
 
@@ -97,7 +98,12 @@ export default class App extends React.Component {
 
        <Route
          exact path="/settings"
-         render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.dispatchData}/> }
+         render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.userData}/> }
+       />
+
+       <Route
+         exact path="/admin"
+         render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.allData}/> }
        />
 
        <Route

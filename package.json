@@ -1,38 +1,67 @@
 {
   "name": "DispatchResponse",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=8.0 <9.9"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "!win32"
+  ],
   "description": "Technology Driven Solutions for Emergency Responders",
   "main": "index.js",
   "scripts": {
+    "build": "NODE_ENV=production webpack --config webpack.prod.js",
+    "start": "node ./bin/www",
+    "start:dev": "NODE_ENV=development nodemon ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.dev.js",
-    "start": "webpack-dev-server --port 1337 --open --config webpack.dev.js"
+    "build:dev": "webpack --config webpack.dev.js",
+    "start:devFront": "webpack-dev-server --port 1337 --open --config webpack.dev.js",
+    "sendDummyCall": "node ./util/sendDummyCall.js"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/DispatchResponse/dispatchResponseApp.git"
   },
   "author": "Kevin Coyner, Nick Freeman",
   "license": "MIT",
   "bugs": {
     "url": ""
   },
-  "homepage": "",
+  "homepage": "https://dispatchresponse.com",
   "dependencies": {
+    "aws-sdk": "2.205.0",
     "axios": "^0.17.1",
+    "body-parser": "1.18.2",
+    "cookie-parser": "1.4.3",
+    "cors": "2.8.4",
+    "cuid": "2.1.0",
+    "date-fns": "1.29.0",
+    "dotenv": "5.0.1",
+    "express": "4.16.2",
+    "fs": "0.0.1-security",
     "history": "^4.7.2",
+    "morgan": "1.9.0",
+    "node-schedule": "1.3.0",
+    "nodemailer": "4.6.0",
+    "path": "0.12.7",
+    "pg": "7.4.1",
+    "pg-hstore": "2.3.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
-    "styled-components": "^2.4.0",
-    "webpack-dev-server": "^2.11.0"
+    "request": "2.83.0",
+    "request-ip": "2.0.2",
+    "sequelize": "4.35.2",
+    "serve-favicon": "2.4.5",
+    "styled-components": "^2.4.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.1",
     "babel-loader": "^7.1.2",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
@@ -40,15 +69,25 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "compression": "^1.7.1",
-    "extract-text-webpack-plugin": "^3.0.2",
-    "file-loader": "^1.1.6",
-    "html-webpack-plugin": "^2.30.1",
+    "compression-webpack-plugin": "1.1.10",
+    "css-loader": "0.28.10",
+    "debug": "3.1.0",
+    "debug-log": "1.0.1",
+    "extract-text-webpack-plugin": "3.0.2",
+    "file-loader": "1.1.11",
+    "html-webpack-plugin": "2.30.1",
     "install": "^0.10.4",
-    "node-sass": "^4.7.2",
+    "node-sass": "4.7.2",
+    "nodemon": "1.17.1",
     "npm": "^5.6.0",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.19.1",
+    "sass-loader": "6.0.7",
+    "style-loader": "0.19.1",
+    "uglifyjs-webpack-plugin": "1.2.2",
+    "url-loader": "1.0.1",
     "webpack": "^3.10.0",
+    "webpack-cli": "2.0.10",
+    "webpack-dev-middleware": "2.0.4",
+    "webpack-dev-server": "2.11.1",
     "webpack-merge": "^4.1.1",
     "webpack-plugin": "^1.0.5"
   }

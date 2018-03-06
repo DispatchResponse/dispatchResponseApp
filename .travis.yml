@@ -1,0 +1,64 @@
+language: node_js
+node_js:
+  - '8'
+
+## Saves having to get modules again if doing multiple builds
+cache:
+  directories:
+    - "node_modules"
+
+## Zip up our project and put into a directory before uploading to s3
+before_deploy:
+  - zip -q -r latestTravis *
+  - mkdir -p s3_upload
+  - mv latestTravis.zip s3_upload/latestTravis.zip
+
+## Will upload to different s3 bucket/folders depending upon whether the repo
+## is from a engineer's dev repo or from github master.  If the former, then it will
+## upload to bucket/testing and deploy to a testing EC2 instance.  If the
+## latter, then it will upload to bucket/production and deploy to a production
+## EC2 instance.
+deploy:
+- provider: s3
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  local_dir: s3_upload
+  skip_cleanup: true
+  on: &3
+    repo: Emergency-Response-Solutions/ERS-Dispatch-Listening-Server
+    branch: master
+  bucket: ers-dispatch
+  upload-dir: production
+  region: us-east-1
+- provider: codedeploy
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: ers-dispatch
+  key: production/latestTravis.zip
+  bundle_type: zip
+  application: ersDispatch-CodeDeploy-prod
+  deployment_group: ersDispatch-CodeDeploy-prod-Group
+  region: us-east-1
+  on: *3
+- provider: s3
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  local_dir: s3_upload
+  skip_cleanup: true
+  on: &2
+    repo: kcoyner/ERS-Dispatch-Listening-Server
+    branch: testing
+  bucket: ers-dispatch
+  upload-dir: testing
+  region: us-east-1
+- provider: codedeploy
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: ers-dispatch
+  key: testing/latestTravis.zip
+  bundle_type: zip
+  application: ersDispatch-CodeDeploy-testing
+  deployment_group: ersDispatch-CodeDeploy-testing-Group
+  region: us-east-1
+  on: *2
+

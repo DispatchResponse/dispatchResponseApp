@@ -4,10 +4,10 @@
 
 const express = require('express')
 const router = express.Router()
-const User = require('../models/user')
-const Apparatus = require('../models/apparatus')
-const Station = require('../models/station')
-const Carrier = require('../models/carrier')
+// const User = require('../models/user')
+// const Apparatus = require('../models/apparatus')
+// const Station = require('../models/station')
+// const Carrier = require('../models/carrier')
 const db = require('../models')
 
 // // GET all users listing

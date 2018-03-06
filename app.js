@@ -15,9 +15,12 @@ const path = require('path')
 const requestIp = require('request-ip')
 
 var index = require('./routes/index')
-var users = require('./routes/users')
+var apparatus = require('./routes/apparatus')
 var calls = require('./routes/calls')
-var api = require('./routes/api')
+var carriers = require('./routes/carriers')
+var stations = require('./routes/stations')
+var users = require('./routes/users')
+
 var callMaker = require('./util/callGenerator.js')
 
 const NODE_ENV = process.env.NODE_ENV
@@ -57,9 +60,11 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'dist')))
 
 app.use('/', index)
-app.use('/api/users', users)
+app.use('/api/apparatus', apparatus)
 app.use('/api/calls', calls)
-app.use('/api', api)
+app.use('/api/carriers', carriers)
+app.use('/api/stations', stations)
+app.use('/api/users', users)
 
 app.use(function(req, res, next) {
   var err = new Error('Not found today')

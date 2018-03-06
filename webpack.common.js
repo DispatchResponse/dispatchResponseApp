@@ -16,7 +16,7 @@ const extractSass = new ExtractTextPlugin({
 module.exports = {
   entry: ['babel-polyfill', `${SRC_DIR}/index.js`],
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: DIST_DIR,
     filename: 'bundle.js',
     publicPath: '/'
   },
@@ -26,9 +26,8 @@ module.exports = {
       loader: 'babel-loader',
       include: SRC_DIR,
       exclude: /node_modules/,
-      options: {
-        presets: ['env', 'react', 'stage-2'],
-        plugins: ['transform-decorators-legacy']
+      query: {
+        presets: ['env', 'react', 'stage-2']
       }
     }, {
       test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,

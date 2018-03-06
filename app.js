@@ -43,14 +43,8 @@ app.use(morgan('dev', {
   skip: function (req, res) { return res.statusCode < 400 }
 }))
 
-// view engine setup
-// TODO: only used for 404 right now.
-// re-do your 404 error handling and display
-// app.set('views', path.join(__dirname, 'views'))
-// app.set('view engine', 'jade')
-
 // middleware
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
 app.use(cors(corsOptions))
 app.use(requestIp.mw())
 
@@ -60,7 +54,7 @@ app.use(bodyParser.raw({ type: 'application/*' }))
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'dist')))
 
 app.use('/', index)
 app.use('/api/users', users)
@@ -104,10 +98,5 @@ function error404 (err, req, res, next) {
   console.log('hey dude - you have an error');
   // TODO: direct this to the NotFound component
 }
-
-// start creating dummy calls
-// comment out once live data is received
-// see ./util/callGenerator.js
-// callMaker.startDummyCalls()
 
 module.exports = app

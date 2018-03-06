@@ -1,0 +1,33 @@
+## Run node.js service with systemd
+## Originally from https://www.axllent.org/docs/view/nodejs-service-with-systemd/
+
+## Install this script in /etc/systemd/system/nodeserver.service
+## Enable it with `sudo systemctl enable nodeserver.service`
+## Start the service with `sudo systemctl start nodeserver.service`
+## Verify it is working with `sudo systemctl status nodeserver.service`
+
+[Unit]
+Description=ERS Dispatch Server
+#Requires=After=mysql.service       # Requires the mysql service to run first
+
+[Service]
+ExecStart=/bin/bash -c 'exec /usr/bin/node /home/ubuntu/ersdispatch/bin/www 2>&1 >> /var/log/node/console.log'
+# ExecStart=/usr/bin/node /home/ubuntu/ersdispatch/bin/www
+# Required on some systems
+WorkingDirectory=/home/ubuntu/ersdispatch
+Restart=always
+ # Restart service after 10 seconds if node service crashes
+RestartSec=10
+ # Output to syslog
+# Uncomment if using the other ExecStart command without logging
+#StandardOutput=syslog
+#StandardError=syslog
+#SyslogIdentifier=nodejs-example
+
+#User=<alternate user>
+#Group=<alternate group>
+Environment=NODE_ENV=production PORT=1337
+
+[Install]
+WantedBy=multi-user.target
+

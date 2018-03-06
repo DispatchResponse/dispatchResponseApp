@@ -27,7 +27,7 @@ module.exports = {
       include: SRC_DIR,
       exclude: /node_modules/,
       options: {
-        presets: ['env', 'react', 'es2015', 'stage-2'],
+        presets: ['env', 'react', 'stage-2'],
         plugins: ['transform-decorators-legacy']
       }
     }, {

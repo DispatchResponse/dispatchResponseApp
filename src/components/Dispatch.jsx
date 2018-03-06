@@ -148,7 +148,8 @@ export default class Dispatch extends React.Component {
 
     return (
 
-      <DispatchContainer>
+        <DispatchContainer>
+
 
         <Title>
           <Description>{this.props.dispatchData.call_category}</Description>
@@ -159,7 +160,7 @@ export default class Dispatch extends React.Component {
           <li>Apparatus Assigned</li>
           <ApparatusContainer>
             {
-              this.props.dispatchData.assignment.split(' ').map( (apparatus) => {
+              this.props.dispatchData.assignment.split(', ').map( (apparatus) => {
                 return <Apparatus key={apparatus}>{apparatus}</Apparatus>
               })
             }
@@ -207,7 +208,8 @@ export default class Dispatch extends React.Component {
           </SettingsButton>
         </NavLink>
 
-      </DispatchContainer>
+        </DispatchContainer>
+
     )
 
   }

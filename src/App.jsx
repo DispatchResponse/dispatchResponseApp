@@ -12,46 +12,66 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dispatchData: {
-        assignment: "DC E1 E2 E3 E4 R5 T1",
-        radio_freq: "CH1A",
-        apt_no: "",
-        call_category: "REPORTED STRUCTURE FIRE",
-        call_description: "REPORTED STRUCTURE FIRE",
-        call_type: "800",
-        cfs_no: "1800001052",
-        cfs_remark: "SMOKE IN STRUCTURE",
-        city: "BELLE HAVEN",
-        dispatch_fire: "2018-01-09T12:18:57.110",
-        latitude: "41.013021\r",
-        location: "00070 BUSH AV",
-        longitude: "-73.636978\r",
-        premise_name: "00070 BUSH AV",
-        priority_amb: "",
-        priority_fire: "FD Pri:1",
-        priority_pol: "",
-        timeout: "01-09-2018 12:17:31",
-        cross_street: "MEADOW WOOD DR&FIELD POINT RD",
-        map_ref: " Map -F22",
-        zip: ""
-      },
+      apparatusData: null,
+      dispatchData: null,
+        // assignment: "DC E1 E2 E3 E4 R5 T1",
+        // radio_freq: "CH1A",
+        // apt_no: "",
+        // call_category: "REPORTED STRUCTURE FIRE",
+        // call_description: "REPORTED STRUCTURE FIRE",
+        // call_type: "800",
+        // cfs_no: "1800001052",
+        // cfs_remark: "SMOKE IN STRUCTURE",
+        // city: "BELLE HAVEN",
+        // dispatch_fire: "2018-01-09T12:18:57.110",
+        // latitude: "41.013021\r",
+        // location: "00070 BUSH AV",
+        // longitude: "-73.636978\r",
+        // premise_name: "00070 BUSH AV",
+        // priority_amb: "",
+        // priority_fire: "FD Pri:1",
+        // priority_pol: "",
+        // timeout: "01-09-2018 12:17:31",
+        // cross_street: "MEADOW WOOD DR&FIELD POINT RD",
+        // map_ref: " Map -F22",
+        // zip: ""
+
       userData: {}
     };
 
-    this.setDispatchState = this.setDispatchState.bind(this);
+    this.setAppState = this.setAppState.bind(this);
 
   }
 
   componentDidMount() {
     //1st iteration:
-    //make axios request for dispatch data
+    axios.get('/api/calls').then((resp) => {
+      this.setAppState(resp.data[0], 'dispatch');
+      console.log(resp.data[0])
+    })
+
+    axios.get('/api/apparatus').then((resp) => {
+      this.setAppState(resp.data, 'apparatus');
+      console.log(resp.data)
+    })
 
     //2nd iteration:
     //SSR with dispatch data ing single request
   }
 
-  setDispatchState(){
+  setAppState(data, type){
     //setState for dispatch data. used in callback from componentDidMount
+    if ( data === 'dispatch') {
+      this.setState({dispatchData: data});
+    } else if ( data === 'apparatus') {
+      this.setState({apparatusData: data});
+    } else if ( data === 'user') {
+      this.setState({userData: data});
+    } else {
+
+    }
+
+    return
   }
 
 
@@ -89,6 +109,11 @@ export default class App extends React.Component {
 
 
     return (
+
+<div>
+        {
+          !this.state.dispatchData ? null : (
+
       <AppContainer>
 
        <Route
@@ -112,6 +137,9 @@ export default class App extends React.Component {
        />
 
      </AppContainer>
+     )}
+     </div>
+
     )
   }
 }

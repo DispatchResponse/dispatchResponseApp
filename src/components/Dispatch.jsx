@@ -29,7 +29,7 @@ export default class Dispatch extends React.Component {
       }
       this.setState({userCoords: userCoords})
     }, () => {
-      console.log('denied');
+      console.log('🐸 ...(denied)');
     });
   }
 
@@ -44,7 +44,9 @@ export default class Dispatch extends React.Component {
 
   render() {
 
-    const alarmColor = this.props.dispatchData.call_category.indexOf('MINOR') > -1 || this.props.dispatchData.call_category.indexOf('BOX') > -1 ? 'green' : 'firebrick';
+    const alarmColor = this.props.dispatchData.call_category.indexOf('MINOR') > -1
+                    || this.props.dispatchData.call_category.indexOf('BOX') > -1 ? 'green'
+                     : 'firebrick';
 
 
     const DispatchContainer = styled.div`
@@ -65,7 +67,6 @@ export default class Dispatch extends React.Component {
         @media screen and (min-width: 1024px){
           border-radius: 15px 15px 0 0;
         }
-
     `;
 
     const Description = styled.div`
@@ -106,11 +107,11 @@ export default class Dispatch extends React.Component {
 
       }
     `;
+
     const ApparatusContainer = styled.li`
       display: flex;
-      ${'' /* margin: 0 15% 0 15%; */}
       justify-content: space-between;
-    `
+    `;
 
     const Apparatus = styled.div`
       color: white;
@@ -156,7 +157,6 @@ export default class Dispatch extends React.Component {
 
         <DispatchDetails>
           <li>Apparatus Assigned</li>
-
           <ApparatusContainer>
             {
               this.props.dispatchData.assignment.split(' ').map( (apparatus) => {
@@ -164,7 +164,6 @@ export default class Dispatch extends React.Component {
               })
             }
           </ApparatusContainer>
-
           <li>Description</li>
           <li>{this.props.dispatchData.call_description}</li>
           <li>Address</li>

@@ -1,4 +1,11 @@
+/**
+ * webpack.common.js
+ *
+ */
+
 const path = require('path');
+const SRC_DIR = path.join(__dirname, './src')
+const DIST_DIR = path.join(__dirname, './dist/')
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -7,7 +14,7 @@ const extractSass = new ExtractTextPlugin({
 });
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: ['babel-polyfill', `${SRC_DIR}/index.js`],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -17,9 +24,10 @@ module.exports = {
     rules: [{
       test: /\.(js|jsx)$/,
       loader: 'babel-loader',
+      include: SRC_DIR,
       exclude: /node_modules/,
       options: {
-        presets: ['env', 'react', 'stage-2'],
+        presets: ['env', 'react', 'es2015', 'stage-2'],
         plugins: ['transform-decorators-legacy']
       }
     }, {

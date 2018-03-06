@@ -1,5 +1,6 @@
-/*
+/**
  * webpack.prod.js
+ *
  */
 
 const webpack = require('webpack');

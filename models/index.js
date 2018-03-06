@@ -46,8 +46,9 @@ db.calls = require('./call')(sequelize, Sequelize)
 db.carriers = require('./carrier')(sequelize, Sequelize)
 db.stations = require('./station')(sequelize, Sequelize)
 db.apparatus = require('./apparatus')(sequelize, Sequelize)
+db.tracking = require('./tracking')(sequelize, Sequelize)
 
-db.users.belongsToMany(db.apparatus, {through: 'tracking'});
-db.apparatus.belongsToMany(db.users, {through: 'tracking'});
+db.users.belongsToMany(db.apparatus, {as: 'users', through: db.tracking, foreignKey: 'userId'})
+db.apparatus.belongsToMany(db.users, {as: 'apparatus', through: db.tracking, foreignKey: 'apparatusId'})
 
 module.exports = db

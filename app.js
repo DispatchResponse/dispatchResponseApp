@@ -60,6 +60,8 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'dist')))
 
 app.use('/', index)
+app.use('/api', calls)
+app.use('/calls', calls)
 app.use('/api/apparatus', apparatus)
 app.use('/api/calls', calls)
 app.use('/api/carriers', carriers)

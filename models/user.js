@@ -35,12 +35,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: null
     },
-    tracking: {
-      type: Sequelize.STRING,
-      // type: Sequelize.ARRAY(Sequelize.STRING),
-      allowNull: false
-      // defaultValue: ['E1, E2']
-    },
     enabled: {
       type: Sequelize.BOOLEAN,
       allowNull: false,
@@ -54,5 +48,16 @@ module.exports = (sequelize, DataTypes) => {
       type: Sequelize.DATE,
       allowNull: false
     }
-  })
+  },
+    {
+      getterMethods: {
+        fullName () {
+          return this.firstName + ' ' + this.lastName
+        },
+        fullMobile () {
+          return this.getDataValue('mobile') + this.getDataValue('carrier')
+        }
+      }
+    }
+ )
 }

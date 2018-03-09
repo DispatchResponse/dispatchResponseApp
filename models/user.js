@@ -51,16 +51,10 @@ module.exports = (sequelize, DataTypes) => {
   },
     {
       timestamps: true,
-      underscored: true
-    },
-    {
+      underscored: true,
       getterMethods: {
-        full_name () {
-          return this.first_name + ' ' + this.last_name
-        },
-        full_mobile () {
-          return this.getDataValue('mobile') + this.getDataValue('carrier')
-        }
+        full_name: function() {return this.first_name + ' ' + this.last_name},
+        full_mobile: function () {return this.getDataValue('mobile') + this.getDataValue('carrier')}
       }
     }
  )

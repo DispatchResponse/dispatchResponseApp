@@ -20,5 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       allowNull: false
     }
-  })
+  },
+    {
+      timestamps: false,
+    }
+  )
 }

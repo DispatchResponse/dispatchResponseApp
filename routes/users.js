@@ -6,6 +6,28 @@ const express = require('express')
 const router = express.Router()
 const db = require('../models')
 
+router.get('/tuna', function (req, res, next) {
+  db.users.findAll({
+    include: [{
+      model: db.trackings,
+      where: {apparatusId: 'E2'}
+      // where: { user_id: db.col('users.user_id')}
+    }]
+    // attributes: ['userId']
+    // where: {apparatusId: 'E2'}
+  })
+  .then(userList => {
+    let allUsers = Object.keys(userList).map(function (k) {
+      return userList[k].dataValues
+    })
+    res.send(allUsers)
+  })
+  .catch(error => {
+    console.error(`ERROR in users GET: ${error}`)
+  })
+})
+
+
 router.get('/track', function (req, res, next) {
   db.apparatus.findAll({
     include: [{

@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS calls CASCADE;
 CREATE TABLE "calls" (
-        "callId" serial NOT NULL UNIQUE,
+        "call_id" serial NOT NULL UNIQUE,
         "assignment" varchar NOT NULL, -- first element is radio channel, all that follows are apparatus
         "radio_freq" varchar NOT NULL,
         "apt_no" varchar NOT NULL,
@@ -24,8 +24,8 @@ CREATE TABLE "calls" (
         "zip" varchar NOT NULL,
         "slug" varchar NOT NULL,
         "test_call" boolean NOT NULL DEFAULT false,
-        "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-        "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+        "created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 ) WITH (
   OIDS=FALSE
 );

@@ -1,9 +1,11 @@
 DROP TABLE IF EXISTS carriers CASCADE;
 CREATE TABLE "carriers" (
-        "carrierId" serial NOT NULL UNIQUE,
-        "carrierName" varchar NOT NULL,
+        "carrier_id" serial NOT NULL UNIQUE,
+        "carrier_name" varchar NOT NULL,
         "gateway" varchar NOT NULL,
-        "enabled" boolean NOT NULL DEFAULT true
+        "enabled" boolean NOT NULL DEFAULT true,
+        "created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        "updated_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 ) WITH (
   OIDS=FALSE
 );

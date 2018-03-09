@@ -69,4 +69,4 @@ const destroyAndInsert = async () => {
   insertTrack(tracks)
 }
 
-destroyAndInsert()
+module.exports = destroyAndInsert

@@ -60,4 +60,4 @@ const destroyAndInsert = async () => {
   insertApparatus(apparatus)
 }
 
-destroyAndInsert()
+module.exports = destroyAndInsert

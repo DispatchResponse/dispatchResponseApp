@@ -53,7 +53,7 @@ const insertCarrier = (carrier) => {
 
 const destroyAndInsert = async () => {
   await destroyAllCarriers()
-  destroyAndInsert()
+  await insertCarrier(carriers)
 }
 
-insertCarrier(carriers)
+module.exports = destroyAndInsert

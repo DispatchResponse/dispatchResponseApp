@@ -83,4 +83,4 @@ const destroyAndInsert = async () => {
   insertCall(calls)
 }
 
-destroyAndInsert()
+module.exports = destroyAndInsert

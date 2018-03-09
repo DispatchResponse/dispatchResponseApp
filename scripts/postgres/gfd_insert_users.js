@@ -49,9 +49,9 @@ const insertUser = (user) => {
   })
 }
 
-const destroyAndInsertUsers = async () => {
+const destroyAndInsert = async () => {
   await destroyAllUsers()
   insertUser(users)
 }
 
-destroyAndInsertUsers()
+module.exports = destroyAndInsert

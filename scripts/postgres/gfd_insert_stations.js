@@ -48,4 +48,4 @@ const destroyAndInsert = async () => {
   insertStations(stations)
 }
 
-destroyAndInsert()
+module.exports = destroyAndInsert

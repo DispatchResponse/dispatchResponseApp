@@ -7,36 +7,36 @@ const db = require('../../models')
 console.log('db.trackings: ', db.trackings);
 var tracks = [
   {
-    "userId": 1,
-    "apparatusId": "E1"
+    'userId': 1,
+    'apparatusId': 'E1'
   },
   {
-    "userId": 1,
-    "apparatusId": "E2"
+    'userId': 1,
+    'apparatusId': 'E2'
   },
   {
-    "userId": 1,
-    "apparatusId": "E3"
+    'userId': 1,
+    'apparatusId': 'E3'
   },
   {
-    "userId": 1,
-    "apparatusId": "E4"
+    'userId': 1,
+    'apparatusId': 'E4'
   },
   {
-    "userId": 2,
-    "apparatusId": "E4"
+    'userId': 2,
+    'apparatusId': 'E4'
   },
   {
-    "userId": 2,
-    "apparatusId": "E5"
+    'userId': 2,
+    'apparatusId': 'E5'
   },
   {
-    "userId": 2,
-    "apparatusId": "E62"
+    'userId': 2,
+    'apparatusId': 'E62'
   },
   {
-    "userId": 2,
-    "apparatusId": "E8"
+    'userId': 2,
+    'apparatusId': 'E8'
   }
 ]
 
@@ -56,13 +56,12 @@ const destroyAllTracks = () => {
 
 const insertTrack = (tracks) => {
   tracks.forEach(track => {
-    console.log('track: ', track);
     db.trackings.create({
-        user_id: track.userId,
-        apparatus_id: track.apparatusId
-      })
+      user_id: track.userId,
+      apparatus_id: track.apparatusId
+    })
       .then(elem => console.log('Success on insert: ', elem))
-      .catch(error => console.error("Error on data insert into Trackings table", error))
+      .catch(error => console.error('Error on data insert into Trackings table', error))
   })
 }
 

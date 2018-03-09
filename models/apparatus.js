@@ -8,14 +8,14 @@ const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('apparatus', {
-    apparatusId: {
+    apparatus_id: {
       // E5
       type: Sequelize.STRING,
       primaryKey: true,
       autoIncrement: false,
       allowNull: false
     },
-    apparatusName: {
+    apparatus_name: {
       // Engine 5
       type: Sequelize.STRING,
       allowNull: false,
@@ -26,13 +26,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: true
     },
-    createdAt: {
+    created_at: {
       type: Sequelize.DATE,
       allowNull: false
     },
-    updatedAt: {
+    updated_at: {
       type: Sequelize.DATE,
       allowNull: false
     }
-  })
+  },
+    {
+      timestamps: true,
+      underscored: true
+    }
+  )
 }

@@ -8,14 +8,14 @@ const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('stations', {
-    stationId: {
+    station_id: {
       // STA2
       type: Sequelize.STRING,
       primaryKey: true,
       autoIncrement: false,
       allowNull: false
     },
-    stationName: {
+    station_name: {
       // Station 2 or Cos Cob
       type: Sequelize.STRING,
       allowNull: false,
@@ -26,13 +26,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: true
     },
-    createdAt: {
+    created_at: {
       type: Sequelize.DATE,
       allowNull: false
     },
-    updatedAt: {
+    updated_at: {
       type: Sequelize.DATE,
       allowNull: false
     }
-  })
+  },
+    {
+      timestamps: true,
+      underscored: true
+    }
+  )
 }

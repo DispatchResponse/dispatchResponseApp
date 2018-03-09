@@ -8,7 +8,7 @@ const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('calls', {
-    callId: {
+    call_id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -168,13 +168,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'py2f7hq7'
     },
-    createdAt: {
+    created_at: {
       type: Sequelize.DATE,
       allowNull: false
     },
-    updatedAt: {
+    updated_at: {
       type: Sequelize.DATE,
       allowNull: false
     }
-  })
+  },
+    {
+      timestamps: true,
+      underscored: true
+    }
+  )
 }

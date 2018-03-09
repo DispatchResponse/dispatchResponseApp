@@ -37,8 +37,8 @@ const destroyAllUsers = () => {
 const insertUser = (user) => {
   user.forEach(person => {
     db.users.create({
-      firstName: person.firstName,
-      lastName: person.lastName,
+      first_name: person.firstName,
+      last_name: person.lastName,
       mobile: person.mobile,
       carrier: person.carrier,
       tracking: person.tracking,

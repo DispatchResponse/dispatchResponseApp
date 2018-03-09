@@ -9,18 +9,18 @@ const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('users', {
-    userId: {
+    user_id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false
     },
-    firstName: {
+    first_name: {
       type: Sequelize.STRING,
       allowNull: true,
       defaultValue: null
     },
-    lastName: {
+    last_name: {
       type: Sequelize.STRING,
       allowNull: true,
       defaultValue: null
@@ -40,21 +40,25 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: true
     },
-    createdAt: {
+    created_at: {
       type: Sequelize.DATE,
       allowNull: false
     },
-    updatedAt: {
+    updated_at: {
       type: Sequelize.DATE,
       allowNull: false
     }
   },
     {
+      timestamps: true,
+      underscored: true
+    },
+    {
       getterMethods: {
-        fullName () {
-          return this.firstName + ' ' + this.lastName
+        full_name () {
+          return this.first_name + ' ' + this.last_name
         },
-        fullMobile () {
+        full_mobile () {
           return this.getDataValue('mobile') + this.getDataValue('carrier')
         }
       }

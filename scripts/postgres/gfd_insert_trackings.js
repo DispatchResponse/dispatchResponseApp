@@ -4,7 +4,6 @@
 
 const db = require('../../models')
 
-console.log('db.trackings: ', db.trackings);
 var tracks = [
   {
     'userId': 1,

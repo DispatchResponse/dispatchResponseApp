@@ -58,8 +58,8 @@ const insertTrack = (tracks) => {
   tracks.forEach(track => {
     console.log('track: ', track);
     db.trackings.create({
-        userId: track.userId,
-        apparatusId: track.apparatusId
+        user_id: track.userId,
+        apparatus_id: track.apparatusId
       })
       .then(elem => console.log('Success on insert: ', elem))
       .catch(error => console.error("Error on data insert into Trackings table", error))

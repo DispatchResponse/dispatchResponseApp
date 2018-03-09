@@ -68,7 +68,7 @@ app.use('/api/carriers', carriers)
 app.use('/api/stations', stations)
 app.use('/api/users', users)
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not found today')
   err.status = 400
   next(err)

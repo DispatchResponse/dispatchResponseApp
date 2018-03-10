@@ -47,12 +47,14 @@ export default class App extends React.Component {
     //1st iteration:
     axios.get('/api/calls').then((resp) => {
       this.setAppState(resp.data[0], 'dispatch');
-      console.log(resp.data[0])
     })
 
     axios.get('/api/apparatus').then((resp) => {
       this.setAppState(resp.data, 'apparatus');
-      console.log(resp.data)
+    })
+
+    axios.get('/api/users').then((resp) => {
+      this.setAppState(resp.data, 'user');
     })
 
     //2nd iteration:
@@ -61,14 +63,14 @@ export default class App extends React.Component {
 
   setAppState(data, type){
     //setState for dispatch data. used in callback from componentDidMount
-    if ( data === 'dispatch') {
+    if ( type === 'dispatch') {
       this.setState({dispatchData: data});
-    } else if ( data === 'apparatus') {
+    } else if ( type === 'apparatus' ) {
       this.setState({apparatusData: data});
-    } else if ( data === 'user') {
+    } else if ( type === 'user' ) {
       this.setState({userData: data});
-    } else {
-
+    } else if ( type === 'admin' ) {
+      this.setState({adminData: data})
     }
 
     return
@@ -107,38 +109,36 @@ export default class App extends React.Component {
         }
     `;
 
-
     return (
 
-<div>
-        {
-          !this.state.dispatchData ? null : (
+      <div>
 
-      <AppContainer>
 
-       <Route
-         exact path="/"
-         render={ routeProps => <Dispatch {...routeProps} dispatchData={this.state.dispatchData}/> }
-       />
+        { !this.state.dispatchData ? null : (
+          <AppContainer>
 
-       <Route
-         exact path="/settings"
-         render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.userData}/> }
-       />
+           <Route
+             exact path="/"
+             render={ routeProps => <Dispatch {...routeProps} dispatchData={this.state.dispatchData}/> }
+           />
 
-       <Route
-         exact path="/admin"
-         render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.allData}/> }
-       />
+           <Route
+             exact path="/settings"
+             render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.userData}/> }
+           />
 
-       <Route
-         exact path="/home"
-         component={ Home }
-       />
+           <Route
+             exact path="/admin"
+             render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.allData}/> }
+           />
 
-     </AppContainer>
-     )}
+         </AppContainer>
+
+        )}
+
      </div>
+
+
 
     )
   }

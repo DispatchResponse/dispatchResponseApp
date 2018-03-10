@@ -32,9 +32,11 @@ if (NODE_ENV === 'production') {
   config = configProd
 }
 const compiler = webpack(config)
-app.use(webpackDevMiddleware(compiler, {
-  publicPath: config.output.publicPath
-}))
+app.use(
+  webpackDevMiddleware(compiler, {
+    publicPath: config.output.publicPath
+  })
+)
 
 const corsOptions = {
   origin: '*',
@@ -42,9 +44,13 @@ const corsOptions = {
 }
 
 /** morgan - log only 4xx and 5xx responses to console */
-app.use(morgan('dev', {
-  skip: function (req, res) { return res.statusCode < 400 }
-}))
+app.use(
+  morgan('dev', {
+    skip: function (req, res) {
+      return res.statusCode < 400
+    }
+  })
+)
 
 // middleware
 app.use(favicon(path.join(__dirname, 'dist', 'favicon.ico')))
@@ -68,7 +74,7 @@ app.use('/api/carriers', carriers)
 app.use('/api/stations', stations)
 app.use('/api/users', users)
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not found today')
   err.status = 400
   next(err)
@@ -86,7 +92,7 @@ function logErrors (err, req, res, next) {
 
 function clientErrorHandler (err, req, res, next) {
   if (req.xhr) {
-    res.status(500).send({error: 'Something failed with xhr'})
+    res.status(500).send({ error: 'Something failed with xhr' })
   } else {
     next(err)
   }
@@ -94,15 +100,15 @@ function clientErrorHandler (err, req, res, next) {
 
 function errorHandler (err, res, req, next) {
   res.status(500)
-  console.log('hey');
+  console.log('hey')
   // res.send('error', { error: err})
-    next(err)
+  next(err)
 }
 
 function error404 (err, req, res, next) {
   var err = new Error('Not Found')
   err.status = 404
-  console.log('hey dude - you have an error');
+  console.log('hey dude - you have an error')
   // TODO: direct this to the NotFound component
 }
 

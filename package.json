@@ -13,12 +13,12 @@
   "main": "index.js",
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
+    "build:dev": "webpack --config webpack.dev.js",
+    "format": "prettier-standard 'src/**/*.js'",
     "start": "node ./bin/www",
     "start:dev": "NODE_ENV=development nodemon ./bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build:dev": "webpack --config webpack.dev.js",
-    "start:devFront": "webpack-dev-server --port 1337 --open --config webpack.dev.js",
-    "sendDummyCall": "node ./util/sendDummyCall.js"
+    "sendDummyCall": "node ./util/sendDummyCall.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

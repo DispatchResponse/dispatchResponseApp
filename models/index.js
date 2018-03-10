@@ -3,8 +3,6 @@
  */
 
 const Sequelize = require('sequelize')
-const fs = require('fs')
-const path = require('path')
 const dotenv = require('dotenv').config()
 
 // Retrieve environment variables
@@ -34,7 +32,8 @@ const sequelize = new Sequelize(DBNAME, DBUSER, DB_PG_PASSWD, {
   operatorsAliases: false,
   define: {
     charset: 'utf8',
-    timestamps: true
+    timestamps: true,
+    userscored: true
   }
 })
 
@@ -46,9 +45,14 @@ db.calls = require('./call')(sequelize, Sequelize)
 db.carriers = require('./carrier')(sequelize, Sequelize)
 db.stations = require('./station')(sequelize, Sequelize)
 db.apparatus = require('./apparatus')(sequelize, Sequelize)
-db.tracking = require('./tracking')(sequelize, Sequelize)
+db.trackings = require('./tracking')(sequelize, Sequelize)
 
-db.users.belongsToMany(db.apparatus, {as: 'users', through: db.tracking, foreignKey: 'userId'})
-db.apparatus.belongsToMany(db.users, {as: 'apparatus', through: db.tracking, foreignKey: 'apparatusId'})
+// db.users.belongsToMany(db.apparatus, {through: db.trackings, foreignKey: 'user_id'})
+// db.apparatus.belongsToMany(db.users, {through: db.trackings, foreignKey: 'apparatus_id'})
+
+db.users.hasMany(db.trackings, { foreignKey: 'user_id' })
+db.trackings.belongsTo(db.users, { foreignKey: 'user_id' })
+db.apparatus.hasMany(db.trackings, { foreignKey: 'apparatus_id' })
+db.trackings.belongsTo(db.apparatus, { foreignKey: 'apparatus_id' })
 
 module.exports = db

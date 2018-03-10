@@ -16,12 +16,12 @@ export default class Dispatch extends React.Component {
     this.getCurrentLocation = this.getCurrentLocation.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.getDestinationData(this.props.dispatchData);
     this.getCurrentLocation();
   }
 
-  getCurrentLocation(){
+  getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(position => {
       let userCoords = {
         userLat: position.coords.latitude,
@@ -33,7 +33,7 @@ export default class Dispatch extends React.Component {
     });
   }
 
-  getDestinationData(dispatchData){
+  getDestinationData(dispatchData) {
     let destinationCoords = {
       destinationLat: parseFloat(dispatchData.latitude),
       destinationLng: parseFloat(dispatchData.longitude)

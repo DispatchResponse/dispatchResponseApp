@@ -5,12 +5,17 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../models')
+const Sequelize = require('sequelize')
+const { or } = Sequelize.Op
 
 router.get('/tuna', function (req, res, next) {
+  var assignment = ['E8', 'E5', 'E4']
   db.users.findAll({
     include: [{
       model: db.trackings,
-      where: {apparatus_id: 'E8'}
+      where: {
+        apparatus_id: { [or]: assignment }
+      }
     }]
   })
   .then(userList => {

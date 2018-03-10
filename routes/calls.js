@@ -88,14 +88,14 @@ const processData = (data) => {
 
 const sendToPostgres = (processedData) => {
   db.calls.create(processedData)
-  .then(processedData => {
-    console.log('PG CALL DETAILS:  ', processedData)
-  })
-  .catch(error => {
+    .then(processedData => {
+      console.log('PG CALL DETAILS:  ', processedData)
+    })
+    .catch(error => {
     // TODO: not sure this is working or correct. creates unhandled promise error
     // To test, misspell processedData above
-    throw error
-  })
+      throw error
+    })
 }
 
 const sendEmail = (data) => {

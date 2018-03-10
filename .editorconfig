@@ -1,0 +1,32 @@
+;.editorconfig
+
+root = true
+
+[*]
+indentstyle = space
+indentsize = 4
+charset = utf-8
+trimtrailingwhitespace = true
+insertfinalnewline = true
+
+[**.js]
+indent_size = 2
+
+[**.json]
+indent_size = 2
+
+[**.jsx]
+e4x = true
+indent_size = 2
+
+[**.css]
+indent_size = 2
+
+[**.html]
+indent_style = space
+indent_size = 4
+max_char = 78
+brace_style = expand
+
+[*.md]
+trimtrailingwhitespace = false

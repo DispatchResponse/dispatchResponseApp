@@ -3,8 +3,8 @@
  *
  */
 
-const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
+const merge = require('webpack-merge')
+const common = require('./webpack.common.js')
 const webpack = require('webpack')
 
 module.exports = merge(common, {
@@ -18,4 +18,4 @@ module.exports = merge(common, {
       'process.env.NODE_ENV': JSON.stringify('development')
     })
   ]
-});
+})

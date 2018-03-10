@@ -50,9 +50,9 @@ db.trackings = require('./tracking')(sequelize, Sequelize)
 // db.users.belongsToMany(db.apparatus, {through: db.trackings, foreignKey: 'user_id'})
 // db.apparatus.belongsToMany(db.users, {through: db.trackings, foreignKey: 'apparatus_id'})
 
-db.users.hasMany(db.trackings, {foreignKey: 'user_id'})
-db.trackings.belongsTo(db.users, {foreignKey: 'user_id'})
-db.apparatus.hasMany(db.trackings, {foreignKey: 'apparatus_id'})
-db.trackings.belongsTo(db.apparatus, {foreignKey: 'apparatus_id'})
+db.users.hasMany(db.trackings, { foreignKey: 'user_id' })
+db.trackings.belongsTo(db.users, { foreignKey: 'user_id' })
+db.apparatus.hasMany(db.trackings, { foreignKey: 'apparatus_id' })
+db.trackings.belongsTo(db.apparatus, { foreignKey: 'apparatus_id' })
 
 module.exports = db

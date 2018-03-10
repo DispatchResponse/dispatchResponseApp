@@ -13,16 +13,18 @@
 const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('trackings', {
-    tracking_id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false
-    }
-  },
+  return sequelize.define(
+    'trackings',
     {
-      timestamps: false,
+      tracking_id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false
+      }
+    },
+    {
+      timestamps: false
     }
   )
 }

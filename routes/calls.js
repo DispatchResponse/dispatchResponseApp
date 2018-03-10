@@ -20,20 +20,22 @@ router.get('/', function (req, res, next) {
   })
 })
 
-router.get('/:callId/:userId', function (req, res, next) {
-  console.log('req.params.callId: ', req.params.callId);
+router.get('/:slug/:userId', function (req, res, next) {
+  console.log('req.params.slug: ', req.params.slug);
   console.log('req.params.userId: ', req.params.userId);
-  db.calls.findAll(
-    {
+  db.calls.findAll({
       where: {
-        call_id: req.params.callId
+        slug: req.params.slug
       }
-    }
-  ).then(function (callDetails) {
+    })
+  .then(function (callDetails) {
     let allTracks = Object.keys(callDetails).map(k => callDetails[k].dataValues)
     console.log('allTracks: ', allTracks);
     allTracks[0].user_id = req.params.userId
     res.send(allTracks)
+  })
+  .catch(error => {
+    console.error(`ERROR in GET: ${error}`)
   })
 })
 
@@ -92,16 +94,15 @@ const sendToPostgres = (processedData) => {
       console.log('PG CALL DETAILS:  ', processedData)
     })
     .catch(error => {
-    // TODO: not sure this is working or correct. creates unhandled promise error
-    // To test, misspell processedData above
-      throw error
+      console.error(`ERROR sending to Postgres: ${error}`)
     })
 }
 
 const sendEmail = (data) => {
   emailTransporter.sendMail({
     from: 'postmaster@signalclick.com',
-    to: '2035160005@msg.fi.google.com, 8057060651@vtext.com',
+    // to: '2035160005@msg.fi.google.com, 8057060651@vtext.com',
+    to: '2035160005@msg.fi.google.com',
     subject: 'GFD Call',
     text: `Call type: ${data.call_category}
 Location: ${data.location}  ${data.city}
@@ -135,7 +136,7 @@ router.post('/', async function (req, res) {
   if (DEBUG === true) {
     // send to Dynamo and email
     await sendToPostgres(processedData)
-    res.send(`DEBUG:  Your POST of ${JSON.stringify(callQuery)} was successful but was not sent to Dynamo or Postgres`)
+    res.send(`DEBUG:  Your POST of ${JSON.stringify(callQuery)} was successful but was not sent to Postgres`)
   } else {
     await sendToDynamo(processedData)
     sendEmail(processedData)

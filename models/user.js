@@ -35,10 +35,23 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: null
     },
-    enabled: {
+    is_enabled: {
+      // admin sets this
       type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: true
+    },
+    is_sleeping: {
+      // user sets this
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    is_admin: {
+      // admin sets this
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
     created_at: {
       type: Sequelize.DATE,

@@ -9,14 +9,16 @@ var users = [{
   'lastName': 'Coyner',
   'mobile': '2035160005',
   'tracking': "['E3','E1']",
-  'carrier': '@msg.fi.google.com'
+  'carrier': '@msg.fi.google.com',
+  'is_admin': true,
 },
 {
   'firstName': 'Nick',
   'lastName': 'Freeman',
   'mobile': '8057060651',
   'tracking': "['E8','E2']",
-  'carrier': '@vtext.com'
+  'carrier': '@vtext.com',
+  'is_admin': true,
 }
 ]
 
@@ -42,6 +44,7 @@ const insertUser = (user) => {
       mobile: person.mobile,
       carrier: person.carrier,
       tracking: person.tracking,
+      is_admin: person.is_admin,
       enabled: true
     })
       .then(elem => console.log('Success on insert: ', elem))

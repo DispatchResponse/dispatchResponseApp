@@ -20,12 +20,29 @@ router.get('/', function (req, res, next) {
   })
 })
 
+router.get('/:callId/:userId', function (req, res, next) {
+  console.log('req.params.callId: ', req.params.callId);
+  console.log('req.params.userId: ', req.params.userId);
+  db.calls.findAll(
+    {
+      where: {
+        call_id: req.params.callId
+      }
+    }
+  ).then(function (callDetails) {
+    let allTracks = Object.keys(callDetails).map(k => callDetails[k].dataValues)
+    console.log('allTracks: ', allTracks);
+    allTracks[0].user_id = req.params.userId
+    res.send(allTracks)
+  })
+})
+
 router.get('/track/:appar', function (req, res, next) {
   console.log('req.params: ', req.params.appar)
   db.trackings.findAll(
     {
       where: {
-        apparatusId: req.params.appar
+        apparatus_id: req.params.appar
       }
     }
   ).then(function (tracksList) {

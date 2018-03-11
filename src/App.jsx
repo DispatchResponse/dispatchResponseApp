@@ -44,6 +44,8 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+
+    var urlParams = this.props.location.search;  
     //1st iteration:
     axios.get('/api/calls').then((resp) => {
       this.setAppState(resp.data[0], 'dispatch');
@@ -56,6 +58,9 @@ export default class App extends React.Component {
     axios.get('/api/users').then((resp) => {
       this.setAppState(resp.data, 'user');
     })
+
+
+
 
     //2nd iteration:
     //SSR with dispatch data ing single request
@@ -122,7 +127,7 @@ export default class App extends React.Component {
              render={ routeProps => <Dispatch {...routeProps} dispatchData={this.state.dispatchData}/> }
            />
 
-           <Route
+           {/* <Route
              exact path="/settings"
              render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.userData}/> }
            />
@@ -130,7 +135,7 @@ export default class App extends React.Component {
            <Route
              exact path="/admin"
              render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.allData}/> }
-           />
+           /> */}
 
          </AppContainer>
 

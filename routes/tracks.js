@@ -39,6 +39,16 @@ router.get('/:userId/:apparatusId', function (req, res, next) {
 // TODO: implement delete of one or more tracking apparatus
 router.delete('/:userId/:apparatusId', function (req, res, next) {
   let apparatus = req.params.apparatusId.toUpperCase().split('&')
+  db.trackings.destroy({
+    where: {
+    }
+  })
+    .then(function () {
+      res.send()
+    })
+    .catch(error => {
+      console.error(`ERROR in DELETE: ${error}`)
+    })
 })
 
 router.get('/:userId', function (req, res, next) {

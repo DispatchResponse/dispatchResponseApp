@@ -5,6 +5,7 @@ import Map2D from './Map2D';
 import Map3D from './Map3D';
 import UserSettings from './UserSettings';
 
+
 export default class Dispatch extends React.Component {
   constructor(props) {
     super(props);
@@ -52,6 +53,49 @@ export default class Dispatch extends React.Component {
     const DispatchContainer = styled.div`
       display: grid;
       grid-template-columns: 1fr;
+    `;
+
+    const MenuItem = styled.div`
+        grid-area: 1/2/1/4;
+        padding: 0 20px 5% 0;
+        z-index: 5;
+        text-align: right;
+        color: black;
+        transform: translateY(-100%);
+        font-family: 'Podkova';
+        font-size: 2em;
+        &:hover{
+          text-decoration: underline;
+          div {
+            display: block;
+          }
+        }
+
+    `;
+
+    const MenuItems = styled.div`
+      display: none;
+      position: absolute;
+      right: 0;
+      text-align: left;
+      list-style-type: none;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      padding: 12px 16px;
+      z-index: 5;
+      padding: 20px;
+      &:hover{
+        cursor: pointer;
+      }
+      li {
+        margin: 10px 0 10px 0;
+        border-bottom: 1px solid white;
+        &:hover{
+          color: firebrick;
+          border-bottom: 1px solid firebrick;
+        }
+      }
     `;
 
     const Title = styled.div`
@@ -125,33 +169,26 @@ export default class Dispatch extends React.Component {
       letter-spacing: 5px;
     `;
 
-    const SettingsButton = styled.div`
-      background-color: firebrick;
-      height: 2em;
-      width: 8em;
-      margin: auto auto 2% auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 15px;
-      font-family: 'Podkova';
-      font-size: 2.5em;
-      color: white;
-       &:hover{
-         box-shadow: -3px -3px .7em darkgrey, 3px 3px .7em darkgrey;
-         color: goldenrod;
-         cursor: pointer;
-       }
 
-    `;
 
 
     return (
 
         <DispatchContainer>
 
-
         <Title>
+          <MenuItem>Menu
+            <MenuItems>
+              <li>Dispatch History</li>
+              <li>User Settings</li>
+              <li>Snooze Notifications: ON</li>
+              {
+                this.props.isAdmin
+                ? <li>Admin</li>
+                : null
+              }
+            </MenuItems>
+          </MenuItem>
           <Description>{this.props.dispatchData.call_category}</Description>
           <Timeout>{this.props.dispatchData.timeout}</Timeout>
         </Title>
@@ -196,6 +233,7 @@ export default class Dispatch extends React.Component {
         <Map3D destinationCoords={this.state.destinationCoords}/>
         }
 
+<<<<<<< HEAD
         <NavLink to="/settings">
           <SettingsButton>
             USER SETTINGS
@@ -207,6 +245,8 @@ export default class Dispatch extends React.Component {
             CALL LIST
           </SettingsButton>
         </NavLink>
+=======
+>>>>>>> some midway styling before rebase
 
         </DispatchContainer>
 

@@ -9,8 +9,9 @@
       "baseURL": "./",
       "paths": {}
     },
-    {
-      "node": {}
+    "node": {},
+    "doc_comment": {
+      "fullDocs": true
     }
   }
 }

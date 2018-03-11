@@ -1,11 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import Map2D from './Map2D';
 import Map3D from './Map3D';
 import UserSettings from './UserSettings';
-
-
 
 export default class Dispatch extends React.Component {
   constructor(props) {
@@ -174,7 +172,6 @@ export default class Dispatch extends React.Component {
           <li>Misc. Details</li>
           <li>{this.props.dispatchData.cfs_remark}</li>
           <li>Navigation</li>
-
         </DispatchDetails>
 
         {
@@ -193,9 +190,17 @@ export default class Dispatch extends React.Component {
         <Map3D destinationCoords={this.state.destinationCoords}/>
         }
 
-        <SettingsButton>
-          USER SETTINGS
-        </SettingsButton>
+        <NavLink to="/settings">
+          <SettingsButton>
+            USER SETTINGS
+          </SettingsButton>
+        </NavLink>
+
+        <NavLink to="/home">
+          <SettingsButton>
+            CALL LIST
+          </SettingsButton>
+        </NavLink>
 
       </DispatchContainer>
     )

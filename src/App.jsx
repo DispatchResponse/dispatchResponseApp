@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import getCoordinates from './utils/getCoordinates'
 import Dispatch from './components/Dispatch';
 import UserSettings from './components/UserSettings';
+import Home from './components/Calls/Home';
 
 
 export default class App extends React.Component {
@@ -83,7 +84,6 @@ export default class App extends React.Component {
           box-shadow: -3px -3px .7em darkgrey, 3px 3px .7em darkgrey;
           border-radius: 15px;
         }
-
     `;
 
 
@@ -98,6 +98,11 @@ export default class App extends React.Component {
        <Route
          exact path="/settings"
          render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.dispatchData}/> }
+       />
+
+       <Route
+         exact path="/home"
+         component={ Home }
        />
 
      </AppContainer>

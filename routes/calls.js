@@ -10,47 +10,34 @@ const emailTransporter = require('../util/sendEmailSES')
 
 const DEBUG = true // set this to true to suppress sending POST requests to Postgres
 
-// TODO:  error proof and sort
+// TODO:  sort
 router.get('/', function (req, res, next) {
-  db.calls.all().then(function (callList) {
-    let allCalls = Object.keys(callList).map(function (k) {
-      return callList[k].dataValues
+  db.calls.all()
+    .then(function (callList) {
+      let allCalls = Object.keys(callList).map(function (k) {
+        return callList[k].dataValues
+      })
+      res.send(allCalls)
     })
-    res.send(allCalls)
-  })
+    .catch(error => {
+      console.error(`ERROR in GET: ${error}`)
+    })
 })
 
 router.get('/:slug/:userId', function (req, res, next) {
-  console.log('req.params.slug: ', req.params.slug);
-  console.log('req.params.userId: ', req.params.userId);
   db.calls.findAll({
-      where: {
-        slug: req.params.slug
-      }
-    })
-  .then(function (callDetails) {
-    let allTracks = Object.keys(callDetails).map(k => callDetails[k].dataValues)
-    console.log('allTracks: ', allTracks);
-    allTracks[0].user_id = req.params.userId
-    res.send(allTracks)
-  })
-  .catch(error => {
-    console.error(`ERROR in GET: ${error}`)
-  })
-})
-
-router.get('/track/:appar', function (req, res, next) {
-  console.log('req.params: ', req.params.appar)
-  db.trackings.findAll(
-    {
-      where: {
-        apparatus_id: req.params.appar
-      }
+    where: {
+      slug: req.params.slug
     }
-  ).then(function (tracksList) {
-    let allTracks = Object.keys(tracksList).map(k => tracksList[k].dataValues)
-    res.send(allTracks)
   })
+    .then(function (callDetails) {
+      let allTracks = Object.keys(callDetails).map(k => callDetails[k].dataValues)
+      allTracks[0].user_id = req.params.userId
+      res.send(allTracks)
+    })
+    .catch(error => {
+      console.error(`ERROR in GET: ${error}`)
+    })
 })
 
 const processData = (data) => {

@@ -9,6 +9,31 @@ const db = require('../models')
 const Sequelize = require('sequelize')
 const { and, eq, or } = Sequelize.Op
 
+
+/**
+ * Add one or more apparatus for a single user
+ */
+router.post('/:userId/:apparatusId', function (req, res, next) {
+  let apparatus = req.params.apparatusId.toUpperCase().split('&')
+  // TODO: implement a loop for each element in apparatus array
+  let entry = {
+    apparatus_id: req.params.apparatusId,
+    user_id: req.params.userId
+  }
+  db.trackings.findOrCreate(
+    { where: entry }
+  )
+  // TODO: use spread
+  // http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findorcreate-search-for-a-specific-element-or-create-it-if-not-available
+  .then(result => {
+    console.log(result)
+  })
+  // TODO: make sure curl command returns something -- i.e. res.sendStatus(404 or 500)
+    .catch(error => {
+      console.error(`ERROR sending to Postgres: ${error}`)
+    })
+})
+
 /**
  * Get one or more apparatus for a single user
  */

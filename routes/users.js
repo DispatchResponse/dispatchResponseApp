@@ -18,29 +18,29 @@ router.get('/tuna', function (req, res, next) {
       }
     }]
   })
-  .then(userList => {
-    let allUsers = Object.keys(userList).map(function (k) {
-      return userList[k].dataValues
+    .then(userList => {
+      let allUsers = Object.keys(userList).map(function (k) {
+        return userList[k].dataValues
+      })
+      res.send(allUsers)
     })
-    res.send(allUsers)
-  })
-  .catch(error => {
-    console.error(`ERROR in users GET: ${error}`)
-  })
+    .catch(error => {
+      console.error(`ERROR in users GET: ${error}`)
+    })
 })
 
 router.get('/:userId', function (req, res, next) {
   db.users.findOne({
     where: {user_id: req.params.userId}
   })
-  .then(user => {
-    // console.log('user.full_name: ', user.full_name)
-    // console.log('user.full_mobile: ', user.full_mobile)
-    res.send(user)
-  })
-  .catch(error => {
-    console.error(`ERROR in users GET: ${error}`)
-  })
+    .then(user => {
+      // console.log('user.full_name: ', user.full_name)
+      // console.log('user.full_mobile: ', user.full_mobile)
+      res.send(user)
+    })
+    .catch(error => {
+      console.error(`ERROR in users GET: ${error}`)
+    })
 })
 
 router.get('/', function (req, res, next) {

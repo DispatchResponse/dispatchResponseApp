@@ -1,14 +1,17 @@
 {
-      "libs": [
-        "browser",
-        "ecmascript",
-        "react"
-      ],
-      "plugins": {
-        "requirejs": {
-          "baseURL": "./",
-          "paths": {}
-        },
-        "node": {}
-      }
+  "libs": [
+    "browser",
+    "ecmascript",
+    "react"
+  ],
+  "plugins": {
+    "requirejs": {
+      "baseURL": "./",
+      "paths": {}
+    },
+    "node": {},
+    "doc_comment": {
+      "fullDocs": true
+    }
+  }
 }

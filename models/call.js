@@ -163,6 +163,12 @@ module.exports = (sequelize, DataTypes) => {
         //   max: 10
         // }
       },
+      test_call: {
+        //  false
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
       slug: {
         // slug -- 8 char alphanumeric from module cuid
         //  py2f7hq7

@@ -4,8 +4,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 import getCoordinates from './utils/getCoordinates'
 import Dispatch from './components/Dispatch';
+import DispatchHistory from './components/DispatchHistory';
 import UserSettings from './components/UserSettings';
-import Home from './components/Calls/Home';
 
 
 export default class App extends React.Component {
@@ -14,28 +14,7 @@ export default class App extends React.Component {
     this.state = {
       apparatusData: null,
       dispatchData: null,
-        // assignment: "DC E1 E2 E3 E4 R5 T1",
-        // radio_freq: "CH1A",
-        // apt_no: "",
-        // call_category: "REPORTED STRUCTURE FIRE",
-        // call_description: "REPORTED STRUCTURE FIRE",
-        // call_type: "800",
-        // cfs_no: "1800001052",
-        // cfs_remark: "SMOKE IN STRUCTURE",
-        // city: "BELLE HAVEN",
-        // dispatch_fire: "2018-01-09T12:18:57.110",
-        // latitude: "41.013021\r",
-        // location: "00070 BUSH AV",
-        // longitude: "-73.636978\r",
-        // premise_name: "00070 BUSH AV",
-        // priority_amb: "",
-        // priority_fire: "FD Pri:1",
-        // priority_pol: "",
-        // timeout: "01-09-2018 12:17:31",
-        // cross_street: "MEADOW WOOD DR&FIELD POINT RD",
-        // map_ref: " Map -F22",
-        // zip: ""
-
+      dispatchHistory: null,
       userData: {}
     };
 
@@ -45,10 +24,11 @@ export default class App extends React.Component {
 
   componentDidMount() {
 
-    var urlParams = this.props.location.search;  
+    var urlParams = this.props.location.search;
     //1st iteration:
     axios.get('/api/calls').then((resp) => {
       this.setAppState(resp.data[0], 'dispatch');
+      this.setAppState(resp.data, 'dispatchHistory');
     })
 
     axios.get('/api/apparatus').then((resp) => {
@@ -70,6 +50,8 @@ export default class App extends React.Component {
     //setState for dispatch data. used in callback from componentDidMount
     if ( type === 'dispatch') {
       this.setState({dispatchData: data});
+    } else if ( type === 'dispatchHistory') {
+      this.setState({dispatchHistory: data});
     } else if ( type === 'apparatus' ) {
       this.setState({apparatusData: data});
     } else if ( type === 'user' ) {
@@ -127,15 +109,15 @@ export default class App extends React.Component {
              render={ routeProps => <Dispatch {...routeProps} dispatchData={this.state.dispatchData}/> }
            />
 
-           {/* <Route
-             exact path="/settings"
-             render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.userData}/> }
+           <Route
+             exact path="/dispatch-history"
+             render={ routeProps => <DispatchHistory {...routeProps} dispatchHistory={this.state.dispatchHistory}/> }
            />
 
            <Route
              exact path="/admin"
              render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.allData}/> }
-           /> */}
+           />
 
          </AppContainer>
 

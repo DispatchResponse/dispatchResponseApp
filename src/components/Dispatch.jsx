@@ -91,9 +91,13 @@ export default class Dispatch extends React.Component {
       li {
         margin: 10px 0 10px 0;
         border-bottom: 1px solid white;
-        &:hover{
-          color: firebrick;
-          border-bottom: 1px solid firebrick;
+        a {
+          text-decoration: none;
+          color: black;
+          &:hover{
+            color: firebrick;
+            border-bottom: 1px solid firebrick;
+          }
         }
       }
     `;
@@ -179,7 +183,9 @@ export default class Dispatch extends React.Component {
         <Title>
           <MenuItem>Menu
             <MenuItems>
-              <li>Dispatch History</li>
+              <li>
+                <NavLink to="/dispatch-history"> Dispatch History </NavLink>
+              </li>
               <li>User Settings</li>
               <li>Snooze Notifications: ON</li>
               {
@@ -233,20 +239,6 @@ export default class Dispatch extends React.Component {
         <Map3D destinationCoords={this.state.destinationCoords}/>
         }
 
-<<<<<<< HEAD
-        <NavLink to="/settings">
-          <SettingsButton>
-            USER SETTINGS
-          </SettingsButton>
-        </NavLink>
-
-        <NavLink to="/home">
-          <SettingsButton>
-            CALL LIST
-          </SettingsButton>
-        </NavLink>
-=======
->>>>>>> some midway styling before rebase
 
         </DispatchContainer>
 

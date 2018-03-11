@@ -6,10 +6,15 @@ const express = require('express')
 const router = express.Router()
 const cuid = require('cuid')
 const db = require('../models')
+const Sequelize = require('sequelize')
+const { or } = Sequelize.Op
 const emailTransporter = require('../util/sendEmailSES')
 
 const DEBUG = true // set this to true to suppress sending POST requests to Postgres
 
+/**
+ * Get all calls
+ */
 // TODO:  sort
 router.get('/', function (req, res, next) {
   db.calls.all()
@@ -17,13 +22,17 @@ router.get('/', function (req, res, next) {
       let allCalls = Object.keys(callList).map(function (k) {
         return callList[k].dataValues
       })
-      res.send(allCalls)
+      res.status(200).send(allCalls)
     })
     .catch(error => {
       console.error(`ERROR in GET: ${error}`)
+      res.sendStatus(501, error)
     })
 })
 
+/**
+ * Get a specific call and inject the userId into it
+ */
 router.get('/:slug/:userId', function (req, res, next) {
   db.calls.findAll({
     where: {
@@ -31,15 +40,56 @@ router.get('/:slug/:userId', function (req, res, next) {
     }
   })
     .then(function (callDetails) {
-      let allTracks = Object.keys(callDetails).map(k => callDetails[k].dataValues)
-      allTracks[0].user_id = req.params.userId
-      res.send(allTracks)
+      let call = Object.keys(callDetails).map(k => callDetails[k].dataValues)
+      call[0].user_id = req.params.userId
+      res.status(200).send(call)
     })
     .catch(error => {
       console.error(`ERROR in GET: ${error}`)
+      res.sendStatus(501, error)
     })
 })
 
+/**
+ * Given a list of apparatus, create a list of recipient phone-emails
+ */
+const getRecipientsAddresses = (apparatusArr) => {
+  console.log('IN FUNCTION apparatusArr: ', apparatusArr);
+  // what to do about E1 E5 STN5 cases? will it choke on STN5
+  db.users.findAll({
+    include: [{
+      model: db.trackings,
+      where: {
+        apparatus_id: { [or]: apparatusArr }
+      }
+    }]
+  })
+    .then(userList => {
+      let allUsers = Object.keys(userList).map(function (k) {
+        return userList[k].dataValues
+      })
+      console.log('allUsers: ', allUsers);
+      // process allUsers for:
+      // if:
+      //   is_sleeping = f
+      //   is_enabled = t
+      // then:
+      //   mobile + carrier
+      // return a comma separated string
+      return allUsers
+    })
+    .catch(error => {
+      console.error(`ERROR in users GET: ${error}`)
+    })
+}
+
+
+
+
+
+/**
+ * Prepare and parse data before DB injection and emailing
+ */
 const processData = (data) => {
   let slug = cuid.slug()
   let assignment = data.UnitList.split(',').splice(1).join(' ')
@@ -75,6 +125,9 @@ const processData = (data) => {
   return callDetails
 }
 
+/**
+ * Send processed data to Postgres
+ */
 const sendToPostgres = (processedData) => {
   db.calls.create(processedData)
     .then(processedData => {
@@ -85,6 +138,9 @@ const sendToPostgres = (processedData) => {
     })
 }
 
+/**
+ * Send processed data to SMS-via-email
+ */
 const sendEmail = (data) => {
   emailTransporter.sendMail({
     from: 'postmaster@signalclick.com',
@@ -119,11 +175,13 @@ router.post('/', async function (req, res) {
   }
 
   let processedData = await processData(callQuery)
+  let apparatusArr = processedData.assignment.split(' ')
+  let recipients = await getRecipientsAddresses(apparatusArr)
 
   if (DEBUG === true) {
     // send to Dynamo and email
     await sendToPostgres(processedData)
-    res.send(`DEBUG:  Your POST of ${JSON.stringify(callQuery)} was successful but was not sent to Postgres`)
+    res.send(`DEBUG:  Your POST of ${JSON.stringify(callQuery)} was successful but was not sent to SMS`)
   } else {
     await sendToDynamo(processedData)
     sendEmail(processedData)

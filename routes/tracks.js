@@ -12,26 +12,27 @@ const { and, eq, or } = Sequelize.Op
 /**
  * Add one or more apparatus for a single user
  */
+// TODO: use spread and think about errors (does it kill the array loop? i don't think so)
+// http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findorcreate-search-for-a-specific-element-or-create-it-if-not-available
 router.post('/:userId/:apparatusId', function (req, res, next) {
-  let apparatus = req.params.apparatusId.toUpperCase().split('&')
-  // TODO: implement a loop for each element in apparatus array
-  let entry = {
-    apparatus_id: req.params.apparatusId,
-    user_id: req.params.userId
-  }
-  db.trackings.findOrCreate(
-    { where: entry }
-  )
-  // TODO: use spread
-  // http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findorcreate-search-for-a-specific-element-or-create-it-if-not-available
-    .then(result => {
-      console.log(result)
-      res.sendStatus(201)
-    })
-    .catch(error => {
-      console.error(`ERROR sending to Postgres: ${error}`)
-      res.sendStatus(501, error)
-    })
+  let userId = req.params.userId
+  let apparatusArr = req.params.apparatusId.toUpperCase().split('&')
+  apparatusArr.forEach(eng => {
+    let entry = {
+      apparatus_id: eng,
+      user_id: userId
+    }
+    db.trackings.findOrCreate(
+      { where: entry }
+    )
+      .then(result => {
+        console.log(result)
+      })
+      .catch(error => {
+        console.error(`ERROR sending to Postgres: ${error}`)
+      })
+  })
+  res.sendStatus(201)
 })
 
 /**

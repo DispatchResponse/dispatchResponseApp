@@ -25,12 +25,13 @@ router.post('/:userId/:apparatusId', function (req, res, next) {
   )
   // TODO: use spread
   // http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findorcreate-search-for-a-specific-element-or-create-it-if-not-available
-  .then(result => {
-    console.log(result)
-  })
-  // TODO: make sure curl command returns something -- i.e. res.sendStatus(404 or 500)
+    .then(result => {
+      console.log(result)
+      res.sendStatus(204)
+    })
     .catch(error => {
       console.error(`ERROR sending to Postgres: ${error}`)
+      res.sendStatus(500)
     })
 })
 
@@ -85,7 +86,7 @@ router.delete('/:userId/:apparatusId', function (req, res, next) {
   })
     .then(function (findResult) {
       console.log('findResult: ', findResult)
-      if (findResult.length !== null && findResult.length > 0 ) {
+      if (findResult.length !== null && findResult.length > 0) {
         db.trackings.destroy({
           where: {
             [and]: [
@@ -100,7 +101,7 @@ router.delete('/:userId/:apparatusId', function (req, res, next) {
             ]
           }
         })
-        console.log('Delete successful 😎 ');
+        console.log('Delete successful 😎 ')
         res.sendStatus(204)
       } else {
         res.sendStatus(404)

@@ -29,6 +29,31 @@ var calls = [
     'test_call': true,
     'zip': '',
     'slug': 'f34h56af'
+  },
+  {
+    'assignment': 'DC, E3, E4, E1, T1',
+    'radio_freq': 'CH2B',
+    'apt_no': '',
+    'call_category': 'BOX ALARM',
+    'call_description': 'BOX ALARM',
+    'call_type': '801',
+    'cfs_no': '1800001054',
+    'cfs_remark': 'ODOR OF NATURAL GAS',
+    'city': 'GREENWICH',
+    'dispatch_fire': '2018-02-09T13:13:57.110',
+    'latitude': '41.013021\r',
+    'location': '00070 BUSH AV',
+    'longitude': '-73.636978\r',
+    'premise_name': '00070 BUSH AV',
+    'priority_amb': '',
+    'priority_fire': 'FD Pri:1',
+    'priority_pol': '',
+    'timeout': '02-09-2018 13:17:31',
+    'cross_street': 'MEADOW WOOD DR&FIELD POINT RD',
+    'map_ref': '-F22',
+    'test_call': true,
+    'zip': '',
+    'slug': 'mg08p5p'
   }
 ]
 

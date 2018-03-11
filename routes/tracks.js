@@ -9,7 +9,6 @@ const db = require('../models')
 const Sequelize = require('sequelize')
 const { and, eq, or } = Sequelize.Op
 
-
 /**
  * Add one or more apparatus for a single user
  */
@@ -27,11 +26,11 @@ router.post('/:userId/:apparatusId', function (req, res, next) {
   // http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findorcreate-search-for-a-specific-element-or-create-it-if-not-available
     .then(result => {
       console.log(result)
-      res.sendStatus(204)
+      res.sendStatus(201)
     })
     .catch(error => {
       console.error(`ERROR sending to Postgres: ${error}`)
-      res.sendStatus(500)
+      res.sendStatus(501, error)
     })
 })
 
@@ -58,10 +57,11 @@ router.get('/:userId/:apparatusId', function (req, res, next) {
   })
     .then(function (trackDetails) {
       let allTracks = Object.keys(trackDetails).map(k => trackDetails[k].dataValues)
-      res.send(allTracks)
+      res.status(200).send(allTracks)
     })
     .catch(error => {
       console.error(`ERROR in GET: ${error}`)
+      res.sendStatus(501, error)
     })
 })
 
@@ -109,25 +109,30 @@ router.delete('/:userId/:apparatusId', function (req, res, next) {
     })
     .catch(error => {
       console.error(`ERROR in DELETE: ${error}`)
-      res.sendStatus(500, error)
+      res.sendStatus(501, error)
     })
 })
 
 /**
  * Get all tracked apparatus for a single user
  */
-router.get('/:userId', function (req, res, next) {
+router.get('/:userId', async function (req, res, next) {
   db.trackings.findAll({
     where: {
       user_id: req.params.userId
     }
   })
     .then(function (trackDetails) {
-      let allTracks = Object.keys(trackDetails).map(k => trackDetails[k].dataValues)
-      res.send(allTracks)
+      if (trackDetails !== null && trackDetails.length > 0) {
+        let allTracks = Object.keys(trackDetails).map(k => trackDetails[k].dataValues)
+        res.status(200).send(allTracks)
+      } else {
+        res.sendStatus(404)
+      }
     })
     .catch(error => {
       console.error(`ERROR in GET: ${error}`)
+      res.sendStatus(500)
     })
 })
 
@@ -135,12 +140,17 @@ router.get('/:userId', function (req, res, next) {
  * Get all trackings for all users
  */
 router.get('/', function (req, res, next) {
-  db.trackings.all().then(function (trackList) {
-    let allTracks = Object.keys(trackList).map(function (k) {
-      return trackList[k].dataValues
+  db.trackings.all()
+    .then(function (trackList) {
+      let allTracks = Object.keys(trackList).map(function (k) {
+        return trackList[k].dataValues
+      })
+      res.status(200).send(allTracks)
     })
-    res.send(allTracks)
-  })
+    .catch(error => {
+      console.error(`ERROR in GET: ${error}`)
+      res.sendStatus(501)
+    })
 })
 
 module.exports = router

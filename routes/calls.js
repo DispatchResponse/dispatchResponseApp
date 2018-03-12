@@ -10,7 +10,7 @@ const Sequelize = require('sequelize')
 const { or } = Sequelize.Op
 const emailTransporter = require('../util/sendEmailSES')
 
-const DEBUG = true // set this to true to suppress sending POST requests to Postgres
+const DEBUG = false // Set this to 'true' to suppress sending email-SMS. It will still send to Postgres.
 
 /**
  * Get all calls
@@ -54,9 +54,8 @@ router.get('/:slug/:userId', function (req, res, next) {
  * Given a list of apparatus, create a list of recipient phone-emails
  */
 const getRecipientsAddresses = (apparatusArr) => {
-  console.log('IN FUNCTION apparatusArr: ', apparatusArr);
-  // what to do about E1 E5 STN5 cases? will it choke on STN5
-  db.users.findAll({
+  // TODO: what to do about E1 E5 STN5 cases? will it choke on STN5
+  return db.users.findAll({
     include: [{
       model: db.trackings,
       where: {
@@ -65,34 +64,26 @@ const getRecipientsAddresses = (apparatusArr) => {
     }]
   })
     .then(userList => {
-      let allUsers = Object.keys(userList).map(function (k) {
-        return userList[k].dataValues
+      let userAddresses = Object.keys(userList).map(function (k) {
+        if (userList[k].dataValues.is_enabled === true && userList[k].dataValues.is_sleeping === false) {
+          return userList[k].dataValues.mobile + userList[k].dataValues.carrier
+        }
       })
-      console.log('allUsers: ', allUsers);
-      // process allUsers for:
-      // if:
-      //   is_sleeping = f
-      //   is_enabled = t
-      // then:
-      //   mobile + carrier
-      // return a comma separated string
-      return allUsers
+      return userAddresses.join(', ')
     })
     .catch(error => {
       console.error(`ERROR in users GET: ${error}`)
     })
 }
 
-
-
-
-
 /**
  * Prepare and parse data before DB injection and emailing
+ * TODO: parse logic to deal with cases of no apparatus assignment but radio
+ * freq is listed and other cases during busy times
  */
 const processData = (data) => {
   let slug = cuid.slug()
-  let assignment = data.UnitList.split(',').splice(1).join(' ')
+  let assignment = data.UnitList.split(',').splice(1).join(' ').trim()
   let radioFreq = data.UnitList.split(',')[0]
   let crossStreet = data.x_street_name.split(' ').splice(3).join(' ')
   let mapRef = data.x_street_name.split(' ').splice(0, 3).join(' ')
@@ -131,7 +122,7 @@ const processData = (data) => {
 const sendToPostgres = (processedData) => {
   db.calls.create(processedData)
     .then(processedData => {
-      console.log('PG CALL DETAILS:  ', processedData)
+      console.log('Successful write to Postgres 😎 ')
     })
     .catch(error => {
       console.error(`ERROR sending to Postgres: ${error}`)
@@ -141,16 +132,18 @@ const sendToPostgres = (processedData) => {
 /**
  * Send processed data to SMS-via-email
  */
-const sendEmail = (data) => {
+const sendEmail = (data, recipients) => {
+  //  TODO:  loop sending emails to each recipient with a corresponding user_id
   emailTransporter.sendMail({
     from: 'postmaster@signalclick.com',
     // to: '2035160005@msg.fi.google.com, 8057060651@vtext.com',
-    to: '2035160005@msg.fi.google.com',
+    // to: '2035160005@msg.fi.google.com',
+    to: recipients,
     subject: 'GFD Call',
     text: `Call type: ${data.call_category}
 Location: ${data.location}  ${data.city}
 Assignment: ${data.assignment}
-Details: https://ers-dispatch.firebaseapp.com/?id=${data.slug}
+Details: https://gfd.gr/${data.slug}/${data.user_id}
       `
   }, (err, info) => {
     if (err) {
@@ -179,12 +172,13 @@ router.post('/', async function (req, res) {
   let recipients = await getRecipientsAddresses(apparatusArr)
 
   if (DEBUG === true) {
-    // send to Dynamo and email
+    // send just to Postgres, not to email-SMS
     await sendToPostgres(processedData)
     res.send(`DEBUG:  Your POST of ${JSON.stringify(callQuery)} was successful but was not sent to SMS`)
   } else {
-    await sendToDynamo(processedData)
-    sendEmail(processedData)
+    // send to Postgres and email-SMS
+    await sendToPostgres(processedData)
+    sendEmail(processedData, recipients)
     res.send(`SUCCESS: Your POST of ${JSON.stringify(processedData)} was successful`)
   }
 })

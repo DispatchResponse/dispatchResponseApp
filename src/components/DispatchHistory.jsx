@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import DispatchHistoryEntry from './DispatchHistoryEntry';
+import Menu from './Menu';
 
 
 
@@ -58,7 +59,8 @@ export default class DispatchHistory extends React.Component {
     `;
 
     return (
-
+      <div>
+      <Menu/>
       <Wrapper>
         <Title>Call List</Title>
           <Subtitle>
@@ -92,7 +94,7 @@ export default class DispatchHistory extends React.Component {
           ))}
         </DispatchTable>
       </Wrapper>
-
+</div>
     )
 
   }

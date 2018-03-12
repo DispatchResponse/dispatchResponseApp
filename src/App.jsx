@@ -22,15 +22,17 @@ export default class App extends React.Component {
       userInfo: null,
       userTracking: null,
       userNotificationStatus: null,
+      userApparatusAssignment: null,
       userIsAdmin: false,
     };
 
     this.setAppState = this.setAppState.bind(this);
     this.modifyNotificationStatus = this.modifyNotificationStatus.bind(this);
-
+    this.modifyApparatusAssignment = this.modifyApparatusAssignment.bind(this);
+    this.buildApparatusAssigment = this.buildApparatusAssigment.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
 
     //NOTE:get URL Params, and extract slug and userID.
     //for now slug and userID is hard coded.
@@ -39,32 +41,32 @@ export default class App extends React.Component {
     let userID = 2;
 
     //get Current Dispatch
-    axios.get(`/api/${slug}/${userID}`).then((resp) => {
+    await axios.get(`/api/${slug}/${userID}`).then((resp) => {
       console.log("//get Current Dispatch", resp)
       this.setAppState(resp.data[0], 'dispatch');
     })
 
     //get Dispatch History
-    axios.get('/api/calls').then((resp) => {
+    await axios.get('/api/calls').then((resp) => {
       console.log("//get Dispatch History",resp)
       this.setAppState(resp.data, 'dispatchHistory');
     })
 
     //get All Station Apparatus
-    axios.get('/api/apparatus').then((resp) => {
+    await axios.get('/api/apparatus').then((resp) => {
       console.log("//get All Station Apparatus",resp)
       this.setAppState(resp.data, 'apparatus');
     })
 
     // get All Carriers
-    axios.get('/api/carriers').then((resp) => {
+    await axios.get('/api/carriers').then((resp) => {
       console.log("// get All Carriers",resp)
       this.setAppState(resp.data, 'carrier');
 
     })
 
     //get User Info
-    axios.get(`/api/users/${userID}`).then((resp) => {
+    await axios.get(`/api/users/${userID}`).then((resp) => {
       console.log("//get User Info",resp)
       this.setAppState(resp.data, 'userInfo');
       this.setAppState(resp.data['is_admin'], 'userIsAdmin');
@@ -73,12 +75,12 @@ export default class App extends React.Component {
     })
 
     //get User Tracking
-    axios.get(`/api/tracks/${userID}`).then((resp) => {
+    await axios.get(`/api/tracks/${userID}`).then((resp) => {
       console.log("//get User Tracking",resp)
       this.setAppState(resp.data, 'userTracking');
     })
 
-
+    this.buildApparatusAssigment()
   }
 
   setAppState(data, type){
@@ -104,8 +106,34 @@ export default class App extends React.Component {
     return
   }
 
+  buildApparatusAssigment() {
+    let userApparatusAssignment = this.state.allApparatus.map( app => {
+      for (let i = 0; i < this.state.userTracking.length; i++) {
+        if( this.state.userTracking[i]['apparatus_id'] === app['apparatus_id'] ) {
+          return {id: app['apparatus_id'], active: true}
+        }
+      }
+      return {id: app['apparatus_id'], active: false}
+    })
+
+    this.setState({userApparatusAssignment: userApparatusAssignment})
+  }
+
   modifyNotificationStatus() {
     this.setState({userNotificationStatus: !this.state.userNotificationStatus})
+  }
+
+  modifyApparatusAssignment(e) {
+    let appID = e.target.id.split('-').pop();
+    let newApparatusAssignment = this.state.userApparatusAssignment.map(app => {
+      if (app.id === appID) {
+        return {id: appID, active: !app.active}
+      } else {
+        return app
+      }
+    })
+    this.setState({userApparatusAssignment: newApparatusAssignment})
+    //TODO: MODIFY APPARATUS ASSIGNMENT IN TRACKING
   }
 
   render() {
@@ -173,12 +201,12 @@ export default class App extends React.Component {
              exact path="/user-settings"
              render={ routeProps =>
                <UserSettings {...routeProps}
-                 allApparatus={this.state.allApparatus}
                  allCarriers={this.state.allCarriers}
                  userInfo={this.state.userInfo}
-                 userTracking={this.state.userTracking}
+                 userApparatusAssignment={this.state.userApparatusAssignment}
                  notificationStatus={this.state.userNotificationStatus}
                  modifyNotificationStatus={this.modifyNotificationStatus}
+                 modifyApparatusAssignment={this.modifyApparatusAssignment}
                  isAdmin={this.state.userIsAdmin}
                /> }
            />

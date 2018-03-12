@@ -61,7 +61,10 @@ export default class DispatchHistory extends React.Component {
 
     return (
       <div>
-      <Menu ns={this.props.notificationStatus}/>
+        <Menu
+          ns={this.props.notificationStatus}
+          tns={this.props.modifyNotificationStatus}/>
+          
       <Wrapper>
         <Title>Call List</Title>
           <Subtitle>

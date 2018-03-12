@@ -7,19 +7,16 @@ export default class UserSettings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentApparatusAssignment: null,
       userCarrierName: null,
     };
-    this.modifyApparatusAssignment = this.modifyApparatusAssignment.bind(this);
-    this.buildApparatusAssigments = this.buildApparatusAssigments.bind(this);
+
     this.determineUserCarrierName = this.determineUserCarrierName.bind(this);
   }
 
   componentDidMount() {
     //TODO: map user mobile carrier to carriers obj and get carrier Name
     //TODO: map apparatuses to tracking and get trues and falses
-
-    this.buildApparatusAssigments()
+    console.log(this.props)
     this.determineUserCarrierName()
 
   }
@@ -35,35 +32,8 @@ export default class UserSettings extends React.Component {
 
   }
 
-  buildApparatusAssigments() {
-    let userApparatusAssignment = this.props.allApparatus.map( app => {
-      for (let i = 0; i < this.props.userTracking.length; i++) {
-        if( this.props.userTracking[i]['apparatus_id'] === app['apparatus_id'] ) {
-          return {id: app['apparatus_id'], active: true}
-        }
-      }
-      return {id: app['apparatus_id'], active: false}
-    })
-
-    this.setState({currentApparatusAssignment: userApparatusAssignment})
-  }
-
-  modifyApparatusAssignment(e) {
-    let appID = e.target.id.split('-').pop();
-    let newApparatusAssignment = this.state.currentApparatusAssignment.map(app => {
-      if (app.id === appID) {
-        return {id: appID, active: !app.active}
-      } else {
-        return app
-      }
-    })
-    this.setState({currentApparatusAssignment: newApparatusAssignment})
-    //TODO: MODIFY APPARATUS ASSIGNMENT IN TRACKING
-  }
-
-
   render() {
-    console.log('rerendered', this.state.currentApparatusAssignment)
+
     const UserSettingsContainer = styled.div`
       width: 100%;
       height: auto;
@@ -264,7 +234,10 @@ export default class UserSettings extends React.Component {
     return (
 
     <UserSettingsContainer>
-      <Menu ns={this.props.notificationStatus}/>
+        <Menu
+          ns={this.props.notificationStatus}
+          tns={this.props.modifyNotificationStatus}/>
+
       <UsrTitle>User Settings</UsrTitle>
       <UsrInfo>
         <li>User Name</li>
@@ -278,9 +251,9 @@ export default class UserSettings extends React.Component {
       <ApparatusAssignment>
 
         {
-          !this.state.currentApparatusAssignment ?
+          !this.props.userApparatusAssignment ?
           null : (
-          this.state.currentApparatusAssignment.map(app => {
+          this.props.userApparatusAssignment.map(app => {
             return <ApparatusItem key={app.id}>
               <li>{app.id}</li>
               <li>
@@ -288,7 +261,7 @@ export default class UserSettings extends React.Component {
                   type="checkbox"
                   id={`switch-${app.id}`}
                   defaultChecked={app.active}
-                  onChange={this.modifyApparatusAssignment}/>
+                  onChange={this.props.modifyApparatusAssignment}/>
                 <label htmlFor={`switch-${app.id}`}></label>
               </li>
             </ApparatusItem>

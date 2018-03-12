@@ -11,6 +11,7 @@ export default class Menu extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props.ns)
   }
 
   render() {
@@ -73,7 +74,7 @@ export default class Menu extends React.Component {
               <NavLink to="/user-settings"> User Settings </NavLink>
             </li>
             <li>
-              Snooze Notifications: ON
+              Notifications: {this.props.ns ? "ON" : "OFF"}
             </li>
             {
               this.props.isAdmin

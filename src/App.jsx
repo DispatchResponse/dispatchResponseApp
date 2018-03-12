@@ -24,6 +24,7 @@ export default class App extends React.Component {
       userNotificationStatus: null,
       userApparatusAssignment: null,
       userIsAdmin: false,
+      userID: 2,
     };
 
     this.setAppState = this.setAppState.bind(this);
@@ -38,7 +39,7 @@ export default class App extends React.Component {
     //for now slug and userID is hard coded.
 
     let slug = 'mg08p5p';
-    let userID = 2;
+    let { userID } = this.state;
 
     //get Current Dispatch
     await axios.get(`/api/${slug}/${userID}`).then((resp) => {
@@ -123,17 +124,64 @@ export default class App extends React.Component {
     this.setState({userNotificationStatus: !this.state.userNotificationStatus})
   }
 
-  modifyApparatusAssignment(e) {
+  async modifyApparatusAssignment(e) {
+    console.log('modify is running')
+    let { userApparatusAssignment, userID } = this.state;
+
     let appID = e.target.id.split('-').pop();
-    let newApparatusAssignment = this.state.userApparatusAssignment.map(app => {
-      if (app.id === appID) {
-        return {id: appID, active: !app.active}
+
+    let newApparatusAssignment = userApparatusAssignment.map(appItem => {
+      if (appItem.id === appID) {
+        return {id: appID, active: !appItem.active}
       } else {
-        return app
+        return appItem
       }
     })
+
+    console.log("newApparatusAssignment")
+    console.log(newApparatusAssignment)
+
+    let oldAssignmentToDelete = userApparatusAssignment.reduce((acc, item, idx) => {
+      if (idx + 1 === userApparatusAssignment.length && item.active) {
+        return `${acc + item.id}`
+      } else if (idx + 1 === userApparatusAssignment.length) {
+        return acc.slice(0, acc.length - 1)
+      } else if (item.active) {
+        return `${acc + item.id}&`
+      } else {
+        return acc
+      }
+    }, '')
+
+    console.log('oldAssignmentToDelete')
+    console.log(oldAssignmentToDelete)
+
+    let newAssignmentToAdd = newApparatusAssignment.reduce((acc, item, idx) => {
+      if (idx + 1 === newApparatusAssignment.length) {
+        return `${acc + item.id}`
+      } else if (item.active) {
+        return `${acc + item.id}&`
+      } else {
+        return acc
+      }
+    }, '')
+
+    console.log('newAssignmentToAdd')
+    console.log(newAssignmentToAdd)
+
     this.setState({userApparatusAssignment: newApparatusAssignment})
-    //TODO: MODIFY APPARATUS ASSIGNMENT IN TRACKING
+
+
+
+
+    await axios.delete(`/api/tracks/${userID}/${oldAssignmentToDelete}`)
+    await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`)
+    await axios.get(`/api/tracks/${userID}`).then((resp) => {
+      console.log("🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 ")
+      console.log(resp)
+      this.setAppState(resp.data, 'userTracking');
+    })
+
   }
 
   render() {

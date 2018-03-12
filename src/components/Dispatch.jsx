@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import Menu from './Menu';
 import Map2D from './Map2D';
 import Map3D from './Map3D';
 import UserSettings from './UserSettings';
@@ -46,60 +47,14 @@ export default class Dispatch extends React.Component {
   render() {
 
     const alarmColor = this.props.dispatchData.call_category.indexOf('MINOR') > -1
-                    || this.props.dispatchData.call_category.indexOf('BOX') > -1 ? 'green'
+                    || this.props.dispatchData.call_category.indexOf('BOX') > -1
+                     ? 'green'
                      : 'firebrick';
 
 
     const DispatchContainer = styled.div`
       display: grid;
       grid-template-columns: 1fr;
-    `;
-
-    const MenuItem = styled.div`
-        grid-area: 1/2/1/4;
-        padding: 0 20px 5% 0;
-        z-index: 5;
-        text-align: right;
-        color: black;
-        transform: translateY(-100%);
-        font-family: 'Podkova';
-        font-size: 2em;
-        &:hover{
-          text-decoration: underline;
-          div {
-            display: block;
-          }
-        }
-
-    `;
-
-    const MenuItems = styled.div`
-      display: none;
-      position: absolute;
-      right: 0;
-      text-align: left;
-      list-style-type: none;
-      background-color: white;
-      min-width: 160px;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-      padding: 12px 16px;
-      z-index: 5;
-      padding: 20px;
-      &:hover{
-        cursor: pointer;
-      }
-      li {
-        margin: 10px 0 10px 0;
-        border-bottom: 1px solid white;
-        a {
-          text-decoration: none;
-          color: black;
-          &:hover{
-            color: firebrick;
-            border-bottom: 1px solid firebrick;
-          }
-        }
-      }
     `;
 
     const Title = styled.div`
@@ -181,20 +136,9 @@ export default class Dispatch extends React.Component {
         <DispatchContainer>
 
         <Title>
-          <MenuItem>Menu
-            <MenuItems>
-              <li>
-                <NavLink to="/dispatch-history"> Dispatch History </NavLink>
-              </li>
-              <li>User Settings</li>
-              <li>Snooze Notifications: ON</li>
-              {
-                this.props.isAdmin
-                ? <li>Admin</li>
-                : null
-              }
-            </MenuItems>
-          </MenuItem>
+
+          <Menu></Menu>
+
           <Description>{this.props.dispatchData.call_category}</Description>
           <Timeout>{this.props.dispatchData.timeout}</Timeout>
         </Title>

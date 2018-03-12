@@ -54,22 +54,28 @@ router.get('/:slug/:userId', function (req, res, next) {
  * Given a list of apparatus, create a list of recipient phone-emails
  */
 const getRecipientsAddresses = (apparatusArr) => {
-  // TODO: what to do about E1 E5 STN5 cases? will it choke on STN5
+  // TODO: what to do about E1 E5 STN5 cases? will it choke on STN5?
   return db.users.findAll({
     include: [{
       model: db.trackings,
       where: {
         apparatus_id: { [or]: apparatusArr }
       }
-    }]
+    }],
+    where: {
+      is_sleeping: false
+    }
   })
     .then(userList => {
+      if (DEBUG) { console.log('😎  userList: ', userList) }
       let userAddresses = Object.keys(userList).map(function (k) {
         if (userList[k].dataValues.is_enabled === true && userList[k].dataValues.is_sleeping === false) {
-          return userList[k].dataValues.mobile + userList[k].dataValues.carrier
+          return {'address': userList[k].dataValues.mobile + userList[k].dataValues.carrier,
+            'userId': userList[k].dataValues.user_id}
         }
       })
-      return userAddresses.join(', ')
+      if (DEBUG) { console.log('😎  userAddresses:', userAddresses) }
+      return userAddresses
     })
     .catch(error => {
       console.error(`ERROR in users GET: ${error}`)
@@ -132,18 +138,15 @@ const sendToPostgres = (processedData) => {
 /**
  * Send processed data to SMS-via-email
  */
-const sendEmail = (data, recipients) => {
-  //  TODO:  loop sending emails to each recipient with a corresponding user_id
+const sendEmail = (data, recipient) => {
   emailTransporter.sendMail({
     from: 'postmaster@signalclick.com',
-    // to: '2035160005@msg.fi.google.com, 8057060651@vtext.com',
-    // to: '2035160005@msg.fi.google.com',
-    to: recipients,
+    to: recipient,
     subject: 'GFD Call',
     text: `Call type: ${data.call_category}
 Location: ${data.location}  ${data.city}
 Assignment: ${data.assignment}
-Details: https://gfd.gr/${data.slug}/${data.user_id}
+Details: https://gfd.gr/${data.slug}/${recipient.userId}
       `
   }, (err, info) => {
     if (err) {
@@ -168,8 +171,10 @@ router.post('/', async function (req, res) {
   }
 
   let processedData = await processData(callQuery)
-  let apparatusArr = processedData.assignment.split(' ')
-  let recipients = await getRecipientsAddresses(apparatusArr)
+  let apparatusArr = processedData.assignment.split(' ').filter(app => app !== '')
+  if (DEBUG) { console.log('😎  apparatusArr: ', apparatusArr) }
+  let recipientsArr = await getRecipientsAddresses(apparatusArr)
+  if (DEBUG) { console.log('😎  recipientsArr: ', recipientsArr) }
 
   if (DEBUG === true) {
     // send just to Postgres, not to email-SMS
@@ -178,8 +183,10 @@ router.post('/', async function (req, res) {
   } else {
     // send to Postgres and email-SMS
     await sendToPostgres(processedData)
-    sendEmail(processedData, recipients)
-    res.send(`SUCCESS: Your POST of ${JSON.stringify(processedData)} was successful`)
+    if (recipientsArr !== undefined && recipientsArr.length > 0) {
+      recipientsArr.forEach(email => sendEmail(processedData, email))
+    }
+    res.send(`SUCCESS: Your POST of ${JSON.stringify(processedData)} was successful and was sent to SMS`)
   }
 })
 

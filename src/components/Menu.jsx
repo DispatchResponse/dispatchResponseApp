@@ -60,7 +60,54 @@ export default class Menu extends React.Component {
               border-bottom: 1px solid firebrick;
             }
           }
+
         }
+      `;
+
+      const NotificationSwitch = styled.li`
+        display: flex;
+        align-items: center;
+
+          input[type=checkbox]{
+          	height: 0;
+          	width: 0;
+          	visibility: hidden;
+          }
+
+          label {
+          	cursor: pointer;
+          	width: 50px;
+          	height: 25px;
+          	background: grey;
+          	display: block;
+          	border-radius: 100px;
+          	position: relative;
+          }
+
+          label:after {
+          	content: '';
+          	position: absolute;
+          	top: 2px;
+          	left: 3px;
+          	width: 21px;
+          	height: 21px;
+          	background: #fff;
+          	border-radius: 45px;
+          	transition: 0.3s;
+          }
+
+          input:checked + label {
+          	background: green;
+          }
+
+          input:checked + label:after {
+          	left: calc(100% - 5px);
+          	transform: translateX(-90%);
+          }
+
+          label:active:after {
+          	width: 100px;
+          }
       `;
 
     return (
@@ -73,9 +120,16 @@ export default class Menu extends React.Component {
             <li>
               <NavLink to="/user-settings"> User Settings </NavLink>
             </li>
-            <li>
-              Notifications: {this.props.ns ? "ON" : "OFF"}
-            </li>
+            <li> Notifications:</li>
+            <NotificationSwitch>
+              <span>{this.props.ns ? 'ON' : 'OFF'}</span>
+                <input
+                  type="checkbox"
+                  id={'notifications'}
+                  defaultChecked={this.props.ns}
+                  onChange={this.props.tns}/>
+                <label htmlFor={'notifications'}></label>
+            </NotificationSwitch>
             {
               this.props.isAdmin
               ? <li>Admin</li>

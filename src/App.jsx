@@ -21,7 +21,7 @@ export default class App extends React.Component {
       dispatchHistory: null,
       userInfo: null,
       userTracking: null,
-      userNotificationStatus: true,
+      userNotificationStatus: null,
       userIsAdmin: false,
     };
 
@@ -67,6 +67,7 @@ export default class App extends React.Component {
       console.log("//get User Info",resp)
       this.setAppState(resp.data, 'userInfo');
       this.setAppState(resp.data['is_admin'], 'userIsAdmin');
+      this.setAppState(resp.data['is_sleeping'], 'userNotificationStatus');
 
     })
 
@@ -76,8 +77,6 @@ export default class App extends React.Component {
       this.setAppState(resp.data, 'userTracking');
     })
 
-    //TODO: get User Notification Status, or extract from getUserInfo call
-    //TODO: get User Notification Status, or extract from getUserInfo call
 
   }
 
@@ -96,7 +95,7 @@ export default class App extends React.Component {
     } else if ( type === 'userTracking' ) {
       this.setState({userTracking: data});
     } else if ( type === 'userNotificationStatus' ) {
-      this.setState({userNotificationStatus: data});
+      this.setState({userNotificationStatus: !data});
     } else if ( type === 'userIsAdmin' ) {
       this.setState({userIsAdmin: data});
     }
@@ -150,7 +149,7 @@ export default class App extends React.Component {
              render={ routeProps =>
                <Dispatch {...routeProps}
                  dispatchData={this.state.dispatchData}
-                 userNotificationStatus={this.state.userNotificationStatus}
+                 notificationStatus={this.state.userNotificationStatus}
                  isAdmin={this.state.userIsAdmin}
                /> }
            />
@@ -160,7 +159,7 @@ export default class App extends React.Component {
              render={ routeProps =>
                <DispatchHistory {...routeProps}
                  dispatchHistory={this.state.dispatchHistory}
-                 userNotificationStatus={this.state.userNotificationStatus}
+                 notificationStatus={this.state.userNotificationStatus}
                  isAdmin={this.state.userIsAdmin}
                /> }
            />
@@ -173,7 +172,7 @@ export default class App extends React.Component {
                  allCarriers={this.state.allCarriers}
                  userInfo={this.state.userInfo}
                  userTracking={this.state.userTracking}
-                 userNotificationStatus={this.state.userNotificationStatus}
+                 notificationStatus={this.state.userNotificationStatus}
                  isAdmin={this.state.userIsAdmin}
                /> }
            />

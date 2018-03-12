@@ -137,7 +137,7 @@ export default class Dispatch extends React.Component {
 
         <Title>
 
-          <Menu></Menu>
+          <Menu ns={this.props.notificationStatus}></Menu>
 
           <Description>{this.props.dispatchData.call_category}</Description>
           <Timeout>{this.props.dispatchData.timeout}</Timeout>

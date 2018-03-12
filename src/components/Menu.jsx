@@ -11,7 +11,7 @@ export default class Menu extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.ns)
+    // console.log(this.props.ns)
   }
 
   render() {

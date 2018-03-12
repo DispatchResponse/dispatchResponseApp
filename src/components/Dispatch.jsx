@@ -67,6 +67,7 @@ export default class Dispatch extends React.Component {
       color: white;
       text-align: center;
       background-color: ${alarmColor};
+      letter-spacing: 5px;
         @media screen and (min-width: 1024px){
           border-radius: 15px 15px 0 0;
         }

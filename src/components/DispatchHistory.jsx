@@ -26,6 +26,7 @@ export default class DispatchHistory extends React.Component {
       display: grid;
       grid-template-columns: 1fr;
       font-size: 2.0em;
+      letter-spacing: 5px;
       text-align: center;
       color: white;
       background-color: lightgray;

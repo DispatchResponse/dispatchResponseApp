@@ -7,18 +7,31 @@ export default class UserSettings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentApparatusAssignment: null
+      currentApparatusAssignment: null,
+      userCarrierName: null,
     };
     this.modifyApparatusAssignment = this.modifyApparatusAssignment.bind(this);
     this.buildApparatusAssigments = this.buildApparatusAssigments.bind(this);
+    this.determineUserCarrierName = this.determineUserCarrierName.bind(this);
   }
 
   componentDidMount() {
     //TODO: map user mobile carrier to carriers obj and get carrier Name
     //TODO: map apparatuses to tracking and get trues and falses
-    console.log(this.props.allApparatus)
-    console.log(this.props.userTracking)
+
     this.buildApparatusAssigments()
+    this.determineUserCarrierName()
+
+  }
+
+  determineUserCarrierName() {
+
+    for (let i = 0; i < this.props.allCarriers.length; i++) {
+      if (this.props.allCarriers[i].gateway === this.props.userInfo['carrier']) {
+        this.setState({userCarrierName: this.props.allCarriers[i]['carrier_name']})
+        return
+      }
+    }
 
   }
 
@@ -45,7 +58,9 @@ export default class UserSettings extends React.Component {
       }
     })
     this.setState({currentApparatusAssignment: newApparatusAssignment})
+    //TODO: MODIFY APPARATUS ASSIGNMENT IN TRACKING
   }
+
 
   render() {
     console.log('rerendered', this.state.currentApparatusAssignment)
@@ -60,7 +75,7 @@ export default class UserSettings extends React.Component {
                            'appar'
                            'notif';
        @media screen and (min-width: 1024px){
-         border-radius: 15px 15px 0 0;
+         border-radius: 15px;
        }
     `;
 
@@ -197,7 +212,52 @@ export default class UserSettings extends React.Component {
         background-color: white;
         padding: 10px 0 0 10px;
         margin-bottom: 2%;
-        font-size: 1.75em;
+        font-size: 3em;
+        display: flex;
+        align-items: center;
+        span{
+          min-width: 100px;
+        }
+        input[type=checkbox]{
+          height: 0;
+          width: 0;
+          visibility: hidden;
+        }
+
+        label {
+          cursor: pointer;
+          width: 100px;
+          height: 50px;
+          background: grey;
+          display: block;
+          border-radius: 100px;
+          position: relative;
+        }
+
+        label:after {
+          content: '';
+          position: absolute;
+          top: 3px;
+          left: 3px;
+          width: 45px;
+          height: 45px;
+          background: #fff;
+          border-radius: 45px;
+          transition: 0.3s;
+        }
+
+        input:checked + label {
+          background: green;
+        }
+
+        input:checked + label:after {
+          left: calc(100% - 5px);
+          transform: translateX(-95%);
+        }
+
+        label:active:after {
+          width: 100px;
+        }
       }
     `;
 
@@ -212,7 +272,7 @@ export default class UserSettings extends React.Component {
         <li>Mobile Contact</li>
         <li>{this.props.userInfo['mobile']}</li>
         <li>Mobile Carrier</li>
-        <li>{this.props.userInfo['carrier']}</li>
+        <li>{!this.state.userCarrierName ? null : this.state.userCarrierName}</li>
         <li>Apparatus Assignments</li>
       </UsrInfo>
       <ApparatusAssignment>
@@ -238,7 +298,17 @@ export default class UserSettings extends React.Component {
       </ApparatusAssignment>
       <NotificationStatus>
         <li>Notifications</li>
-        <li>{this.props.notificationStatus ? 'ON' : 'OFF'}</li>
+        <li>
+          <span>{this.props.notificationStatus ? 'ON' : 'OFF'}</span>
+
+            <input
+              type="checkbox"
+              id={'notifications'}
+              defaultChecked={this.props.notificationStatus}
+              onChange={this.props.modifyNotificationStatus}/>
+            <label htmlFor={'notifications'}></label>
+
+        </li>
       </NotificationStatus>
     </UserSettingsContainer>
 

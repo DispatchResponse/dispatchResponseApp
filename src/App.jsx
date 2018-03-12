@@ -26,6 +26,7 @@ export default class App extends React.Component {
     };
 
     this.setAppState = this.setAppState.bind(this);
+    this.modifyNotificationStatus = this.modifyNotificationStatus.bind(this);
 
   }
 
@@ -103,7 +104,9 @@ export default class App extends React.Component {
     return
   }
 
-
+  modifyNotificationStatus() {
+    this.setState({userNotificationStatus: !this.state.userNotificationStatus})
+  }
 
   render() {
 
@@ -150,6 +153,7 @@ export default class App extends React.Component {
                <Dispatch {...routeProps}
                  dispatchData={this.state.dispatchData}
                  notificationStatus={this.state.userNotificationStatus}
+                 modifyNotificationStatus={this.modifyNotificationStatus}
                  isAdmin={this.state.userIsAdmin}
                /> }
            />
@@ -160,6 +164,7 @@ export default class App extends React.Component {
                <DispatchHistory {...routeProps}
                  dispatchHistory={this.state.dispatchHistory}
                  notificationStatus={this.state.userNotificationStatus}
+                 modifyNotificationStatus={this.modifyNotificationStatus}
                  isAdmin={this.state.userIsAdmin}
                /> }
            />
@@ -173,6 +178,7 @@ export default class App extends React.Component {
                  userInfo={this.state.userInfo}
                  userTracking={this.state.userTracking}
                  notificationStatus={this.state.userNotificationStatus}
+                 modifyNotificationStatus={this.modifyNotificationStatus}
                  isAdmin={this.state.userIsAdmin}
                /> }
            />
@@ -182,6 +188,7 @@ export default class App extends React.Component {
              render={ routeProps =>
                <Admin {...routeProps}
                  notificationStatus={this.state.notificationStatus}
+                 modifyNotificationStatus={this.modifyNotificationStatus}
                  isAdmin={this.state.userIsAdmin}
                /> }
            />

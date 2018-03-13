@@ -126,7 +126,7 @@ export default class App extends React.Component {
 
   async modifyNotificationStatus() {
 
-    await axios.put(`/api/users/${this.state.userID}/${this.state.userNotificationStatus}`).catch(err => console.log(err))
+    await axios.put(`/api/users/${this.state.userID}/sleep/${this.state.userNotificationStatus}`).catch(err => console.log(err))
 
     await axios.get(`/api/users/${this.state.userID}`).then((resp) => {
       this.setAppState(resp.data, 'userInfo');

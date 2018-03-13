@@ -57,9 +57,9 @@ router.get('/', function (req, res, next) {
   })
 })
 
-router.put('/:userId/:isSleep', function (req, res, next) {
+router.put('/:userId/sleep/:data', function (req, res, next) {
   db.users.update({
-    is_sleeping: req.params.isSleep
+    is_sleeping: req.params.data
   }, {
     where: {user_id: req.params.userId}
   })

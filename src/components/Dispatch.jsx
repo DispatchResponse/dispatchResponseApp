@@ -1,9 +1,11 @@
 import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import Menu from './Menu';
 import Map2D from './Map2D';
 import Map3D from './Map3D';
 import UserSettings from './UserSettings';
+
 
 export default class Dispatch extends React.Component {
   constructor(props) {
@@ -16,12 +18,12 @@ export default class Dispatch extends React.Component {
     this.getCurrentLocation = this.getCurrentLocation.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.getDestinationData(this.props.dispatchData);
     this.getCurrentLocation();
   }
 
-  getCurrentLocation(){
+  getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(position => {
       let userCoords = {
         userLat: position.coords.latitude,
@@ -29,11 +31,11 @@ export default class Dispatch extends React.Component {
       }
       this.setState({userCoords: userCoords})
     }, () => {
-      console.log('denied');
+      console.log('🐸 ...(denied)');
     });
   }
 
-  getDestinationData(dispatchData){
+  getDestinationData(dispatchData) {
     let destinationCoords = {
       destinationLat: parseFloat(dispatchData.latitude),
       destinationLng: parseFloat(dispatchData.longitude)
@@ -44,7 +46,10 @@ export default class Dispatch extends React.Component {
 
   render() {
 
-    const alarmColor = this.props.dispatchData.call_category.indexOf('MINOR') > -1 || this.props.dispatchData.call_category.indexOf('BOX') > -1 ? 'green' : 'firebrick';
+    const alarmColor = this.props.dispatchData.call_category.indexOf('MINOR') > -1
+                    || this.props.dispatchData.call_category.indexOf('BOX') > -1
+                     ? 'green'
+                     : 'firebrick';
 
 
     const DispatchContainer = styled.div`
@@ -62,10 +67,10 @@ export default class Dispatch extends React.Component {
       color: white;
       text-align: center;
       background-color: ${alarmColor};
+      letter-spacing: 5px;
         @media screen and (min-width: 1024px){
           border-radius: 15px 15px 0 0;
         }
-
     `;
 
     const Description = styled.div`
@@ -106,11 +111,11 @@ export default class Dispatch extends React.Component {
 
       }
     `;
+
     const ApparatusContainer = styled.li`
       display: flex;
-      margin: 0 15% 0 15%;
       justify-content: space-between;
-    `
+    `;
 
     const Apparatus = styled.div`
       color: white;
@@ -124,41 +129,32 @@ export default class Dispatch extends React.Component {
       letter-spacing: 5px;
     `;
 
-    const SettingsButton = styled.div`
-      background-color: firebrick;
-      height: 2em;
-      width: 8em;
-      margin: auto auto 2% auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 15px;
-      font-family: 'Podkova';
-      font-size: 2.5em;
-      color: white;
-       &:hover{
-         box-shadow: -3px -3px .7em darkgrey, 3px 3px .7em darkgrey;
-         color: goldenrod;
-         cursor: pointer;
-       }
 
-    `;
 
 
     return (
 
-      <DispatchContainer>
+        <DispatchContainer>
 
         <Title>
+
+          <Menu
+            ns={this.props.notificationStatus}
+            tns={this.props.modifyNotificationStatus}/>
+
           <Description>{this.props.dispatchData.call_category}</Description>
           <Timeout>{this.props.dispatchData.timeout}</Timeout>
         </Title>
 
         <DispatchDetails>
           <li>Apparatus Assigned</li>
-          <ApparatusContainer>{ this.props.dispatchData.assignment.split(' ').map((apparatus)=>{
-            return <Apparatus key={apparatus}>{apparatus}</Apparatus>
-          }) }</ApparatusContainer>
+          <ApparatusContainer>
+            {
+              this.props.dispatchData.assignment.split(', ').map( (apparatus) => {
+                return <Apparatus key={apparatus}>{apparatus}</Apparatus>
+              })
+            }
+          </ApparatusContainer>
           <li>Description</li>
           <li>{this.props.dispatchData.call_description}</li>
           <li>Address</li>
@@ -190,19 +186,9 @@ export default class Dispatch extends React.Component {
         <Map3D destinationCoords={this.state.destinationCoords}/>
         }
 
-        <NavLink to="/settings">
-          <SettingsButton>
-            USER SETTINGS
-          </SettingsButton>
-        </NavLink>
 
-        <NavLink to="/home">
-          <SettingsButton>
-            CALL LIST
-          </SettingsButton>
-        </NavLink>
+        </DispatchContainer>
 
-      </DispatchContainer>
     )
 
   }

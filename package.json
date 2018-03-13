@@ -17,8 +17,11 @@
     "format": "prettier-standard 'src/**/*.js'",
     "start": "node ./bin/www",
     "start:dev": "NODE_ENV=development nodemon ./bin/www",
-    "sendDummyCall": "node ./util/sendDummyCall.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:dev": "webpack --config webpack.dev.js",
+    "start:devFront": "webpack-dev-server --port 1338 --open --config webpack.dev.js",
+    "sendDummyCall": "node ./util/sendDummyCall.js"
+
   },
   "repository": {
     "type": "git",

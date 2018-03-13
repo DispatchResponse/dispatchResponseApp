@@ -57,7 +57,7 @@ export default class Map2D extends React.Component {
     const MapDiv = styled.div`
       width: 100%;
       height: 50em;
-      margin: 2em 0 2em 0;
+      margin: 0 0 2em 0;
     `;
 
     return (

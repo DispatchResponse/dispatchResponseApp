@@ -4,56 +4,211 @@ import axios from 'axios';
 import styled from 'styled-components';
 import getCoordinates from './utils/getCoordinates'
 import Dispatch from './components/Dispatch';
+import DispatchHistory from './components/DispatchHistory';
 import UserSettings from './components/UserSettings';
-import Home from './components/Calls/Home';
+import Admin from './components/Admin';
 
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+
+
     this.state = {
-      dispatchData: {
-        assignment: "DC E1 E2 E3 E4 R5 T1",
-        radio_freq: "CH1A",
-        apt_no: "",
-        call_category: "REPORTED STRUCTURE FIRE",
-        call_description: "REPORTED STRUCTURE FIRE",
-        call_type: "800",
-        cfs_no: "1800001052",
-        cfs_remark: "SMOKE IN STRUCTURE",
-        city: "BELLE HAVEN",
-        dispatch_fire: "2018-01-09T12:18:57.110",
-        latitude: "41.013021\r",
-        location: "00070 BUSH AV",
-        longitude: "-73.636978\r",
-        premise_name: "00070 BUSH AV",
-        priority_amb: "",
-        priority_fire: "FD Pri:1",
-        priority_pol: "",
-        timeout: "01-09-2018 12:17:31",
-        cross_street: "MEADOW WOOD DR&FIELD POINT RD",
-        map_ref: " Map -F22",
-        zip: ""
-      }
+      allApparatus: null,
+      allCarriers: null,
+      dispatchData: null,
+      dispatchHistory: null,
+      userInfo: null,
+      userTracking: null,
+      userNotificationStatus: null,
+      userApparatusAssignment: null,
+      userIsAdmin: false,
+      userID: 2,
+      slug: 'mg08p5p',
     };
 
-    this.setDispatchState = this.setDispatchState.bind(this);
-
+    this.setAppState = this.setAppState.bind(this);
+    this.modifyNotificationStatus = this.modifyNotificationStatus.bind(this);
+    this.modifyApparatusAssignment = this.modifyApparatusAssignment.bind(this);
+    this.buildApparatusAssigment = this.buildApparatusAssigment.bind(this);
   }
 
-  componentDidMount() {
-    //1st iteration:
-    //make axios request for dispatch data
+  async componentDidMount() {
 
-    //2nd iteratgion:
-    //SSR with dispatch data ing single request
+    // var urlParams = this.props.location.search;
+    // console.log(urlParams) //then get slug and userId
+
+    //NOTE:get URL Params, and extract slug and userID from above code.
+    //for now slug and userID is hard coded below.
+
+    let { userID, slug } = this.state;
+
+    //get Current Dispatch
+    await axios.get(`/api/${slug}/${userID}`).then((resp) => {
+      // console.log("//get Current Dispatch", resp)
+      this.setAppState(resp.data[0], 'dispatch');
+    })
+
+    //get Dispatch History
+    await axios.get('/api/calls').then((resp) => {
+      // console.log("//get Dispatch History",resp)
+      this.setAppState(resp.data, 'dispatchHistory');
+    })
+
+    //get All Station Apparatus
+    await axios.get('/api/apparatus').then((resp) => {
+      // console.log("//get All Station Apparatus",resp)
+      this.setAppState(resp.data, 'apparatus');
+    })
+
+    // get All Carriers
+    await axios.get('/api/carriers').then((resp) => {
+      // console.log("// get All Carriers",resp)
+      this.setAppState(resp.data, 'carrier');
+
+    })
+
+    //get User Info
+    await axios.get(`/api/users/${userID}`).then((resp) => {
+      // console.log("//get User Info",resp)
+      this.setAppState(resp.data, 'userInfo');
+      this.setAppState(resp.data['is_admin'], 'userIsAdmin');
+      this.setAppState(resp.data['is_sleeping'], 'userNotificationStatus');
+
+    })
+
+    //get User Tracking
+    await axios.get(`/api/tracks/${userID}`).then((resp) => {
+      // console.log("//get User Tracking",resp)
+      this.setAppState(resp.data, 'userTracking');
+    })
+
+    this.buildApparatusAssigment()
   }
 
-  setDispatchState(){
+  setAppState(data, type){
     //setState for dispatch data. used in callback from componentDidMount
+      if ( type === 'dispatch') {
+      this.setState({dispatchData: data});
+    } else if ( type === 'dispatchHistory') {
+      this.setState({dispatchHistory: data});
+    } else if ( type === 'apparatus' ) {
+      this.setState({allApparatus: data});
+    } else if ( type === 'carrier' ) {
+      this.setState({allCarriers: data});
+    } else if ( type === 'userInfo' ) {
+      this.setState({userInfo: data});
+    } else if ( type === 'userTracking' ) {
+      this.setState({userTracking: data});
+    } else if ( type === 'userNotificationStatus' ) {
+      this.setState({userNotificationStatus: !data});
+    } else if ( type === 'userIsAdmin' ) {
+      this.setState({userIsAdmin: data});
+    }
+
+    return
   }
 
+  buildApparatusAssigment() {
+    let userApparatusAssignment = this.state.allApparatus.map( app => {
+      for (let i = 0; i < this.state.userTracking.length; i++) {
+        if( this.state.userTracking[i]['apparatus_id'] === app['apparatus_id'] ) {
+          return {id: app['apparatus_id'], active: true}
+        }
+      }
+      return {id: app['apparatus_id'], active: false}
+    })
 
+    this.setState({userApparatusAssignment: userApparatusAssignment})
+  }
+
+  async modifyNotificationStatus() {
+
+    let { userInfo } = this.state;
+    // console.log('this is oldUserInfo')
+    // console.log(userInfo)
+    let newUserInfo = {
+          'carrier' : userInfo['carrier'],
+          'created_at' : userInfo['created_at'],
+          'first_name' : userInfo['first_name'],
+          'full_mobile' : userInfo['full_mobile'],
+          'full_name' : userInfo['full_name'],
+          'is_admin' : userInfo['is_admin'],
+          'is_enabled' : userInfo['is_enabled'],
+          'is_sleeping' : this.state.userNotificationStatus,
+          'last_name' : userInfo['last_name'],
+          'mobile' : userInfo['mobile'],
+          'user_id' : userInfo['user_id']
+        }
+    // console.log('this.state.userNotificationStatus')
+    // console.log(this.state.userNotificationStatus)
+    // console.log('!this.state.userNotificationStatus')
+    // console.log(!this.state.userNotificationStatus)
+    // console.log('this is newUserInfo')
+    // console.log(newUserInfo)
+
+    this.setState({userNotificationStatus: !this.state.userNotificationStatus})
+    this.setState({userInfo: newUserInfo})
+
+    // THIS BREAKS ---> await axios.put(`/api/users/${this.state.userID}`, newUserInfo).catch(err => console.log(err))
+    // THIS ISNT NECESSARY UNTIL THE ABOVE WORKS ---> await axios.get(`/api/users/${this.state.userID}`)
+
+  }
+
+  async modifyApparatusAssignment(e) {
+    let { userApparatusAssignment, userID } = this.state;
+
+    let appID = e.target.id.split('-').pop();
+
+    let newApparatusAssignment = userApparatusAssignment.map(appItem => {
+      if (appItem.id === appID) {
+        return {id: appID, active: !appItem.active}
+      } else {
+        return appItem
+      }
+    })
+
+    // console.log("newApparatusAssignment")
+    // console.log(newApparatusAssignment)
+
+    let oldAssignmentToDelete = userApparatusAssignment.reduce((acc, item, idx) => {
+      if (idx + 1 === userApparatusAssignment.length && item.active) {
+        return `${acc + item.id}`
+      } else if (idx + 1 === userApparatusAssignment.length) {
+        return acc.slice(0, acc.length - 1)
+      } else if (item.active) {
+        return `${acc + item.id}&`
+      } else {
+        return acc
+      }
+    }, '')
+
+    // console.log('oldAssignmentToDelete')
+    // console.log(oldAssignmentToDelete)
+
+    let newAssignmentToAdd = newApparatusAssignment.reduce((acc, item, idx) => {
+      if (idx + 1 === newApparatusAssignment.length) {
+        return `${acc + item.id}`
+      } else if (item.active) {
+        return `${acc + item.id}&`
+      } else {
+        return acc
+      }
+    }, '')
+
+    // console.log('newAssignmentToAdd')
+    // console.log(newAssignmentToAdd)
+
+    this.setState({userApparatusAssignment: newApparatusAssignment})
+
+    await axios.delete(`/api/tracks/${userID}/${oldAssignmentToDelete}`)
+    await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`)
+    await axios.get(`/api/tracks/${userID}`).then((resp) => {
+      this.setAppState(resp.data, 'userTracking');
+    })
+
+  }
 
   render() {
 
@@ -86,26 +241,68 @@ export default class App extends React.Component {
         }
     `;
 
-
     return (
-      <AppContainer>
 
-       <Route
-         exact path="/"
-         render={ routeProps => <Dispatch {...routeProps} dispatchData={this.state.dispatchData}/> }
-       />
+      <div>
 
-       <Route
-         exact path="/settings"
-         render={ routeProps => <UserSettings {...routeProps} dispatchData={this.state.dispatchData}/> }
-       />
 
-       <Route
-         exact path="/home"
-         component={ Home }
-       />
+        { !this.state.dispatchData ? null : (
+          <AppContainer>
 
-     </AppContainer>
+           <Route
+             exact path="/"
+             render={ routeProps =>
+               <Dispatch {...routeProps}
+                 dispatchData={this.state.dispatchData}
+                 notificationStatus={this.state.userNotificationStatus}
+                 modifyNotificationStatus={this.modifyNotificationStatus}
+                 isAdmin={this.state.userIsAdmin}
+               /> }
+           />
+
+           <Route
+             exact path="/dispatch-history"
+             render={ routeProps =>
+               <DispatchHistory {...routeProps}
+                 dispatchHistory={this.state.dispatchHistory}
+                 notificationStatus={this.state.userNotificationStatus}
+                 modifyNotificationStatus={this.modifyNotificationStatus}
+                 isAdmin={this.state.userIsAdmin}
+               /> }
+           />
+
+           <Route
+             exact path="/user-settings"
+             render={ routeProps =>
+               <UserSettings {...routeProps}
+                 allCarriers={this.state.allCarriers}
+                 userInfo={this.state.userInfo}
+                 userApparatusAssignment={this.state.userApparatusAssignment}
+                 notificationStatus={this.state.userNotificationStatus}
+                 modifyNotificationStatus={this.modifyNotificationStatus}
+                 modifyApparatusAssignment={this.modifyApparatusAssignment}
+                 isAdmin={this.state.userIsAdmin}
+               /> }
+           />
+
+           <Route
+             exact path="/admin"
+             render={ routeProps =>
+               <Admin {...routeProps}
+                 notificationStatus={this.state.notificationStatus}
+                 modifyNotificationStatus={this.modifyNotificationStatus}
+                 isAdmin={this.state.userIsAdmin}
+               /> }
+           />
+
+         </AppContainer>
+
+        )}
+
+     </div>
+
+
+
     )
   }
 }

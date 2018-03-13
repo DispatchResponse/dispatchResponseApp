@@ -22,63 +22,83 @@ export default class DispatchHistory extends React.Component {
 
   render() {
 
+    const DispatchHistoryContainer = styled.div`
+    width: 100%;
+    height: auto;
+    background-color: white;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-areas: 'title  '
+                         'head   '
+                         'records';
+    @media screen and (min-width: 1024px){
+      border-radius: 15px;
+    }
+
+    @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+    }
+
+    @media screen and (max-device-width: 480px) and (orientation: portrait){
+    }
+    `;
+
     const Title = styled.div`
-      display: grid;
-      grid-template-columns: 1fr;
-      font-size: 2.0em;
+      grid-area: title;
+      font-size: 3.5em;
       letter-spacing: 5px;
       text-align: center;
       color: white;
-      background-color: lightgray;
-      margin: 0 10% 0px 10%;
+      background-color: gray;
       padding: .7% 0;
+      font-family: 'Podkova';
     `;
 
-    const Subtitle = styled.div`
+    const Headers = styled.div`
+      grid-area: head;
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       background-color: DarkRed;
       color: white;
       font-size: 1.4em;
-      margin: 0 10% 0px 10%;
-      padding: .7% 0;
+      padding: 1% 0;
+      font-family: 'Podkova';
+      div {
+        margin: auto;
+      }
     `;
 
-    const Wrapper = styled.section`
-      padding: 4em;
-      background: white;
-    `;
 
     const DispatchTable = styled.div`
+      grid-area: records;
       display: grid;
-      margin: 0 10% 0 10%;
       grid-template-columns: 1fr;
         > div:nth-child(odd){
-          background-color: Gainsboro;
+          background-color: whitesmoke;
         }
         > div:hover{background-color: tomato;}
     `;
 
     return (
-      <div>
+
+        <DispatchHistoryContainer>
+
         <Menu
           ns={this.props.notificationStatus}
           tns={this.props.modifyNotificationStatus}/>
-          
-      <Wrapper>
+
         <Title>Call List</Title>
-          <Subtitle>
-            <div>&nbsp;Timeout</div>
-            <div>Description</div>
-            <div>District</div>
-            <div>Location</div>
-            <div>Premise</div>
-            <div>Cross Streets</div>
-            <div>Assignment</div>
-            <div>Radio Freq</div>
-            <div>Map</div>
-            <div>Remarks</div>
-          </Subtitle>
+        <Headers>
+          <div>&nbsp;Timeout</div>
+          <div>Description</div>
+          <div>District</div>
+          <div>Location</div>
+          <div>Premise</div>
+          <div>Cross Streets</div>
+          <div>Assignment</div>
+          <div>Radio</div>
+          <div>Map</div>
+          <div>Remarks</div>
+        </Headers>
 
         <DispatchTable>
           {this.props.dispatchHistory.map((call, idx) => (
@@ -97,8 +117,8 @@ export default class DispatchHistory extends React.Component {
             />
           ))}
         </DispatchTable>
-      </Wrapper>
-</div>
+      </DispatchHistoryContainer>
+
     )
 
   }

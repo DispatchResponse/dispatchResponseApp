@@ -25,6 +25,7 @@ export default class App extends React.Component {
       userApparatusAssignment: null,
       userIsAdmin: false,
       userID: 2,
+      slug: 'mg08p5p',
     };
 
     this.setAppState = this.setAppState.bind(this);
@@ -35,40 +36,42 @@ export default class App extends React.Component {
 
   async componentDidMount() {
 
-    //NOTE:get URL Params, and extract slug and userID.
-    //for now slug and userID is hard coded.
+    // var urlParams = this.props.location.search;
+    // console.log(urlParams) //then get slug and userId
 
-    let slug = 'mg08p5p';
-    let { userID } = this.state;
+    //NOTE:get URL Params, and extract slug and userID from above code.
+    //for now slug and userID is hard coded below.
+
+    let { userID, slug } = this.state;
 
     //get Current Dispatch
     await axios.get(`/api/${slug}/${userID}`).then((resp) => {
-      console.log("//get Current Dispatch", resp)
+      // console.log("//get Current Dispatch", resp)
       this.setAppState(resp.data[0], 'dispatch');
     })
 
     //get Dispatch History
     await axios.get('/api/calls').then((resp) => {
-      console.log("//get Dispatch History",resp)
+      // console.log("//get Dispatch History",resp)
       this.setAppState(resp.data, 'dispatchHistory');
     })
 
     //get All Station Apparatus
     await axios.get('/api/apparatus').then((resp) => {
-      console.log("//get All Station Apparatus",resp)
+      // console.log("//get All Station Apparatus",resp)
       this.setAppState(resp.data, 'apparatus');
     })
 
     // get All Carriers
     await axios.get('/api/carriers').then((resp) => {
-      console.log("// get All Carriers",resp)
+      // console.log("// get All Carriers",resp)
       this.setAppState(resp.data, 'carrier');
 
     })
 
     //get User Info
     await axios.get(`/api/users/${userID}`).then((resp) => {
-      console.log("//get User Info",resp)
+      // console.log("//get User Info",resp)
       this.setAppState(resp.data, 'userInfo');
       this.setAppState(resp.data['is_admin'], 'userIsAdmin');
       this.setAppState(resp.data['is_sleeping'], 'userNotificationStatus');
@@ -77,7 +80,7 @@ export default class App extends React.Component {
 
     //get User Tracking
     await axios.get(`/api/tracks/${userID}`).then((resp) => {
-      console.log("//get User Tracking",resp)
+      // console.log("//get User Tracking",resp)
       this.setAppState(resp.data, 'userTracking');
     })
 
@@ -120,12 +123,40 @@ export default class App extends React.Component {
     this.setState({userApparatusAssignment: userApparatusAssignment})
   }
 
-  modifyNotificationStatus() {
+  async modifyNotificationStatus() {
+
+    let { userInfo } = this.state;
+    // console.log('this is oldUserInfo')
+    // console.log(userInfo)
+    let newUserInfo = {
+          'carrier' : userInfo['carrier'],
+          'created_at' : userInfo['created_at'],
+          'first_name' : userInfo['first_name'],
+          'full_mobile' : userInfo['full_mobile'],
+          'full_name' : userInfo['full_name'],
+          'is_admin' : userInfo['is_admin'],
+          'is_enabled' : userInfo['is_enabled'],
+          'is_sleeping' : this.state.userNotificationStatus,
+          'last_name' : userInfo['last_name'],
+          'mobile' : userInfo['mobile'],
+          'user_id' : userInfo['user_id']
+        }
+    // console.log('this.state.userNotificationStatus')
+    // console.log(this.state.userNotificationStatus)
+    // console.log('!this.state.userNotificationStatus')
+    // console.log(!this.state.userNotificationStatus)
+    // console.log('this is newUserInfo')
+    // console.log(newUserInfo)
+
     this.setState({userNotificationStatus: !this.state.userNotificationStatus})
+    this.setState({userInfo: newUserInfo})
+
+    // THIS BREAKS ---> await axios.put(`/api/users/${this.state.userID}`, newUserInfo).catch(err => console.log(err))
+    // THIS ISNT NECESSARY UNTIL THE ABOVE WORKS ---> await axios.get(`/api/users/${this.state.userID}`)
+
   }
 
   async modifyApparatusAssignment(e) {
-    console.log('modify is running')
     let { userApparatusAssignment, userID } = this.state;
 
     let appID = e.target.id.split('-').pop();
@@ -138,8 +169,8 @@ export default class App extends React.Component {
       }
     })
 
-    console.log("newApparatusAssignment")
-    console.log(newApparatusAssignment)
+    // console.log("newApparatusAssignment")
+    // console.log(newApparatusAssignment)
 
     let oldAssignmentToDelete = userApparatusAssignment.reduce((acc, item, idx) => {
       if (idx + 1 === userApparatusAssignment.length && item.active) {
@@ -153,8 +184,8 @@ export default class App extends React.Component {
       }
     }, '')
 
-    console.log('oldAssignmentToDelete')
-    console.log(oldAssignmentToDelete)
+    // console.log('oldAssignmentToDelete')
+    // console.log(oldAssignmentToDelete)
 
     let newAssignmentToAdd = newApparatusAssignment.reduce((acc, item, idx) => {
       if (idx + 1 === newApparatusAssignment.length) {
@@ -166,19 +197,14 @@ export default class App extends React.Component {
       }
     }, '')
 
-    console.log('newAssignmentToAdd')
-    console.log(newAssignmentToAdd)
+    // console.log('newAssignmentToAdd')
+    // console.log(newAssignmentToAdd)
 
     this.setState({userApparatusAssignment: newApparatusAssignment})
-
-
-
 
     await axios.delete(`/api/tracks/${userID}/${oldAssignmentToDelete}`)
     await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`)
     await axios.get(`/api/tracks/${userID}`).then((resp) => {
-      console.log("🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 🙏🏾 ")
-      console.log(resp)
       this.setAppState(resp.data, 'userTracking');
     })
 

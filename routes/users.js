@@ -57,4 +57,23 @@ router.get('/', function (req, res, next) {
   })
 })
 
+router.put('/:userId', function (req, res, next) {
+  console.log("🏉 🏉 🏉 🏉 ")
+  console.log(req.data)
+  db.users.findOne({
+    where: {user_id: req.params.userId}
+  })
+    .then(user => {
+      console.log(user)
+      user.update({
+
+      })
+      // console.log('user.full_mobile: ', user.full_mobile)
+      // res.send(user)
+    })
+    .catch(error => {
+      console.error(`ERROR in users GET: ${error}`)
+    })
+})
+
 module.exports = router

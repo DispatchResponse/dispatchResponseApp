@@ -64,6 +64,9 @@ router.put('/:userId', function (req, res, next) {
   }, {
     where: {user_id: req.params.userId}
   })
+    .then(() => {
+      return res.sendStatus(201)
+    })
     .catch(error => {
       console.error(`ERROR in users PUT: ${error}`)
     })

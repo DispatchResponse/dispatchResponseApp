@@ -59,20 +59,13 @@ router.get('/', function (req, res, next) {
 
 router.put('/:userId', function (req, res, next) {
   console.log("🏉 🏉 🏉 🏉 ")
-  console.log(req.data)
-  db.users.findOne({
+  db.users.update({
+    is_sleeping: req.params.is_sleeping
+  }, {
     where: {user_id: req.params.userId}
   })
-    .then(user => {
-      console.log(user)
-      user.update({
-
-      })
-      // console.log('user.full_mobile: ', user.full_mobile)
-      // res.send(user)
-    })
     .catch(error => {
-      console.error(`ERROR in users GET: ${error}`)
+      console.error(`ERROR in users PUT: ${error}`)
     })
 })
 

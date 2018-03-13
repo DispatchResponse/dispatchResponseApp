@@ -124,16 +124,20 @@ export default class App extends React.Component {
     this.setState({userApparatusAssignment: userApparatusAssignment})
   }
 
-  async modifyNotificationStatus() {
+  async modifyNotificationStatus () {
 
-    await axios.put(`/api/users/${this.state.userID}/sleep/${this.state.userNotificationStatus}`).catch(err => console.log(err))
+    let userUpdate = {
+        is_sleeping: this.state.userNotificationStatus
+    }
+
+    await axios.patch(`/api/users/${this.state.userID}`, userUpdate)
+      .catch(err => console.log(err))
 
     await axios.get(`/api/users/${this.state.userID}`).then((resp) => {
       this.setAppState(resp.data, 'userInfo');
       this.setAppState(resp.data['is_admin'], 'userIsAdmin');
       this.setAppState(resp.data['is_sleeping'], 'userNotificationStatus');
     })
-
   }
 
   async modifyApparatusAssignment(e) {

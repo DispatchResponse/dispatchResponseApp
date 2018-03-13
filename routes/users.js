@@ -6,28 +6,7 @@ const express = require('express')
 const router = express.Router()
 const db = require('../models')
 const Sequelize = require('sequelize')
-const { or } = Sequelize.Op
-
-router.get('/tuna', function (req, res, next) {
-  var assignment = ['E8', 'E5', 'E4']
-  db.users.findAll({
-    include: [{
-      model: db.trackings,
-      where: {
-        apparatus_id: { [or]: assignment }
-      }
-    }]
-  })
-    .then(userList => {
-      let allUsers = Object.keys(userList).map(function (k) {
-        return userList[k].dataValues
-      })
-      res.send(allUsers)
-    })
-    .catch(error => {
-      console.error(`ERROR in users GET: ${error}`)
-    })
-})
+const { or, and } = Sequelize.Op
 
 router.get('/:userId', function (req, res, next) {
   db.users.findOne({
@@ -57,9 +36,26 @@ router.get('/', function (req, res, next) {
   })
 })
 
-router.put('/:userId/sleep/:data', function (req, res, next) {
+router.patch('/:userId', function (req, res, next) {
+  const bodyData = JSON.parse(req.body)
+  db.users.find({
+    where: {user_id: req.params.userId}
+  })
+  .then(user => {
+    return user.update(bodyData)
+  })
+  .then(updatedUser => {
+    console.log(`UPDATED USER SLEEP STATUS: ${updatedUser}`)
+    return res.sendStatus(201)
+  })
+    .catch(error => {
+      console.error(`ERROR in users-sleep PATCH: ${error}`)
+    })
+})
+
+router.put('/:userId/mobile/:data', function (req, res, next) {
   db.users.update({
-    is_sleeping: req.params.data
+    mobile: req.params.data
   }, {
     where: {user_id: req.params.userId}
   })
@@ -67,7 +63,7 @@ router.put('/:userId/sleep/:data', function (req, res, next) {
       return res.sendStatus(201)
     })
     .catch(error => {
-      console.error(`ERROR in users PUT: ${error}`)
+      console.error(`ERROR in users-mobile PUT: ${error}`)
     })
 })
 

@@ -2,7 +2,7 @@
 
 # Remove all files in ersdispatch so we can cleanly inject new files from S3
 # Note this particular rm invocation gets dot files as well
-cd /home/ubuntu/ersdispatch
+cd /home/ubuntu/gfddispatch
 rm -rf * .[^.]*
 # Install and/or upgrade nginx
 apt-get -y install nginx
@@ -10,20 +10,17 @@ apt-get -y install nginx
 # Replace the default nginx website config with a proxy to our node app
 # Get this file from S3
 rm -f /etc/nginx/sites-available/default
-aws s3 cp s3://ers-dispatch/scripts/nginx-server.conf /etc/nginx/sites-available/default
-
-# Get the firebase key from S3 and inject it into the key directory
-aws s3 cp s3://ers-dispatch/scripts/ers-dispatch-firebase-adminsdk-08k8q-3c9e3d13f9.json /home/ubuntu/ersdispatch/key/ers-dispatch-firebase-adminsdk-08k8q-3c9e3d13f9.json
+aws s3 cp s3://dispatchresponse/scripts/nginx-server.conf /etc/nginx/sites-available/default
 
 # Get environment variables and inject into .env
-aws s3 cp s3://ers-dispatch/scripts/environment-vars.txt /home/ubuntu/ersdispatch/.env
+aws s3 cp s3://dispatchresponse/scripts/environment-vars.txt /home/ubuntu/gfddispatch/.env
 
 # Get AWS credentials
-aws s3 cp s3://ers-dispatch/scripts/aws-credentials.json /home/ubuntu/ersdispatch/.aws-credentials.json
+aws s3 cp s3://dispatchresponse/scripts/aws-credentials.json /home/ubuntu/gfddispatch/.aws-credentials.json
 
 # Get tmux.conf and bash_aliases because they are useful
-aws s3 cp s3://ers-dispatch/scripts/tmux.conf /home/ubuntu/.tmux.conf
-aws s3 cp s3://ers-dispatch/scripts/bash_aliases /home/ubuntu/.bash_aliases
+aws s3 cp s3://dispatchresponse/scripts/tmux.conf /home/ubuntu/.tmux.conf
+aws s3 cp s3://dispatchresponse/scripts/bash_aliases /home/ubuntu/.bash_aliases
 
 service nginx restart
 

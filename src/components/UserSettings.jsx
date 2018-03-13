@@ -16,7 +16,7 @@ export default class UserSettings extends React.Component {
   componentDidMount() {
     //TODO: map user mobile carrier to carriers obj and get carrier Name
     //TODO: map apparatuses to tracking and get trues and falses
-    console.log(this.props)
+
     this.determineUserCarrierName()
 
   }
@@ -46,6 +46,12 @@ export default class UserSettings extends React.Component {
                            'notif';
        @media screen and (min-width: 1024px){
          border-radius: 15px;
+       }
+
+       @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+       }
+
+       @media screen and (max-device-width: 480px) and (orientation: portrait){
        }
     `;
 
@@ -95,8 +101,12 @@ export default class UserSettings extends React.Component {
       @media screen and (min-width: 1024px){
         grid-template-columns: repeat(5, 1fr);
       }
-      @media screen and (max-device-width: 480px) and (orientation: portrait){
+      @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
         grid-template-columns: repeat(3, 1fr);
+      }
+
+      @media screen and (max-device-width: 480px) and (orientation: portrait){
+        grid-template-columns: repeat(2, 1fr);
       }
     `;
 

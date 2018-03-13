@@ -41,29 +41,15 @@ router.patch('/:userId', function (req, res, next) {
   db.users.find({
     where: {user_id: req.params.userId}
   })
-  .then(user => {
-    return user.update(bodyData)
-  })
-  .then(updatedUser => {
-    console.log(`UPDATED USER SLEEP STATUS: ${updatedUser}`)
-    return res.sendStatus(201)
-  })
-    .catch(error => {
-      console.error(`ERROR in users-sleep PATCH: ${error}`)
+    .then(user => {
+      return user.update(bodyData)
     })
-})
-
-router.put('/:userId/mobile/:data', function (req, res, next) {
-  db.users.update({
-    mobile: req.params.data
-  }, {
-    where: {user_id: req.params.userId}
-  })
-    .then(() => {
+    .then(updatedUser => {
+      console.log(`UPDATED USER SLEEP STATUS: ${updatedUser}`)
       return res.sendStatus(201)
     })
     .catch(error => {
-      console.error(`ERROR in users-mobile PUT: ${error}`)
+      console.error(`ERROR in users-sleep PATCH: ${error}`)
     })
 })
 

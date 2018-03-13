@@ -1,9 +1,9 @@
 #!/bin/bash
 
-cd /home/ubuntu/ersdispatch
+cd /home/ubuntu/gfddispatch
 npm install
 npm run build
-chown -R ubuntu:ubuntu /home/ubuntu/ersdispatch/public
+chown -R ubuntu:ubuntu /home/ubuntu/gfddispatch/dist
 npm start > /dev/null 2> /dev/null < /dev/null &
 #systemctl start nodeserver.service > /dev/null 2> /dev/null < /dev/null &
 

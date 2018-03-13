@@ -19,12 +19,14 @@ export default class DispatchHistoryEntry extends React.Component {
     const CallListRow = styled.div`
       display: grid;
       grid-template-columns: repeat(10, 1fr);
-      width: 100%;
+      padding: 1% 0;
+      font-family: 'Anonymous Pro';
     `;
 
     const CallListItem = styled.div`
-      display: flex;
-      align-items: center;
+      margin: auto;
+      word-wrap: break-word;
+      max-width: 80%;
     `;
 
     return (

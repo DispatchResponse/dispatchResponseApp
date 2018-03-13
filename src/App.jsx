@@ -74,6 +74,7 @@ export default class App extends React.Component {
       // console.log("//get User Info",resp)
       this.setAppState(resp.data, 'userInfo');
       this.setAppState(resp.data['is_admin'], 'userIsAdmin');
+      console.log("🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ This is the value of is_sleeping from the database", resp.data['is_sleeping'])
       this.setAppState(resp.data['is_sleeping'], 'userNotificationStatus');
 
     })
@@ -125,34 +126,13 @@ export default class App extends React.Component {
 
   async modifyNotificationStatus() {
 
-    let { userInfo } = this.state;
-    // console.log('this is oldUserInfo')
-    // console.log(userInfo)
-    let newUserInfo = {
-          'carrier' : userInfo['carrier'],
-          'created_at' : userInfo['created_at'],
-          'first_name' : userInfo['first_name'],
-          'full_mobile' : userInfo['full_mobile'],
-          'full_name' : userInfo['full_name'],
-          'is_admin' : userInfo['is_admin'],
-          'is_enabled' : userInfo['is_enabled'],
-          'is_sleeping' : this.state.userNotificationStatus,
-          'last_name' : userInfo['last_name'],
-          'mobile' : userInfo['mobile'],
-          'user_id' : userInfo['user_id']
-        }
-    // console.log('this.state.userNotificationStatus')
-    // console.log(this.state.userNotificationStatus)
-    // console.log('!this.state.userNotificationStatus')
-    // console.log(!this.state.userNotificationStatus)
-    // console.log('this is newUserInfo')
-    // console.log(newUserInfo)
+    await axios.put(`/api/users/${this.state.userID}/${this.state.userNotificationStatus}`).catch(err => console.log(err))
 
-    this.setState({userNotificationStatus: !this.state.userNotificationStatus})
-    this.setState({userInfo: newUserInfo})
-
-    // THIS BREAKS ---> await axios.put(`/api/users/${this.state.userID}`, newUserInfo).catch(err => console.log(err))
-    // THIS ISNT NECESSARY UNTIL THE ABOVE WORKS ---> await axios.get(`/api/users/${this.state.userID}`)
+    await axios.get(`/api/users/${this.state.userID}`).then((resp) => {
+      this.setAppState(resp.data, 'userInfo');
+      this.setAppState(resp.data['is_admin'], 'userIsAdmin');
+      this.setAppState(resp.data['is_sleeping'], 'userNotificationStatus');
+    })
 
   }
 

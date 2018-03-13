@@ -31,7 +31,6 @@ export default class Menu extends React.Component {
               display: block;
             }
           }
-
       `;
 
       const MenuItems = styled.div`
@@ -64,9 +63,20 @@ export default class Menu extends React.Component {
         }
       `;
 
+      const NotificationTitle = styled.li`
+        color: firebrick;
+        box-shadow: 0 4px 2px -2px lightgray;
+        background-color: white;
+        border-bottom: 2px solid firebrick;
+        padding: 25px 0 5px 0;
+        font-size: .6em;
+        letter-spacing: 3px;
+      `;
+
       const NotificationSwitch = styled.li`
         display: flex;
         align-items: center;
+        justify-content: space-around;
 
           input[type=checkbox]{
           	height: 0;
@@ -120,7 +130,7 @@ export default class Menu extends React.Component {
             <li>
               <NavLink to="/user-settings"> User Settings </NavLink>
             </li>
-            <li> Notifications:</li>
+            <NotificationTitle> Notifications:</NotificationTitle>
             <NotificationSwitch>
               <span>{this.props.ns ? 'ON' : 'OFF'}</span>
                 <input

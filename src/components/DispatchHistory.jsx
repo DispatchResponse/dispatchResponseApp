@@ -70,8 +70,6 @@ export default class DispatchHistory extends React.Component {
 
     const DispatchTable = styled.div`
       grid-area: records;
-      display: grid;
-      grid-template-columns: 1fr;
         > div:nth-child(odd){
           background-color: whitesmoke;
         }

@@ -7,7 +7,6 @@
  */
 const data = require('./dummy_data')
 const request = require('request')
-const cuid = require('cuid')
 
 var dateformat = require('date-fns/format')
 

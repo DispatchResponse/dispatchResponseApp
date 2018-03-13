@@ -74,7 +74,7 @@ app.use('/api/tracks', tracks)
 app.use('/api/users', users)
 app.use('/api', calls)
 app.use('/calls', calls)
-app.use('/', index)
+app.use('/', calls)
 
 app.use(function (req, res, next) {
   var err = new Error('Not found today')

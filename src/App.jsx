@@ -7,6 +7,7 @@ import Dispatch from './components/Dispatch';
 import DispatchHistory from './components/DispatchHistory';
 import UserSettings from './components/UserSettings';
 import Admin from './components/Admin';
+import Menu from './components/Menu';
 
 
 export default class App extends React.Component {
@@ -23,7 +24,7 @@ export default class App extends React.Component {
       userTracking: null,
       userNotificationStatus: null,
       userApparatusAssignment: null,
-      userIsAdmin: false,
+      userIsAdmin: true,
       userID: 2,
       slug: 'mg08p5p',
     };
@@ -232,6 +233,9 @@ export default class App extends React.Component {
 
         { !this.state.dispatchData ? null : (
           <AppContainer>
+          <Menu
+            ns={this.state.userNotificationStatus}
+            tns={this.modifyNotificationStatus}/>
 
            <Route
              exact path="/"

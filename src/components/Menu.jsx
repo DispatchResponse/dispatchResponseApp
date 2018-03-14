@@ -7,7 +7,9 @@ import styled from 'styled-components';
 export default class Menu extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isAdmin: true,
+    };
   }
 
   componentDidMount() {
@@ -130,6 +132,11 @@ export default class Menu extends React.Component {
             <li>
               <NavLink to="/user-settings"> User Settings </NavLink>
             </li>
+            {
+              this.state.isAdmin
+              ? <li> <NavLink to="/admin"> Admin </NavLink> </li>
+              : null
+            }
             <NotificationTitle> Notifications:</NotificationTitle>
             <NotificationSwitch>
               <span>{this.props.ns ? 'ON' : 'OFF'}</span>
@@ -140,11 +147,6 @@ export default class Menu extends React.Component {
                   onChange={this.props.tns}/>
                 <label htmlFor={'notifications'}></label>
             </NotificationSwitch>
-            {
-              this.props.isAdmin
-              ? <li>Admin</li>
-              : null
-            }
           </MenuItems>
         </MenuContainer>
     )

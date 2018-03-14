@@ -7,17 +7,40 @@ import styled from 'styled-components';
 export default class Admin extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      changeColor: false,
+    };
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
   }
 
-  render() {
+  handleClick() {
+    this.setState({changeColor: !this.state.changeColor})
+  }
 
+  render() {
+    const AdminContainer = styled.div`
+      width: 100%;
+      height: 500px;
+      background-color: ${!this.state.changeColor ? 'indianred' : 'midnightblue'};
+      &:hover{
+        cursor: pointer;
+      }
+
+    `;
 
     return (
-        <div>ADMIN</div>
+        <AdminContainer onClick={this.handleClick}>
+
+
+
+          admin stuff
+
+
+
+        </AdminContainer>
     )
 
   }

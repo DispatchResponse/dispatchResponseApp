@@ -37,7 +37,7 @@ deploy:
   key: production/latestTravis.zip
   bundle_type: zip
   application: CodeDeployApp_GFD
-  deployment_group: CodeDeployApp_GFD-group
+  deployment_group: CodeDeployApp_GFD_group
   region: us-east-1
   on: *3
 - provider: s3
@@ -58,7 +58,7 @@ deploy:
   key: testing/latestTravis.zip
   bundle_type: zip
   application: CodeDeployApp_GFD
-  deployment_group: CodeDeployApp_GFD-group
+  deployment_group: CodeDeployApp_GFD_group
   region: us-east-1
   on: *2
 

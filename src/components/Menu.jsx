@@ -34,12 +34,28 @@ export default class Menu extends React.Component {
           color: black;
           font-family: 'Podkova';
           font-size: 2em;
-          padding: 0 0 20px 0;
+          padding: 20px 0;
           &:hover{
             text-decoration: underline;
           }
           @media screen and (max-device-width: 480px) and (orientation: portrait){
-          ${'' /* put some styles in here for mobile */}
+            position: fixed;
+            bottom: 0;
+            z-index: 5;
+            background-color: white;
+            width: 100%;
+            margin-left: -5px;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 5px solid firebrick;
+          }
+      `;
+
+      const MenuTitle = styled.div`
+          @media screen and (max-device-width: 480px) and (orientation: portrait){
+            padding-right: 10%;
+            color: firebrick;
+            font-size: 2em;
           }
       `;
 
@@ -50,7 +66,7 @@ export default class Menu extends React.Component {
         list-style-type: none;
         background-color: white;
         min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        box-shadow: 8px 0px 0px 8px rgba(0,0,0,0.2);
         padding: 12px 16px;
         z-index: 5;
         padding: 20px;
@@ -59,16 +75,30 @@ export default class Menu extends React.Component {
         }
         li {
           margin: 10px 0 10px 0;
-          border-bottom: 1px solid white;
+          border-bottom: 1px solid black;
           a {
             text-decoration: none;
             color: black;
+            @media screen and (max-device-width: 480px) and (orientation: portrait){
+              margin-left: 30px;
+              padding-bottom: 20px;
+            }
             &:hover{
               color: firebrick;
               border-bottom: 1px solid firebrick;
             }
           }
-
+          @media screen and (max-device-width: 480px) and (orientation: portrait){
+            font-size: 2em;
+            padding: 15px 0px 15px 30px;
+          }
+        }
+        @media screen and (max-device-width: 480px) and (orientation: portrait){
+          transform: translateY(-100%);
+          width: 100%;
+          li:last-child{
+            border-bottom: none;
+          }
         }
       `;
 
@@ -80,6 +110,12 @@ export default class Menu extends React.Component {
         padding: 25px 0 5px 0;
         font-size: .6em;
         letter-spacing: 3px;
+        @media screen and (max-device-width: 480px) and (orientation: portrait){
+          font-size: 1.5em!important;
+          padding-left: 60px!important;
+          box-shadow: none!important;
+          border: none!important;
+        }
       `;
 
       const NotificationSwitch = styled.li`
@@ -95,8 +131,8 @@ export default class Menu extends React.Component {
 
           label {
           	cursor: pointer;
-          	width: 50px;
-          	height: 25px;
+          	width: 75px;
+          	height: 35px;
           	background: grey;
           	display: block;
           	border-radius: 100px;
@@ -108,8 +144,8 @@ export default class Menu extends React.Component {
           	position: absolute;
           	top: 2px;
           	left: 3px;
-          	width: 21px;
-          	height: 21px;
+          	width: 28px;
+          	height: 28px;
           	background: #fff;
           	border-radius: 45px;
           	transition: 0.3s;
@@ -127,11 +163,36 @@ export default class Menu extends React.Component {
           label:active:after {
           	width: 100px;
           }
+          @media screen and (max-device-width: 480px) and (orientation: portrait){
+
+            label {
+              cursor: pointer;
+              width: 100px;
+              height: 45px;
+              background: grey;
+              display: block;
+              border-radius: 100px;
+              position: relative;
+            }
+
+            label:after {
+              content: '';
+              position: absolute;
+              top: 2px;
+              left: 5px;
+              width: 38px;
+              height: 38px;
+              background: #fff;
+              border-radius: 45px;
+              transition: 0.3s;
+            }
+
+          }
       `;
 
     return (
         <MenuContainer onClick={this.toggleDisplay}>
-          Menu
+          <MenuTitle>Menu</MenuTitle>
           <MenuItems>
             <li>
               <NavLink to="/dispatch-history"> Dispatch History </NavLink>

@@ -204,10 +204,10 @@ export default class App extends React.Component {
           background-color: white;
           width: 100vw;
           height: auto;
-            grid-template-areas: 'app '
-                                 'menu';
-
+          grid-template-areas: 'app '
+                               'menu';
         }
+
         /* #### Tablets Portrait or Landscape #### */
         @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
           background-color: white;

@@ -25,19 +25,19 @@ deploy:
   local_dir: s3_upload
   skip_cleanup: true
   on: &3
-    repo: Emergency-Response-Solutions/ERS-Dispatch-Listening-Server
+    repo: DispatchResponse/dispatchResponseApp
     branch: master
-  bucket: ers-dispatch
+  bucket: dispatchresponse
   upload-dir: production
   region: us-east-1
 - provider: codedeploy
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key: $AWS_SECRET_KEY
-  bucket: ers-dispatch
+  bucket: dispatchresponse
   key: production/latestTravis.zip
   bundle_type: zip
-  application: ersDispatch-CodeDeploy-prod
-  deployment_group: ersDispatch-CodeDeploy-prod-Group
+  application: CodeDeployApp_GFD
+  deployment_group: CodeDeployApp_GFD_group
   region: us-east-1
   on: *3
 - provider: s3
@@ -46,19 +46,19 @@ deploy:
   local_dir: s3_upload
   skip_cleanup: true
   on: &2
-    repo: kcoyner/ERS-Dispatch-Listening-Server
+    repo: kcoyner/dispatchResponseApp
     branch: testing
-  bucket: ers-dispatch
+  bucket: dispatchresponse
   upload-dir: testing
   region: us-east-1
 - provider: codedeploy
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key: $AWS_SECRET_KEY
-  bucket: ers-dispatch
+  bucket: dispatchresponse
   key: testing/latestTravis.zip
   bundle_type: zip
-  application: ersDispatch-CodeDeploy-testing
-  deployment_group: ersDispatch-CodeDeploy-testing-Group
+  application: CodeDeployApp_GFD
+  deployment_group: CodeDeployApp_GFD_group
   region: us-east-1
   on: *2
 

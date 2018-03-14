@@ -4,6 +4,8 @@
 # Note this particular rm invocation gets dot files as well
 cd /home/ubuntu/gfddispatch
 rm -rf * .[^.]*
+mkdir -p /home/ubuntu/gfddispatch/dist
+
 # Install and/or upgrade nginx
 apt-get -y install nginx
 
@@ -17,6 +19,9 @@ aws s3 cp s3://dispatchresponse/scripts/environment-vars.txt /home/ubuntu/gfddis
 
 # Get AWS credentials
 aws s3 cp s3://dispatchresponse/scripts/aws-credentials.json /home/ubuntu/gfddispatch/.aws-credentials.json
+
+# Get and install favicon
+aws s3 cp s3://dispatchresponse/scripts/favicon.ico /home/ubuntu/gfddispatch/dist/favicon.ico
 
 # Get tmux.conf and bash_aliases because they are useful
 aws s3 cp s3://dispatchresponse/scripts/tmux.conf /home/ubuntu/.tmux.conf

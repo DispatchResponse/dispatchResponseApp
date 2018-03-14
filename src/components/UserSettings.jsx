@@ -244,9 +244,6 @@ export default class UserSettings extends React.Component {
     return (
 
     <UserSettingsContainer>
-        <Menu
-          ns={this.props.notificationStatus}
-          tns={this.props.modifyNotificationStatus}/>
 
       <UsrTitle>User Settings</UsrTitle>
       <UsrInfo>

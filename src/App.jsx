@@ -213,6 +213,8 @@ export default class App extends React.Component {
           background-color: white;
           width: 100vw;
           height: auto;
+          grid-template-areas: 'app '
+                               'menu';
         }
 
         /* #### Desktops #### */

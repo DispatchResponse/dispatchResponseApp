@@ -38,6 +38,17 @@ export default class Menu extends React.Component {
           &:hover{
             text-decoration: underline;
           }
+          @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+            position: fixed;
+            bottom: 0;
+            z-index: 5;
+            background-color: white;
+            width: 100%;
+            margin-left: -5px;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 3px solid firebrick;
+          }
           @media screen and (max-device-width: 480px) and (orientation: portrait){
             position: fixed;
             bottom: 0;
@@ -49,11 +60,19 @@ export default class Menu extends React.Component {
             justify-content: flex-end;
             border-top: 5px solid firebrick;
           }
+
       `;
 
       const MenuTitle = styled.div`
+          @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+            padding-right: 10%;
+            padding-bottom: 10px;
+            color: firebrick;
+            font-size: 1.5em;
+          }
           @media screen and (max-device-width: 480px) and (orientation: portrait){
             padding-right: 10%;
+            padding-bottom: 20px;
             color: firebrick;
             font-size: 2em;
           }
@@ -79,6 +98,10 @@ export default class Menu extends React.Component {
           a {
             text-decoration: none;
             color: black;
+            @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+              margin-left: 30px;
+              padding-bottom: 20px;
+            }
             @media screen and (max-device-width: 480px) and (orientation: portrait){
               margin-left: 30px;
               padding-bottom: 20px;
@@ -88,9 +111,20 @@ export default class Menu extends React.Component {
               border-bottom: 1px solid firebrick;
             }
           }
+          @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+            font-size: 1.5em;
+            padding: 15px 0px 15px 30px;
+          }
           @media screen and (max-device-width: 480px) and (orientation: portrait){
             font-size: 2em;
             padding: 15px 0px 15px 30px;
+          }
+        }
+        @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+          transform: translateY(-100%);
+          width: 100%;
+          li:last-child{
+            border-bottom: none;
           }
         }
         @media screen and (max-device-width: 480px) and (orientation: portrait){
@@ -110,6 +144,12 @@ export default class Menu extends React.Component {
         padding: 25px 0 5px 0;
         font-size: .6em;
         letter-spacing: 3px;
+        @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+          font-size: 1.5em!important;
+          padding-left: 60px!important;
+          box-shadow: none!important;
+          border: none!important;
+        }
         @media screen and (max-device-width: 480px) and (orientation: portrait){
           font-size: 1.5em!important;
           padding-left: 60px!important;

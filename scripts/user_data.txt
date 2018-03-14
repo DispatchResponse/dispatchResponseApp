@@ -12,6 +12,9 @@ wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install
 chmod +x ./install
 ./install auto
 
+aws s3 cp s3://dispatchresponse/scripts/tmux.conf /home/ubuntu/.tmux.conf
+aws s3 cp s3://dispatchresponse/scripts/bash_aliases /home/ubuntu/.bash_aliases
+
 apt-get -y install nodejs
 apt-get -y install npm
 update-alternatives --install /usr/bin/node node /usr/bin/nodejs 1

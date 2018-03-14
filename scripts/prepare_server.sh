@@ -23,10 +23,6 @@ aws s3 cp s3://dispatchresponse/scripts/aws-credentials.json /home/ubuntu/gfddis
 # Get and install favicon
 aws s3 cp s3://dispatchresponse/scripts/favicon.ico /home/ubuntu/gfddispatch/dist/favicon.ico
 
-# Get tmux.conf and bash_aliases because they are useful
-aws s3 cp s3://dispatchresponse/scripts/tmux.conf /home/ubuntu/.tmux.conf
-aws s3 cp s3://dispatchresponse/scripts/bash_aliases /home/ubuntu/.bash_aliases
-
 service nginx restart
 
 # This creates a default home page although nginx redirects it away to our node app

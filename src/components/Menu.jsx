@@ -9,36 +9,43 @@ export default class Menu extends React.Component {
     super(props);
     this.state = {
       isAdmin: true,
+      display: false,
     };
+    this.toggleDisplay = this.toggleDisplay.bind(this);
   }
 
   componentDidMount() {
     // console.log(this.props.ns)
   }
 
-  render() {
+  toggleDisplay(e) {
+    if (e.target.id === 'notification-toggle') {
+      this.props.tns;
+    } else {
+      this.setState({display: !this.state.display})
+    }
+    return;
+  }
 
+  render() {
+      // grid-area: menu refers to the templates provided in App.jsx
       const MenuContainer = styled.div`
-          grid-area: 1/1/1/4;
-          padding: 0 20px 5% 0;
-          z-index: 5;
-          text-align: right;
+          grid-area: menu;
           color: black;
-          transform: translateY(-100%);
           font-family: 'Podkova';
           font-size: 2em;
+          padding: 0 0 20px 0;
           &:hover{
             text-decoration: underline;
-            div {
-              display: block;
-            }
+          }
+          @media screen and (max-device-width: 480px) and (orientation: portrait){
+          ${'' /* put some styles in here for mobile */}
           }
       `;
 
       const MenuItems = styled.div`
-        display: none;
+        display: ${!this.state.display ? 'none' : 'block'};
         position: absolute;
-        right: 0;
         text-align: left;
         list-style-type: none;
         background-color: white;
@@ -123,7 +130,7 @@ export default class Menu extends React.Component {
       `;
 
     return (
-        <MenuContainer>
+        <MenuContainer onClick={this.toggleDisplay}>
           Menu
           <MenuItems>
             <li>
@@ -145,7 +152,7 @@ export default class Menu extends React.Component {
                   id={'notifications'}
                   defaultChecked={this.props.ns}
                   onChange={this.props.tns}/>
-                <label htmlFor={'notifications'}></label>
+                <label htmlFor={'notifications'} id="notification-toggle"></label>
             </NotificationSwitch>
           </MenuItems>
         </MenuContainer>

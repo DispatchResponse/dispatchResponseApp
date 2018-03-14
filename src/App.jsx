@@ -198,12 +198,14 @@ export default class App extends React.Component {
   render() {
 
     const AppContainer = styled.div`
-        margin -10px;
+        display: grid;
         /* #### Mobile Phones Portrait #### */
         @media screen and (max-device-width: 480px) and (orientation: portrait){
           background-color: white;
           width: 100vw;
           height: auto;
+            grid-template-areas: 'app '
+                                 'menu';
 
         }
         /* #### Tablets Portrait or Landscape #### */
@@ -218,12 +220,17 @@ export default class App extends React.Component {
           background-color: white;
           width: 100vw;
           height: auto;
-          max-width: 1200px;
           margin: auto;
-          margin-top: 10%;
-          box-shadow: -3px -3px .7em darkgrey, 3px 3px .7em darkgrey;
-          border-radius: 15px;
+          max-width: 1200px;
+          grid-template-areas: 'menu'
+                               'app ';
         }
+    `;
+
+    const AppContent = styled.div`
+      grid-area: app;
+      box-shadow: -3px -3px .7em darkgrey, 3px 3px .7em darkgrey;
+      border-radius: 15px;
     `;
 
     return (
@@ -233,55 +240,60 @@ export default class App extends React.Component {
 
         { !this.state.dispatchData ? null : (
           <AppContainer>
+
           <Menu
             ns={this.state.userNotificationStatus}
             tns={this.modifyNotificationStatus}/>
 
-           <Route
-             exact path="/"
-             render={ routeProps =>
-               <Dispatch {...routeProps}
-                 dispatchData={this.state.dispatchData}
-                 notificationStatus={this.state.userNotificationStatus}
-                 modifyNotificationStatus={this.modifyNotificationStatus}
-                 isAdmin={this.state.userIsAdmin}
-               /> }
-           />
+          <AppContent>
 
-           <Route
-             exact path="/dispatch-history"
-             render={ routeProps =>
-               <DispatchHistory {...routeProps}
-                 dispatchHistory={this.state.dispatchHistory}
-                 notificationStatus={this.state.userNotificationStatus}
-                 modifyNotificationStatus={this.modifyNotificationStatus}
-                 isAdmin={this.state.userIsAdmin}
-               /> }
-           />
+             <Route
+               exact path="/"
+               render={ routeProps =>
+                 <Dispatch {...routeProps}
+                   dispatchData={this.state.dispatchData}
+                   notificationStatus={this.state.userNotificationStatus}
+                   modifyNotificationStatus={this.modifyNotificationStatus}
+                   isAdmin={this.state.userIsAdmin}
+                 /> }
+             />
 
-           <Route
-             exact path="/user-settings"
-             render={ routeProps =>
-               <UserSettings {...routeProps}
-                 allCarriers={this.state.allCarriers}
-                 userInfo={this.state.userInfo}
-                 userApparatusAssignment={this.state.userApparatusAssignment}
-                 notificationStatus={this.state.userNotificationStatus}
-                 modifyNotificationStatus={this.modifyNotificationStatus}
-                 modifyApparatusAssignment={this.modifyApparatusAssignment}
-                 isAdmin={this.state.userIsAdmin}
-               /> }
-           />
+             <Route
+               exact path="/dispatch-history"
+               render={ routeProps =>
+                 <DispatchHistory {...routeProps}
+                   dispatchHistory={this.state.dispatchHistory}
+                   notificationStatus={this.state.userNotificationStatus}
+                   modifyNotificationStatus={this.modifyNotificationStatus}
+                   isAdmin={this.state.userIsAdmin}
+                 /> }
+             />
 
-           <Route
-             exact path="/admin"
-             render={ routeProps =>
-               <Admin {...routeProps}
-                 notificationStatus={this.state.notificationStatus}
-                 modifyNotificationStatus={this.modifyNotificationStatus}
-                 isAdmin={this.state.userIsAdmin}
-               /> }
-           />
+             <Route
+               exact path="/user-settings"
+               render={ routeProps =>
+                 <UserSettings {...routeProps}
+                   allCarriers={this.state.allCarriers}
+                   userInfo={this.state.userInfo}
+                   userApparatusAssignment={this.state.userApparatusAssignment}
+                   notificationStatus={this.state.userNotificationStatus}
+                   modifyNotificationStatus={this.modifyNotificationStatus}
+                   modifyApparatusAssignment={this.modifyApparatusAssignment}
+                   isAdmin={this.state.userIsAdmin}
+                 /> }
+             />
+
+             <Route
+               exact path="/admin"
+               render={ routeProps =>
+                 <Admin {...routeProps}
+                   notificationStatus={this.state.notificationStatus}
+                   modifyNotificationStatus={this.modifyNotificationStatus}
+                   isAdmin={this.state.userIsAdmin}
+                 /> }
+             />
+
+           </AppContent>
 
          </AppContainer>
 

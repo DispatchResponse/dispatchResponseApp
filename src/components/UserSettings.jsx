@@ -49,9 +49,11 @@ export default class UserSettings extends React.Component {
        }
 
        @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+         margin-bottom: 100px;
        }
 
        @media screen and (max-device-width: 480px) and (orientation: portrait){
+         margin-bottom: 50px;
        }
     `;
 
@@ -62,6 +64,7 @@ export default class UserSettings extends React.Component {
       color: white;
       grid-area: title;
       display: flex;
+      padding: 2% 0;
       align-items: center;
       justify-content: center;
       font-size: 3.5em;

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import DispatchHistoryEntry from './DispatchHistoryEntry';
 import Menu from './Menu';
 
 
@@ -15,7 +14,7 @@ export default class DispatchHistory extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.dispatchHistory)
+
   }
 
 
@@ -39,6 +38,7 @@ export default class DispatchHistory extends React.Component {
     }
 
     @media screen and (max-device-width: 480px) and (orientation: portrait){
+      font-size: 2em;
     }
     `;
 
@@ -47,6 +47,7 @@ export default class DispatchHistory extends React.Component {
       font-size: 3.5em;
       letter-spacing: 5px;
       text-align: center;
+      border-radius: 15px 15px 0 0;
       color: white;
       background-color: gray;
       padding: .7% 0;
@@ -57,13 +58,19 @@ export default class DispatchHistory extends React.Component {
       grid-area: head;
       display: grid;
       grid-template-columns: repeat(10, 1fr);
-      background-color: DarkRed;
+      background-color: firebrick;
       color: white;
       font-size: 1.4em;
       padding: 1% 0;
       font-family: 'Podkova';
+      overflow: auto;
+      width: 100%;
+      position: sticky;
+      top: 0;
       div {
         margin: auto;
+        width: 200px;
+        text-align: center;
       }
     `;
 
@@ -73,16 +80,31 @@ export default class DispatchHistory extends React.Component {
         > div:nth-child(odd){
           background-color: whitesmoke;
         }
-        > div:hover{background-color: tomato;}
+        > div:hover{
+          background-color: royalblue;
+          color: white;
+        }
+    `;
+
+    const CallListRow = styled.div`
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      padding: 1% 0;
+      font-family: 'Anonymous Pro';
+    `;
+
+    const CallListItem = styled.div`
+      margin: auto;
+      width: 300px;
+      word-wrap: break-word;
+      max-width: 80%;
+      text-align: center;
     `;
 
     return (
 
         <DispatchHistoryContainer>
 
-        <Menu
-          ns={this.props.notificationStatus}
-          tns={this.props.modifyNotificationStatus}/>
 
         <Title>Call List</Title>
         <Headers>
@@ -100,19 +122,41 @@ export default class DispatchHistory extends React.Component {
 
         <DispatchTable>
           {this.props.dispatchHistory.map((call, idx) => (
-            <DispatchHistoryEntry
-              callTimeout={ call.timeout }
-              callDescription={ call.call_description }
-              callDistrict={ call.city }
-              callLocation={ call.location }
-              callPremiseName={ call.premise_name }
-              callCrossStreets={ call.cross_street }
-              callAssignment={ call.assignment }
-              callRadioFreq={ (call.radio_freq) }
-              callMap={ call.map_ref }
-              callRemarks={ call.cfs_remark }
-              key={ idx }
-            />
+            <CallListRow key={idx}>
+              <CallListItem>
+                { call.timeout.split(' ')[0]}
+              </CallListItem>
+              <CallListItem>
+                { call['call_description'] }
+              </CallListItem>
+              <CallListItem>
+                { call.city }
+              </CallListItem>
+              <CallListItem>
+                { call.location }
+              </CallListItem>
+              <CallListItem>
+                { call.location === call['premise_name'] ?
+                  '' :
+                  call['premise_name']
+                }
+              </CallListItem>
+              <CallListItem>
+                { call['cross_street'] }
+              </CallListItem>
+              <CallListItem>
+                { call.assignment }
+              </CallListItem>
+              <CallListItem>
+                { call['radio_freq'] }
+              </CallListItem>
+              <CallListItem>
+                { call['map_ref'] }
+              </CallListItem>
+              <CallListItem>
+                { call['cfs_remark'] }
+              </CallListItem>
+            </CallListRow>
           ))}
         </DispatchTable>
       </DispatchHistoryContainer>

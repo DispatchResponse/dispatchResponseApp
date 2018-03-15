@@ -8,7 +8,7 @@ export default class Menu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAdmin: true,
+      isAdmin: false,
       display: false,
     };
     this.toggleDisplay = this.toggleDisplay.bind(this);
@@ -64,6 +64,9 @@ export default class Menu extends React.Component {
       `;
 
       const MenuTitle = styled.div`
+          &:hover{
+            cursor: pointer;
+          }
           @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
             padding-right: 10%;
             padding-bottom: 10px;
@@ -85,39 +88,37 @@ export default class Menu extends React.Component {
         list-style-type: none;
         background-color: white;
         min-width: 160px;
-        box-shadow: 8px 0px 0px 8px rgba(0,0,0,0.2);
+        box-shadow: 1px 0px 5px 0px rgba(0,0,0,0.2);
         padding: 12px 16px;
         z-index: 5;
         padding: 20px;
-        &:hover{
-          cursor: pointer;
-        }
-        li {
-          margin: 10px 0 10px 0;
-          border-bottom: 1px solid black;
-          a {
-            text-decoration: none;
-            color: black;
-            @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-              margin-left: 30px;
-              padding-bottom: 20px;
+        a {
+          text-decoration: none;
+          color: black;
+
+          li {
+            margin: 15px 0 15px 0;
+            border-bottom: 1px solid white;
+
+            &:last-child{
+              border-bottom: none;
             }
-            @media screen and (max-device-width: 480px) and (orientation: portrait){
-              margin-left: 30px;
-              padding-bottom: 20px;
-            }
+
             &:hover{
+              cursor: pointer;
               color: firebrick;
-              border-bottom: 1px solid firebrick;
             }
-          }
-          @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-            font-size: 1.5em;
-            padding: 15px 0px 15px 30px;
-          }
-          @media screen and (max-device-width: 480px) and (orientation: portrait){
-            font-size: 2em;
-            padding: 15px 0px 15px 30px;
+
+            @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+              font-size: 1.5em;
+              padding: 15px 0px 15px 30px;
+            }
+
+            @media screen and (max-device-width: 480px) and (orientation: portrait){
+              font-size: 2em;
+              padding: 15px 0px 15px 30px;
+            }
+
           }
         }
         @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
@@ -141,9 +142,10 @@ export default class Menu extends React.Component {
         box-shadow: 0 4px 2px -2px lightgray;
         background-color: white;
         border-bottom: 2px solid firebrick;
-        padding: 25px 0 5px 0;
+        padding: 15px 0 5px 0;
         font-size: .6em;
         letter-spacing: 3px;
+        margin-bottom:10px;
         @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
           font-size: 1.5em!important;
           padding-left: 60px!important;
@@ -171,8 +173,8 @@ export default class Menu extends React.Component {
 
           label {
           	cursor: pointer;
-          	width: 75px;
-          	height: 35px;
+          	width: 50px;
+          	height: 32px;
           	background: grey;
           	display: block;
           	border-radius: 100px;
@@ -234,15 +236,20 @@ export default class Menu extends React.Component {
         <MenuContainer onClick={this.toggleDisplay}>
           <MenuTitle>Menu</MenuTitle>
           <MenuItems>
-            <li>
-              <NavLink to="/dispatch-history"> Dispatch History </NavLink>
-            </li>
-            <li>
-              <NavLink to="/user-settings"> User Settings </NavLink>
-            </li>
+
+              <NavLink to="/dispatch-history">
+                <li>Dispatch History </li>
+              </NavLink>
+
+              <NavLink to="/user-settings">
+                <li>User Settings </li>
+              </NavLink>
+
             {
               this.state.isAdmin
-              ? <li> <NavLink to="/admin"> Admin </NavLink> </li>
+              ? <NavLink to="/admin">
+                  <li> Admin </li>
+                </NavLink>
               : null
             }
             <NotificationTitle> Notifications:</NotificationTitle>

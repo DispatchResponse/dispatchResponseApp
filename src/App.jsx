@@ -24,7 +24,7 @@ export default class App extends React.Component {
       userTracking: null,
       userNotificationStatus: null,
       userApparatusAssignment: null,
-      userIsAdmin: true,
+      userIsAdmin: false,
       userID: 2,
       slug: 'mg08p5p',
     };
@@ -67,7 +67,6 @@ export default class App extends React.Component {
     await axios.get('/api/carriers').then((resp) => {
       // console.log("// get All Carriers",resp)
       this.setAppState(resp.data, 'carrier');
-
     })
 
     //get User Info
@@ -75,9 +74,7 @@ export default class App extends React.Component {
       // console.log("//get User Info",resp)
       this.setAppState(resp.data, 'userInfo');
       this.setAppState(resp.data['is_admin'], 'userIsAdmin');
-      console.log("🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ 🚵‍‍ This is the value of is_sleeping from the database", resp.data['is_sleeping'])
       this.setAppState(resp.data['is_sleeping'], 'userNotificationStatus');
-
     })
 
     //get User Tracking

@@ -24,6 +24,10 @@ pip3 install --upgrade pip
 pip3 install awscli
 
 apt-get -y install nginx
+apt-get -y install software-properties-common
+add-apt-repository -y ppa:certbot/certbot
+apt-get -y update
+apt-get -y install python-certbot-nginx
 
 cd /home/ubuntu/gfddispatch
 export NODE_ENV=production

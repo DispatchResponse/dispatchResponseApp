@@ -24,7 +24,7 @@ export default class App extends React.Component {
       userTracking: null,
       userNotificationStatus: null,
       userApparatusAssignment: null,
-      userIsAdmin: true,
+      userIsAdmin: false,
       userID: 2,
       slug: 'mg08p5p',
     };

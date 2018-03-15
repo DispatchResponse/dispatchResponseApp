@@ -25,7 +25,7 @@ pip3 install awscli
 
 apt-get -y install nginx
 
-cd /home/ubuntu/ersdispatch
+cd /home/ubuntu/gfddispatch
 export NODE_ENV=production
 npm install
 npm run build

@@ -75,13 +75,13 @@ export default class Dispatch extends React.Component {
 
     const Description = styled.div`
       grid-area: description;
-      font-size: 3.5em;
+      font-size: 3em;
       font-family: 'Podkova';
     `;
 
     const Timeout = styled.div`
       grid-area: timeout;
-      font-size: 2.5em;
+      font-size: 1.5em;
       font-family: 'Anonymous Pro';
       letter-spacing: 5px;
     `;
@@ -122,7 +122,7 @@ export default class Dispatch extends React.Component {
       text-align: center;
       background-color: black;
       width: 10%;
-      font-size: 1.25em;
+      font-size: 1em;
       border-radius: 50%;
       margin: 2%;
       padding: 2% 2% 2% 3%;

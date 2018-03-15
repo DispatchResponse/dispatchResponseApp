@@ -24,6 +24,7 @@ export default class DispatchHistory extends React.Component {
     const DispatchHistoryContainer = styled.div`
     width: 100%;
     height: auto;
+    max-width: 1200px;
     background-color: white;
     display: grid;
     grid-template-columns: 100%;
@@ -35,16 +36,18 @@ export default class DispatchHistory extends React.Component {
     }
 
     @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+      border-radius: none;
     }
 
     @media screen and (max-device-width: 480px) and (orientation: portrait){
-      font-size: 2em;
+      border-radius: none;
+      font-size: 1em;
     }
     `;
 
     const Title = styled.div`
       grid-area: title;
-      font-size: 3.5em;
+      font-size: 3em;
       letter-spacing: 5px;
       text-align: center;
       border-radius: 15px 15px 0 0;
@@ -54,31 +57,79 @@ export default class DispatchHistory extends React.Component {
       font-family: 'Podkova';
     `;
 
+    const TableData = styled.div`
+        @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+          div > div {
+            min-width: 300px;
+          }
+        }
+
+        @media screen and (max-device-width: 480px) and (orientation: portrait){
+          font-size: 1em;
+            div > div {
+            min-width: 200px;
+          }
+        }
+        overflow: auto;
+
+    `;
+
     const Headers = styled.div`
       grid-area: head;
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       background-color: firebrick;
       color: white;
-      font-size: 1.4em;
+      font-size: 1em;
       padding: 1% 0;
       font-family: 'Podkova';
-      overflow: auto;
       width: 100%;
       position: sticky;
       top: 0;
       div {
         margin: auto;
-        width: 200px;
         text-align: center;
       }
+      @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+        &:before{
+          content: "";
+          background-color: firebrick;
+          position: absolute;
+          height: 100%;
+          width: 8000px;
+          left: -4000px;
+          z-index: -1;
+        }
+      }
+
+      @media screen and (max-device-width: 480px) and (orientation: portrait){
+        &:before{
+          content: "";
+          background-color: firebrick;
+          position: absolute;
+          height: 100%;
+          width: 4000px;
+          left: -2000px;
+          z-index: -1;
+        }
+      }
+
     `;
 
 
     const DispatchTable = styled.div`
       grid-area: records;
+      font-size: 1em;
         > div:nth-child(odd){
           background-color: whitesmoke;
+          @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+            background-color: white!important;
+          }
+
+          @media screen and (max-device-width: 480px) and (orientation: portrait){
+            background-color: white!important;
+          }
+
         }
         > div:hover{
           background-color: royalblue;
@@ -94,10 +145,10 @@ export default class DispatchHistory extends React.Component {
     `;
 
     const CallListItem = styled.div`
-      margin: auto;
-      width: 300px;
+
+      min-width: 50px;
+      max-width: 300px;
       word-wrap: break-word;
-      max-width: 80%;
       text-align: center;
     `;
 
@@ -105,8 +156,10 @@ export default class DispatchHistory extends React.Component {
 
         <DispatchHistoryContainer>
 
-
         <Title>Call List</Title>
+
+        <TableData>
+
         <Headers>
           <div>&nbsp;Timeout</div>
           <div>Description</div>
@@ -119,6 +172,7 @@ export default class DispatchHistory extends React.Component {
           <div>Map</div>
           <div>Remarks</div>
         </Headers>
+
 
         <DispatchTable>
           {this.props.dispatchHistory.map((call, idx) => (
@@ -159,6 +213,9 @@ export default class DispatchHistory extends React.Component {
             </CallListRow>
           ))}
         </DispatchTable>
+
+        </TableData>
+
       </DispatchHistoryContainer>
 
     )

@@ -51,6 +51,7 @@ export default class Menu extends React.Component {
           }
           @media screen and (max-device-width: 480px) and (orientation: portrait){
             position: fixed;
+            max-width: 480px;
             bottom: 0;
             z-index: 5;
             background-color: white;
@@ -69,15 +70,13 @@ export default class Menu extends React.Component {
           }
           @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
             padding-right: 10%;
-            padding-bottom: 10px;
             color: firebrick;
-            font-size: 1.5em;
+            font-size: .7em;
           }
           @media screen and (max-device-width: 480px) and (orientation: portrait){
             padding-right: 10%;
-            padding-bottom: 20px;
             color: firebrick;
-            font-size: 2em;
+            font-size: .7em;
           }
       `;
 
@@ -110,12 +109,12 @@ export default class Menu extends React.Component {
             }
 
             @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-              font-size: 1.5em;
+              font-size: 1em;
               padding: 15px 0px 15px 30px;
             }
 
             @media screen and (max-device-width: 480px) and (orientation: portrait){
-              font-size: 2em;
+              font-size: 1em;
               padding: 15px 0px 15px 30px;
             }
 
@@ -147,14 +146,14 @@ export default class Menu extends React.Component {
         letter-spacing: 3px;
         margin-bottom:10px;
         @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-          font-size: 1.5em!important;
-          padding-left: 60px!important;
+          font-size: .5!important;
+          padding-left: 30px!important;
           box-shadow: none!important;
           border: none!important;
         }
         @media screen and (max-device-width: 480px) and (orientation: portrait){
-          font-size: 1.5em!important;
-          padding-left: 60px!important;
+          font-size: .5!important;
+          padding-left: 30px!important;
           box-shadow: none!important;
           border: none!important;
         }

@@ -8,6 +8,7 @@ import DispatchHistory from './components/DispatchHistory';
 import UserSettings from './components/UserSettings';
 import Admin from './components/Admin';
 import Menu from './components/Menu';
+import Logo from './assets/logo.svg';
 
 
 export default class App extends React.Component {
@@ -36,9 +37,9 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
-
-    // var urlParams = this.props.location.search;
-    // console.log(urlParams) //then get slug and userId
+    console.log(this.props.location)
+    var urlParams = this.props.location.search;
+    console.log(urlParams) //then get slug and userId
 
     //NOTE:get URL Params, and extract slug and userID from above code.
     //for now slug and userID is hard coded below.
@@ -222,7 +223,8 @@ export default class App extends React.Component {
           margin: auto;
           max-width: 1200px;
           grid-template-areas: 'menu'
-                               'app ';
+                               'app '
+                               'test';
         }
     `;
 
@@ -235,7 +237,6 @@ export default class App extends React.Component {
     return (
 
       <div>
-
 
         { !this.state.dispatchData ? null : (
           <AppContainer>

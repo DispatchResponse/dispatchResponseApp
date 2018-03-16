@@ -35,12 +35,13 @@ export default class Menu extends React.Component {
           font-family: 'Podkova';
           font-size: 2em;
           padding: 20px 0;
+          margin: 0;
           &:hover{
             text-decoration: underline;
           }
           @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
             position: fixed;
-            bottom: 0;
+            bottom: 0px;
             z-index: 5;
             background-color: white;
             width: 100%;
@@ -48,20 +49,22 @@ export default class Menu extends React.Component {
             display: flex;
             justify-content: flex-end;
             border-top: 3px solid firebrick;
+            border-bottom: 3px solid firebrick;
           }
           @media screen and (max-device-width: 480px) and (orientation: portrait){
             position: fixed;
             max-width: 100%;
-            bottom: 0;
+            bottom: 0px;
             z-index: 5;
             color: white;
-            height: 3em;
+            height: .7em;
             box-shadow: 2px 0px whitesmoke, -2px -2px whitesmoke;
-            background-color: whitesmoke;
-            width: 100%;
+            background-color: white;
+            width: 110%;
             display: flex;
             justify-content: flex-end;
-            border-top: 5px solid firebrick;
+            border-top: 2px solid firebrick;
+            border-bottom: 3px solid firebrick;
           }
 
       `;
@@ -78,7 +81,7 @@ export default class Menu extends React.Component {
           @media screen and (max-device-width: 480px) and (orientation: portrait){
             padding-right: 10%;
             color: firebrick;
-            font-size: 1.25em;
+            font-size: .8em;
           }
       `;
 

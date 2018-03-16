@@ -91,7 +91,7 @@ export default class Dispatch extends React.Component {
       font-size: 3em;
       font-family: 'Podkova';
       @media screen and (max-device-width: 480px) and (orientation: portrait){
-        font-size: 5em;
+        font-size: 2em;
       }
     `;
 
@@ -100,6 +100,9 @@ export default class Dispatch extends React.Component {
       font-size: 1.5em;
       font-family: 'Source Code Pro', monospace;
       letter-spacing: 5px;
+      @media screen and (max-device-width: 480px) and (orientation: portrait){
+        font-size: 1em;
+      }
     `;
 
     const DispatchDetails = styled.ul`
@@ -115,6 +118,9 @@ export default class Dispatch extends React.Component {
         border-bottom: 2px solid firebrick;
         padding: 0 0 5px 10px;
         font-size: 1.3em;
+        @media screen and (max-device-width: 480px) and (orientation: portrait){
+          font-size: 1em;
+        }
       }
 
       li:nth-child(even) {
@@ -124,7 +130,9 @@ export default class Dispatch extends React.Component {
         padding: 10px 0 0 10px;
         margin-bottom: 2%;
         font-size: 1.5em;
-
+        @media screen and (max-device-width: 480px) and (orientation: portrait){
+          font-size: 1.3em;
+        }
       }
     `;
 
@@ -135,8 +143,10 @@ export default class Dispatch extends React.Component {
 
     const Apparatus = styled.div`
       font-family: 'Source Code Pro', monospace;
-      color: white;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;  
       background-color: black;
       width: 10%;
       font-size: 1.5em;
@@ -144,6 +154,9 @@ export default class Dispatch extends React.Component {
       margin: 2%;
       padding: 2%;
       letter-spacing: 5px;
+      @media screen and (max-device-width: 480px) and (orientation: portrait){
+        font-size: 1.3em;
+      }
     `;
 
 

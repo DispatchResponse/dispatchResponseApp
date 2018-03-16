@@ -27,15 +27,20 @@ export default class Dispatch extends React.Component {
   }
 
   getCurrentLocation() {
+    const options = {
+            timeout: 30000,
+            enableHighAccuracy: true,
+            maximumAge: 75000
+          }
+
     navigator.geolocation.getCurrentPosition(position => {
       let userCoords = {
         userLat: position.coords.latitude,
         userLng: position.coords.longitude
       }
       this.setState({userCoords: userCoords})
-    }, () => {
-      console.log('🐸 ...(denied)');
-    });
+    }, (err) => { console.log('🐸 ...(denied)', err);
+    }, options );
   }
 
   setApparatus() {
@@ -81,7 +86,7 @@ export default class Dispatch extends React.Component {
       text-align: center;
       background-color: ${alarmColor};
       letter-spacing: 5px;
-        @media screen and (min-width: 1024px){
+        @media screen and (min-width: 1050px){
           border-radius: 15px 15px 0 0;
         }
     `;
@@ -146,13 +151,13 @@ export default class Dispatch extends React.Component {
       display: flex;
       justify-content: center;
       align-items: center;
-      color: white;  
+      color: white;
       background-color: black;
       width: 10%;
       font-size: 1.5em;
       border-radius: 50%;
       margin: 2%;
-      padding: 2%;
+      padding: 2% 2% 2% 3%;
       letter-spacing: 5px;
       @media screen and (max-device-width: 480px) and (orientation: portrait){
         font-size: 1.3em;

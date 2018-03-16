@@ -94,6 +94,7 @@ export default class App extends React.Component {
       this.setState({allCarriers: data});
     } else if ( type === 'userInfo' ) {
       this.setState({userInfo: data});
+      this.setState({userID: data['user_id']});
     } else if ( type === 'userTracking' ) {
       this.setState({userTracking: data});
     } else if ( type === 'userNotificationStatus' ) {
@@ -119,7 +120,6 @@ export default class App extends React.Component {
   }
 
   async modifyNotificationStatus () {
-
     let userUpdate = {
         is_sleeping: this.state.userNotificationStatus
     }
@@ -193,8 +193,27 @@ export default class App extends React.Component {
     const AppContainer = styled.div`
         display: grid;
         width: 100vw;
+        background-color: white;
+        height: auto;
+        margin: auto;
+        max-width: 1200px;
+        grid-template-areas: 'menu'
+                             'app '
+                             'test';
         /* #### Mobile Phones Portrait #### */
-        @media screen and (max-device-width: 480px) and (orientation: portrait){
+        @media screen and (max-device-width: 480px)
+                      and (orientation: portrait){
+          background-color: white;
+          margin: -10px -10px 100px -10px;
+          height: auto;
+          grid-template-columns: 1fr;
+          grid-template-areas: 'app '
+                               'menu';
+        }
+
+        @media only screen and (min-device-width: 480px)
+                   and (max-device-width: 800px)
+                   and (orientation: landscape) {
           background-color: white;
           margin: -10px -10px 100px -10px;
           height: auto;
@@ -204,23 +223,20 @@ export default class App extends React.Component {
         }
 
         /* #### Tablets Portrait or Landscape #### */
-        @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+        @media screen and (min-device-width: 768px) and (max-device-width: 1050px){
           background-color: white;
           height: auto;
-          margin: -10px auto 100px auto;
+          margin-top: -10px;
+          margin-bottom: 100px;
+          margin-left: -10px;
+          margin-right: -10px;
           grid-template-areas: 'app '
                                'menu';
         }
 
         /* #### Desktops #### */
-        @media screen and (min-width: 1024px){
-          background-color: white;
-          height: auto;
-          margin: auto;
-          max-width: 1200px;
-          grid-template-areas: 'menu'
-                               'app '
-                               'test';
+        @media screen and (min-width: 1050px){
+
         }
 
     `;
@@ -240,10 +256,10 @@ export default class App extends React.Component {
 
           <Menu
             ns={this.state.userNotificationStatus}
-            tns={this.modifyNotificationStatus}/>
+            mns={this.modifyNotificationStatus}/>
 
           <AppContent>
-            <Switch>
+            
 
              <Route
                exact path="/"
@@ -302,7 +318,7 @@ export default class App extends React.Component {
                  /> }
              />
 
-             </Switch>
+             
            </AppContent>
 
          </AppContainer>

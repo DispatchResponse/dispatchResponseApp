@@ -86,17 +86,29 @@ export default class UserSettings extends React.Component {
         border-top: 2px solid white;
         border-bottom: 2px solid firebrick;
         padding: 5px 0 5px 10px;
-        font-size: 1.5em;
+        font-size: 1.3em;
+        @media screen and (max-device-width: 480px) and (orientation: portrait){
+          font-size: 1em;
+        }
       }
 
       li:nth-child(even) {
         color: black;
         font-weight: bolder;
+        font-family: 'Source Code Pro', monospace;
         background-color: white;
         padding: 10px 0 0 10px;
         margin-bottom: 2%;
-        font-size: 1.75em;
-      }
+        font-size: 1.5em;
+        @media screen and (max-device-width: 480px) and (orientation: portrait){
+          font-size: 1.3em;
+        }
+        @media only screen and (min-device-width: 480px)
+                   and (max-device-width: 800px)
+                   and (orientation: landscape) {
+          font-size: 1.3em;
+        }
+    }
     `;
     const ApparatusAssignment = styled.div`
       grid-area: appar;
@@ -109,6 +121,11 @@ export default class UserSettings extends React.Component {
       }
 
       @media screen and (max-device-width: 480px) and (orientation: portrait){
+        grid-template-columns: repeat(2, 1fr);
+      }
+        @media only screen and (min-device-width: 480px)
+                   and (max-device-width: 800px)
+                   and (orientation: landscape) {
         grid-template-columns: repeat(2, 1fr);
       }
     `;
@@ -180,6 +197,7 @@ export default class UserSettings extends React.Component {
       padding: 0;
       list-style: none;
       font-family: 'Anonymous Pro';
+
       li:nth-child(odd) {
         color: firebrick;
         background-color: white;
@@ -191,12 +209,16 @@ export default class UserSettings extends React.Component {
 
       li:nth-child(even) {
         color: black;
+        grid-template-columns: 1fr 2fr 2fr 1fr;
+        grid-template-areas: '.. tog dis ..';
         font-weight: bolder;
         background-color: white;
-        padding: 10px 0 0 10px;
+        padding-top: 30px;
         margin-bottom: 2%;
         font-size: 3em;
         display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-around;
         align-items: center;
         span{
           min-width: 100px;
@@ -210,7 +232,7 @@ export default class UserSettings extends React.Component {
         label {
           cursor: pointer;
           width: 100px;
-          height: 50px;
+          height: 51px;
           background: grey;
           display: block;
           border-radius: 100px;

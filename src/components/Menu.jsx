@@ -51,13 +51,14 @@ export default class Menu extends React.Component {
           }
           @media screen and (max-device-width: 480px) and (orientation: portrait){
             position: fixed;
-            max-width: 480px;
+            max-width: 100%;
             bottom: 0;
             z-index: 5;
             color: white;
-            background-color: firebrick;
+            height: 3em;
+            box-shadow: 2px 0px whitesmoke, -2px -2px whitesmoke;
+            background-color: whitesmoke;
             width: 100%;
-            margin-left: -5px;
             display: flex;
             justify-content: flex-end;
             border-top: 5px solid firebrick;
@@ -77,7 +78,7 @@ export default class Menu extends React.Component {
           @media screen and (max-device-width: 480px) and (orientation: portrait){
             padding-right: 10%;
             color: firebrick;
-            font-size: .7em;
+            font-size: 1.25em;
           }
       `;
 

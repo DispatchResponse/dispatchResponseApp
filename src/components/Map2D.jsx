@@ -56,13 +56,13 @@ export default class Map2D extends React.Component {
   render() {
     const MapDiv = styled.div`
       width: 100%;
-      height: 50em;
+      height: 100vw;
       margin: 0 0 2em 0;
       @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-        height: 25em;
+        height: 100vw;
       }
       @media screen and (max-device-width: 480px) and (orientation: portrait){
-        height: 25em;
+        height: 100vw;
       }
     `;
 

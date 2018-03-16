@@ -13,14 +13,17 @@ export default class Dispatch extends React.Component {
     this.state = {
       destinationCoords: null,
       userCoords: null,
+      apparatusAssignment: null,
     };
     this.getDestinationData = this.getDestinationData.bind(this);
+    this.setApparatus = this.setApparatus.bind(this);
     this.getCurrentLocation = this.getCurrentLocation.bind(this);
   }
 
   componentDidMount() {
     this.getDestinationData(this.props.dispatchData);
     this.getCurrentLocation();
+    this.setApparatus()
   }
 
   getCurrentLocation() {
@@ -33,6 +36,15 @@ export default class Dispatch extends React.Component {
     }, () => {
       console.log('🐸 ...(denied)');
     });
+  }
+
+  setApparatus() {
+    let apparatusData = this.props.dispatchData.assignment
+      .replace(/\s/g, ',')
+      .split(',')
+      .filter(apparatus => { return apparatus !== ',' && apparatus !== '' });
+
+    this.setState({apparatusAssignment: apparatusData})
   }
 
   getDestinationData(dispatchData) {
@@ -78,12 +90,15 @@ export default class Dispatch extends React.Component {
       grid-area: description;
       font-size: 3em;
       font-family: 'Podkova';
+      @media screen and (max-device-width: 480px) and (orientation: portrait){
+        font-size: 5em;
+      }
     `;
 
     const Timeout = styled.div`
       grid-area: timeout;
       font-size: 1.5em;
-      font-family: 'Anonymous Pro';
+      font-family: 'Source Code Pro', monospace;
       letter-spacing: 5px;
     `;
 
@@ -103,7 +118,7 @@ export default class Dispatch extends React.Component {
       }
 
       li:nth-child(even) {
-        font-family: 'Source Code Pro';
+        font-family: 'Source Code Pro', monospace;
         color: black;
         background-color: white;
         padding: 10px 0 0 10px;
@@ -115,7 +130,7 @@ export default class Dispatch extends React.Component {
 
     const ApparatusContainer = styled.li`
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
     `;
 
     const Apparatus = styled.div`
@@ -128,9 +143,10 @@ export default class Dispatch extends React.Component {
       margin: 2%;
       padding: 2% 2% 2% 3%;
       letter-spacing: 5px;
+      ${'' /* @media screen and (max-device-width: 480px) and (orientation: portrait){
+        font-size: 1.5em;
+      } */}
     `;
-
-
 
 
     return (
@@ -146,7 +162,8 @@ export default class Dispatch extends React.Component {
           <li>Apparatus Assigned</li>
           <ApparatusContainer>
             {
-              this.props.dispatchData.assignment.split(', ').map( (apparatus) => {
+              !this.state.apparatusAssignment ? null :
+              this.state.apparatusAssignment.map( (apparatus) => {
                 return <Apparatus key={apparatus}>{apparatus}</Apparatus>
               })
             }

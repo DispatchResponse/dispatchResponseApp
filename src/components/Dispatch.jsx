@@ -55,6 +55,7 @@ export default class Dispatch extends React.Component {
     const DispatchContainer = styled.div`
       display: grid;
       grid-template-columns: 1fr;
+      max-width: 1200px;
     `;
 
     const Title = styled.div`
@@ -89,25 +90,25 @@ export default class Dispatch extends React.Component {
     const DispatchDetails = styled.ul`
       padding: 0;
       list-style: none;
-      font-family: 'Anonymous Pro';
 
       li:nth-child(odd) {
+        font-family: 'Anonymous Pro';
         color: firebrick;
         box-shadow: 0 4px 2px -2px lightgray;
         background-color: white;
         border-top: 2px solid white;
         border-bottom: 2px solid firebrick;
         padding: 5px 0 5px 10px;
-        font-size: 1.5em;
+        font-size: 1.3em;
       }
 
       li:nth-child(even) {
+        font-family: 'Source Code Pro';
         color: black;
-        font-weight: bolder;
         background-color: white;
         padding: 10px 0 0 10px;
         margin-bottom: 2%;
-        font-size: 1.75em;
+        font-size: 1.5em;
 
       }
     `;

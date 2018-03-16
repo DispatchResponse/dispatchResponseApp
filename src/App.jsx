@@ -192,11 +192,13 @@ export default class App extends React.Component {
 
     const AppContainer = styled.div`
         display: grid;
+        width: 100vw;
         /* #### Mobile Phones Portrait #### */
         @media screen and (max-device-width: 480px) and (orientation: portrait){
           background-color: white;
-          width: 100vw;
+          margin: -10px -10px 100px -10px;
           height: auto;
+          grid-template-columns: 1fr;
           grid-template-areas: 'app '
                                'menu';
         }
@@ -204,8 +206,8 @@ export default class App extends React.Component {
         /* #### Tablets Portrait or Landscape #### */
         @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
           background-color: white;
-          width: 100vw;
           height: auto;
+          margin: -10px auto 100px auto;
           grid-template-areas: 'app '
                                'menu';
         }
@@ -213,7 +215,6 @@ export default class App extends React.Component {
         /* #### Desktops #### */
         @media screen and (min-width: 1024px){
           background-color: white;
-          width: 100vw;
           height: auto;
           margin: auto;
           max-width: 1200px;
@@ -221,6 +222,7 @@ export default class App extends React.Component {
                                'app '
                                'test';
         }
+
     `;
 
     const AppContent = styled.div`

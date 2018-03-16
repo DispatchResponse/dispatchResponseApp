@@ -54,7 +54,8 @@ export default class Menu extends React.Component {
             max-width: 480px;
             bottom: 0;
             z-index: 5;
-            background-color: white;
+            color: white;
+            background-color: firebrick;
             width: 100%;
             margin-left: -5px;
             display: flex;

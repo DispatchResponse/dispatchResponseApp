@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import getCoordinates from './utils/getCoordinates'
@@ -26,8 +26,8 @@ export default class App extends React.Component {
       userNotificationStatus: null,
       userApparatusAssignment: null,
       userIsAdmin: false,
-      userID: 2,
-      slug: 'mg08p5p',
+      userID: null,
+      slug: null
     };
 
     this.setAppState = this.setAppState.bind(this);
@@ -37,18 +37,13 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
-    console.log(this.props.location)
-    var urlParams = this.props.location.search;
-    console.log(urlParams) //then get slug and userId
-
-    //NOTE:get URL Params, and extract slug and userID from above code.
-    //for now slug and userID is hard coded below.
-
+    var urlPathname = this.props.location.pathname;
     let { userID, slug } = this.state;
+    slug = urlPathname.split('/')[1]
+    userID = urlPathname.split('/')[2]
 
     //get Current Dispatch
     await axios.get(`/api/${slug}/${userID}`).then((resp) => {
-      // console.log("//get Current Dispatch", resp)
       this.setAppState(resp.data[0], 'dispatch');
     })
 
@@ -246,6 +241,7 @@ export default class App extends React.Component {
             tns={this.modifyNotificationStatus}/>
 
           <AppContent>
+            <Switch>
 
              <Route
                exact path="/"
@@ -293,6 +289,18 @@ export default class App extends React.Component {
                  /> }
              />
 
+             <Route
+               exact path="/:slug/:userID"
+               render={ routeProps =>
+                 <Dispatch {...routeProps}
+                   dispatchData={this.state.dispatchData}
+                   notificationStatus={this.state.userNotificationStatus}
+                   modifyNotificationStatus={this.modifyNotificationStatus}
+                   isAdmin={this.state.userIsAdmin}
+                 /> }
+             />
+
+             </Switch>
            </AppContent>
 
          </AppContainer>

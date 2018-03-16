@@ -74,13 +74,13 @@ app.use('/api/tracks', tracks)
 app.use('/api/users', users)
 app.use('/api', calls)
 app.use('/calls', calls)
-app.use('/', calls)
+// app.use('/', calls)
 
-app.use(function (req, res, next) {
-  var err = new Error('Not found today')
-  err.status = 400
-  next(err)
-})
+// app.use(function (req, res, next) {
+//   var err = new Error('Not found today')
+//   err.status = 400
+//   next(err)
+// })
 
 app.use(logErrors)
 app.use(clientErrorHandler)
@@ -113,5 +113,9 @@ function error404 (err, req, res, next) {
   console.log('hey dude - you have an error')
   // TODO: direct this to the NotFound component
 }
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.resolve('./dist', 'index.html'));
+});
 
 module.exports = app

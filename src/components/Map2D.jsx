@@ -15,7 +15,7 @@ export default class Map2D extends React.Component {
 
   componentDidMount(){
 
-    const {userLat, userLng} = this.props.userCoords;
+
     const {destinationLat, destinationLng} = this.props.destinationCoords;
         map = new window.google.maps.Map(document.getElementById('map'), {
           zoom: 12,
@@ -35,7 +35,8 @@ export default class Map2D extends React.Component {
           title: 'Dispatch Destination'
         });
 
-        if (userLat && userLng) {
+        if (this.props.userCoords && this.props.userCoords.userLat && this.props.userCoords.userLng) {
+          const {userLat, userLng} = this.props.userCoords;
 
           userMarker = new google.maps.Marker({
             position: {lat: userLat, lng: userLng},

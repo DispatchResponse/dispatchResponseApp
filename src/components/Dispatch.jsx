@@ -28,7 +28,7 @@ export default class Dispatch extends React.Component {
 
   getCurrentLocation() {
     const options = {
-            timeout: 30000,
+            timeout: 10000,
             enableHighAccuracy: true,
             maximumAge: 75000
           }
@@ -54,12 +54,17 @@ export default class Dispatch extends React.Component {
   }
 
   getDestinationData(dispatchData) {
-    let destinationCoords = {
-      destinationLat: parseFloat(dispatchData.latitude),
-      destinationLng: parseFloat(dispatchData.longitude)
-    }
+    let {latitude, longitude} = dispatchData
+    if (latitude && longitude) {
 
-    this.setState({destinationCoords: destinationCoords})
+      let destinationCoords = {
+        destinationLat: parseFloat(latitude),
+        destinationLng: parseFloat(longitude)
+      }
+
+      this.setState({destinationCoords: destinationCoords})
+    } else {}
+
   }
 
   render() {
@@ -169,13 +174,23 @@ export default class Dispatch extends React.Component {
       }
     `;
 
+    let { cross_street,
+      call_description,
+      location,
+      call_category,
+      city,
+      map_ref,
+      radio_freq,
+      timeout,
+      cfs_remark } = this.props.dispatchData
+
     return (
 
         <DispatchContainer>
 
         <Title>
-          <Description>{this.props.dispatchData.call_category}</Description>
-          <Timeout>{this.props.dispatchData.timeout}</Timeout>
+          <Description>{call_category}</Description>
+          <Timeout>{timeout}</Timeout>
         </Title>
 
         <DispatchDetails>
@@ -192,17 +207,17 @@ export default class Dispatch extends React.Component {
 
           </ApparatusContainer>
           <li>Description</li>
-          <li>{this.props.dispatchData.call_description}</li>
+          <li>{call_description}</li>
           <li>Address</li>
-          <li>{this.props.dispatchData.location + ", " + this.props.dispatchData.city}</li>
+          <li>{location + ", " + city}</li>
           <li>Nearest Cross Streets</li>
-          <li>{ this.props.dispatchData.cross_street }</li>
+          <li>{ cross_street.replace(/\&/g, ' & ') }</li>
           <li>Radio Channel & Map Reference</li>
-          <li>{ this.props.dispatchData.radio_freq } &nbsp; { this.props.dispatchData.map_ref }</li>
+          <li>{ radio_freq } &nbsp; { map_ref }</li>
           <li>Dispatch Timeout</li>
-          <li>{ this.props.dispatchData.timeout }</li>
+          <li>{ timeout }</li>
           <li>Misc. Details</li>
-          <li>{this.props.dispatchData.cfs_remark}</li>
+          <li>{cfs_remark}</li>
           <li>Navigation</li>
         </DispatchDetails>
 

@@ -10,6 +10,8 @@ import Admin from './components/Admin';
 import Menu from './components/Menu';
 import Logo from './assets/logo.svg';
 
+const GAPI_KEY = process.env.GAPI_KEY;
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -55,7 +57,7 @@ export default class App extends React.Component {
 
     //get All Station Apparatus
     await axios.get('/api/apparatus').then((resp) => {
-      console.log("//get All Station Apparatus",resp)
+      // console.log("//get All Station Apparatus",resp)
       this.setAppState(resp.data, 'apparatus');
     })
 
@@ -74,8 +76,7 @@ export default class App extends React.Component {
     })
 
     //get User Tracking
-    await axios.get(`/api/tracks/${userID}`).then((resp) => {
-      // console.log("//get User Tracking",resp)
+    await axios.get(`/api/tracks/${userID}`).then((resp, err) => {
       this.setAppState(resp.data, 'userTracking');
     })
 
@@ -108,14 +109,19 @@ export default class App extends React.Component {
 
   buildApparatusAssigment() {
     let userApparatusAssignment = this.state.allApparatus.map( app => {
-      for (let i = 0; i < this.state.userTracking.length; i++) {
-        if( this.state.userTracking[i]['apparatus_id'] === app['apparatus_id'] ) {
-          return {id: app['apparatus_id'], active: true}
+      // console.log("this.state.userTracking INSIDE BUILD APPARATUS ASSIGNMENT")
+      // console.log(this.state.userTracking)
+      if (this.state.userTracking && this.state.userTracking.length > 0) {
+        for (let i = 0; i < this.state.userTracking.length; i++) {
+          if( this.state.userTracking[i]['apparatus_id'] === app['apparatus_id'] ) {
+            return {id: app['apparatus_id'], active: true}
+          }
         }
       }
+
       return {id: app['apparatus_id'], active: false}
     })
-    console.log('buildApparatusAssigment', userApparatusAssignment)
+
     this.setState({userApparatusAssignment: userApparatusAssignment})
   }
 
@@ -125,7 +131,7 @@ export default class App extends React.Component {
     }
 
     await axios.patch(`/api/users/${this.state.userID}`, userUpdate)
-      .catch(err => console.log(err))
+      .catch(err => console.log("ERROR WITH PATCH IN modifyNotificationStatus", err))
 
     await axios.get(`/api/users/${this.state.userID}`).then((resp) => {
       this.setAppState(resp.data, 'userInfo');
@@ -136,6 +142,10 @@ export default class App extends React.Component {
 
   async modifyApparatusAssignment(e) {
     let { userApparatusAssignment, userID } = this.state;
+
+    // console.log("CURRENT APPARATUS ASSIGNMENT")
+    // console.log(userApparatusAssignment)
+
 
     let appID = e.target.id.split('-').pop();
 
@@ -168,15 +178,25 @@ export default class App extends React.Component {
                                 .filter(apparatus => apparatus.active)
                                 .map(apparatus => apparatus.id)
 
-    newAssignmentToAdd.length > 1 ? newAssignmentToAdd.join('&') : newAssignmentToAdd.join('');
+    if ( newAssignmentToAdd.length > 1 ) {
+      newAssignmentToAdd = newAssignmentToAdd.join('&')
+    } else {
+      newAssignmentToAdd = newAssignmentToAdd.join('')
+    }
 
     // console.log('newAssignmentToAdd')
     // console.log(newAssignmentToAdd)
 
     this.setState({userApparatusAssignment: newApparatusAssignment})
 
-    await axios.delete(`/api/tracks/${userID}/${oldAssignmentToDelete}`)
-    await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`)
+    if (oldAssignmentToDelete.length > 0) {
+      await axios.delete(`/api/tracks/${userID}/${oldAssignmentToDelete}`)
+    }
+
+    if (newAssignmentToAdd.length > 0) {
+      await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`)
+    }
+
     await axios.get(`/api/tracks/${userID}`).then((resp) => {
       this.setAppState(resp.data, 'userTracking');
     })
@@ -205,7 +225,7 @@ export default class App extends React.Component {
           grid-template-areas: 'app '
                                'menu';
         }
-        
+
         @media only screen and (min-device-width: 480px)
                    and (max-device-width: 800px)
                    and (orientation: landscape) {

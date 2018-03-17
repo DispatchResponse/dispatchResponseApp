@@ -20,19 +20,14 @@ export default class Map2D extends React.Component {
         map = new window.google.maps.Map(document.getElementById('map'), {
           zoom: 12,
           center: {
-            lat: userLat,
-            lng: userLng,
+            lat: destinationLat,
+            lng: destinationLng,
           },
           streetViewControl: false,
           mapTypeControl: false,
           mapTypeId: 'roadmap',
         });
 
-        userMarker = new google.maps.Marker({
-          position: {lat: userLat, lng: userLng},
-          map: map,
-          title: 'Current Location'
-        });
 
         destinationMarker = new google.maps.Marker({
           position: {lat: destinationLat, lng: destinationLng},
@@ -40,13 +35,23 @@ export default class Map2D extends React.Component {
           title: 'Dispatch Destination'
         });
 
-        let markers = [userMarker, destinationMarker];
-        let bounds = new google.maps.LatLngBounds();
-        for (let i = 0; i < markers.length; i++) {
-         bounds.extend(markers[i].getPosition());
-        }
+        if (userLat && userLng) {
 
-        map.fitBounds(bounds);
+          userMarker = new google.maps.Marker({
+            position: {lat: userLat, lng: userLng},
+            map: map,
+            title: 'Current Location'
+          });
+
+          let markers = [userMarker, destinationMarker];
+          let bounds = new google.maps.LatLngBounds();
+
+          for (let i = 0; i < markers.length; i++) {
+           bounds.extend(markers[i].getPosition());
+          }
+
+          map.fitBounds(bounds);
+        }
 
         var trafficLayer = new google.maps.TrafficLayer();
         trafficLayer.setMap(map)
@@ -56,7 +61,7 @@ export default class Map2D extends React.Component {
   render() {
     const MapDiv = styled.div`
       width: 100%;
-      height: 100vw;
+      height: 70vw;
       margin: 0 0 2em 0;
       @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
         height: 100vw;

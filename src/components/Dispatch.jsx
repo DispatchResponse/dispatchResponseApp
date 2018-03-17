@@ -44,10 +44,11 @@ export default class Dispatch extends React.Component {
   }
 
   setApparatus() {
+    //incomping props seems unpredictable with , and ' '
     let apparatusData = this.props.dispatchData.assignment
-      .replace(/\s/g, ',')
+      .replace(/\s/g, ',') //replace spaces with commas
       .split(',')
-      .filter(apparatus => { return apparatus !== ',' && apparatus !== '' });
+      .filter(apparatus => apparatus !== ',' && apparatus !== '' );
 
     this.setState({apparatusAssignment: apparatusData})
   }
@@ -180,7 +181,6 @@ export default class Dispatch extends React.Component {
         <DispatchDetails>
           <li>Apparatus Assigned</li>
           <ApparatusContainer>
-            <Apparatus key={"STA5"}>{"STA5"}</Apparatus>
 
             {
               !this.state.apparatusAssignment ? null :
@@ -189,10 +189,6 @@ export default class Dispatch extends React.Component {
                 return <Apparatus key={apparatus}>{apparatus}</Apparatus>
               })
             }
-            <Apparatus key={"STA5"}>{"STA5"}</Apparatus>
-            <Apparatus key={"STA5"}>{"STA5"}</Apparatus>
-            <Apparatus key={"STA5"}>{"STA5"}</Apparatus>
-
 
           </ApparatusContainer>
           <li>Description</li>

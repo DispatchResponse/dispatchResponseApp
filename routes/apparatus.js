@@ -7,9 +7,15 @@ const express = require('express')
 const router = express.Router()
 const db = require('../models')
 
-//TODO:  sort the output
+/**
+ * Returns a complete list of apparatus by apparatus_id in ascending order
+ */
 router.get('/', function (req, res, next) {
-  db.apparatus.all().then(function (apparatusList) {
+  db.apparatus.all({
+    order: [
+      ['apparatus_id', 'ASC']
+    ]
+  }).then(function (apparatusList) {
     let allApparatus = Object.keys(apparatusList).map(function (k) {
       return apparatusList[k].dataValues
     })

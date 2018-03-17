@@ -44,10 +44,11 @@ export default class Dispatch extends React.Component {
   }
 
   setApparatus() {
+    //incomping props seems unpredictable with , and ' '
     let apparatusData = this.props.dispatchData.assignment
-      .replace(/\s/g, ',')
+      .replace(/\s/g, ',') //replace spaces with commas
       .split(',')
-      .filter(apparatus => { return apparatus !== ',' && apparatus !== '' });
+      .filter(apparatus => apparatus !== ',' && apparatus !== '' );
 
     this.setState({apparatusAssignment: apparatusData})
   }
@@ -142,28 +143,31 @@ export default class Dispatch extends React.Component {
     `;
 
     const ApparatusContainer = styled.li`
-      display: flex;
-      justify-content: space-around;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 30px;
+      max-width: 90%;
+      margin: auto;
     `;
 
     const Apparatus = styled.div`
       font-family: 'Source Code Pro', monospace;
       display: flex;
+      justify-self: center;
       justify-content: center;
       align-items: center;
       color: white;
       background-color: black;
-      width: 10%;
+      min-width: 50%;
       font-size: 1.5em;
-      border-radius: 50%;
-      margin: 2%;
-      padding: 2% 2% 2% 3%;
       letter-spacing: 5px;
+      padding: 5px 5px 5px 6px;
+      border-radius: 35px;
       @media screen and (max-device-width: 480px) and (orientation: portrait){
-        font-size: 1.3em;
+        border-radius: 15px;
+        font-size: 1em;
       }
     `;
-
 
     return (
 
@@ -177,12 +181,15 @@ export default class Dispatch extends React.Component {
         <DispatchDetails>
           <li>Apparatus Assigned</li>
           <ApparatusContainer>
+
             {
               !this.state.apparatusAssignment ? null :
+
               this.state.apparatusAssignment.map( (apparatus) => {
                 return <Apparatus key={apparatus}>{apparatus}</Apparatus>
               })
             }
+
           </ApparatusContainer>
           <li>Description</li>
           <li>{this.props.dispatchData.call_description}</li>

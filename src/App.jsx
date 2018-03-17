@@ -55,7 +55,7 @@ export default class App extends React.Component {
 
     //get All Station Apparatus
     await axios.get('/api/apparatus').then((resp) => {
-      // console.log("//get All Station Apparatus",resp)
+      console.log("//get All Station Apparatus",resp)
       this.setAppState(resp.data, 'apparatus');
     })
 
@@ -115,7 +115,7 @@ export default class App extends React.Component {
       }
       return {id: app['apparatus_id'], active: false}
     })
-
+    console.log('buildApparatusAssigment', userApparatusAssignment)
     this.setState({userApparatusAssignment: userApparatusAssignment})
   }
 
@@ -164,16 +164,11 @@ export default class App extends React.Component {
 
     // console.log('oldAssignmentToDelete')
     // console.log(oldAssignmentToDelete)
+    let newAssignmentToAdd = newApparatusAssignment
+                                .filter(apparatus => apparatus.active)
+                                .map(apparatus => apparatus.id)
 
-    let newAssignmentToAdd = newApparatusAssignment.reduce((acc, item, idx) => {
-      if (idx + 1 === newApparatusAssignment.length) {
-        return `${acc + item.id}`
-      } else if (item.active) {
-        return `${acc + item.id}&`
-      } else {
-        return acc
-      }
-    }, '')
+    newAssignmentToAdd.length > 1 ? newAssignmentToAdd.join('&') : newAssignmentToAdd.join('');
 
     // console.log('newAssignmentToAdd')
     // console.log(newAssignmentToAdd)
@@ -210,7 +205,7 @@ export default class App extends React.Component {
           grid-template-areas: 'app '
                                'menu';
         }
-
+        
         @media only screen and (min-device-width: 480px)
                    and (max-device-width: 800px)
                    and (orientation: landscape) {
@@ -259,7 +254,7 @@ export default class App extends React.Component {
             mns={this.modifyNotificationStatus}/>
 
           <AppContent>
-            
+
 
              <Route
                exact path="/"
@@ -318,7 +313,7 @@ export default class App extends React.Component {
                  /> }
              />
 
-             
+
            </AppContent>
 
          </AppContainer>

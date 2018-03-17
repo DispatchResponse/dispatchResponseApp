@@ -222,7 +222,7 @@ export default class Dispatch extends React.Component {
         </DispatchDetails>
 
         {
-        !this.state.userCoords || !this.state.destinationCoords ?  null :
+         !this.state.destinationCoords ?  null :
         <Map2D
           userCoords={this.state.userCoords}
           destinationCoords={this.state.destinationCoords}/>

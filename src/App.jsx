@@ -194,7 +194,7 @@ export default class App extends React.Component {
     }
 
     if (newAssignmentToAdd.length > 0) {
-      await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`).then(resp => console.log('🎾 🎾 🎾 🎾 🎾 🎾 ', resp)).catch(err => console.log('🐸 🐸 🐸 🐸 🐸🐸', err))
+      await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`)
     }
 
     await axios.get(`/api/tracks/${userID}`).then((resp) => {

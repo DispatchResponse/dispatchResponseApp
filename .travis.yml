@@ -58,7 +58,28 @@ deploy:
   key: testing/latestTravis.zip
   bundle_type: zip
   application: CodeDeployApp_GFD
-  deployment_group: CodeDeployApp_GFD_group
+  deployment_group: CodeDeployApp_GFD_group-testing
   region: us-east-1
   on: *2
+- provider: s3
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  local_dir: s3_upload
+  skip_cleanup: true
+  on: &4
+    repo: nickfreemandesign/dispatchResponseApp
+    branch: testing
+  bucket: dispatchresponse
+  upload-dir: testing
+  region: us-east-1
+- provider: codedeploy
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: dispatchresponse
+  key: testing/latestTravis.zip
+  bundle_type: zip
+  application: CodeDeployApp_GFD
+  deployment_group: CodeDeployApp_GFD_group-testing
+  region: us-east-1
+  on: *4
 

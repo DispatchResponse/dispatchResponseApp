@@ -14,16 +14,8 @@ export default class Menu extends React.Component {
     this.toggleDisplay = this.toggleDisplay.bind(this);
   }
 
-  componentDidMount() {
-    // console.log(this.props.ns)
-  }
-
   toggleDisplay(e) {
-    if (e.target.id === 'notification-toggle') {
-      this.props.tns;
-    } else {
       this.setState({display: !this.state.display})
-    }
     return;
   }
 
@@ -35,31 +27,52 @@ export default class Menu extends React.Component {
           font-family: 'Podkova';
           font-size: 2em;
           padding: 20px 0;
+          margin: 0;
           &:hover{
             text-decoration: underline;
           }
-          @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+          @media screen and (min-device-width: 768px) and (max-device-width: 1050px){
             position: fixed;
-            bottom: 0;
+            bottom: 0px;
             z-index: 5;
             background-color: white;
             width: 100%;
-            margin-left: -5px;
             display: flex;
             justify-content: flex-end;
             border-top: 3px solid firebrick;
+            border-bottom: 3px solid firebrick;
           }
           @media screen and (max-device-width: 480px) and (orientation: portrait){
             position: fixed;
-            max-width: 480px;
-            bottom: 0;
+            max-width: 100%;
+            bottom: 0px;
             z-index: 5;
+            color: white;
+            height: .7em;
+            box-shadow: 2px 0px whitesmoke, -2px -2px whitesmoke;
             background-color: white;
-            width: 100%;
-            margin-left: -5px;
+            width: 110%;
             display: flex;
             justify-content: flex-end;
-            border-top: 5px solid firebrick;
+            border-top: 2px solid firebrick;
+            border-bottom: 3px solid firebrick;
+          }
+          @media only screen and (min-device-width: 480px)
+                     and (max-device-width: 800px)
+                     and (orientation: landscape) {
+            position: fixed;
+            max-width: 100%;
+            bottom: 0px;
+            z-index: 5;
+            color: white;
+            height: .7em;
+            box-shadow: 2px 0px whitesmoke, -2px -2px whitesmoke;
+            background-color: white;
+            width: 110%;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 2px solid firebrick;
+            border-bottom: 3px solid firebrick;
           }
 
       `;
@@ -76,7 +89,14 @@ export default class Menu extends React.Component {
           @media screen and (max-device-width: 480px) and (orientation: portrait){
             padding-right: 10%;
             color: firebrick;
-            font-size: .7em;
+            font-size: .8em;
+          }
+          @media only screen and (min-device-width: 480px)
+                     and (max-device-width: 800px)
+                     and (orientation: landscape) {
+            padding-right: 10%;
+            color: firebrick;
+            font-size: .8em;
           }
       `;
 
@@ -88,9 +108,11 @@ export default class Menu extends React.Component {
         background-color: white;
         min-width: 160px;
         box-shadow: 1px 0px 5px 0px rgba(0,0,0,0.2);
-        padding: 12px 16px;
         z-index: 5;
         padding: 20px;
+        @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+          left: 0;
+        }
         a {
           text-decoration: none;
           color: black;
@@ -99,16 +121,12 @@ export default class Menu extends React.Component {
             margin: 15px 0 15px 0;
             border-bottom: 1px solid white;
 
-            &:last-child{
-              border-bottom: none;
-            }
-
             &:hover{
               cursor: pointer;
               color: firebrick;
             }
 
-            @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+            @media screen and (min-device-width: 768px) and (max-device-width: 1050px){
               font-size: 1em;
               padding: 15px 0px 15px 30px;
             }
@@ -117,23 +135,38 @@ export default class Menu extends React.Component {
               font-size: 1em;
               padding: 15px 0px 15px 30px;
             }
+            @media only screen and (min-device-width: 480px)
+                       and (max-device-width: 800px)
+                       and (orientation: landscape) {
+              font-size: 1em;
+              padding: 15px 0px 15px 30px;
+            }
 
           }
         }
-        @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-          transform: translateY(-100%);
+        @media screen and (min-device-width: 768px) and (max-device-width: 1050px){
+          transform: translateY(-107%);
           width: 100%;
           li:last-child{
             border-bottom: none;
           }
         }
         @media screen and (max-device-width: 480px) and (orientation: portrait){
-          transform: translateY(-100%);
+          transform: translateY(-107%);
           width: 100%;
           li:last-child{
             border-bottom: none;
           }
         }
+        @media only screen and (min-device-width: 480px)
+                   and (max-device-width: 800px)
+                   and (orientation: landscape) {
+          transform: translateY(-107%);
+          width: 100%;
+          li:last-child{
+            border-bottom: none;
+          }
+       }
       `;
 
       const NotificationTitle = styled.li`
@@ -146,14 +179,19 @@ export default class Menu extends React.Component {
         letter-spacing: 3px;
         margin-bottom:10px;
         @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-          font-size: .5!important;
-          padding-left: 30px!important;
+          padding: 15px 0px 15px 30px;
           box-shadow: none!important;
           border: none!important;
         }
         @media screen and (max-device-width: 480px) and (orientation: portrait){
-          font-size: .5!important;
-          padding-left: 30px!important;
+          padding: 15px 0px 15px 30px;
+          box-shadow: none!important;
+          border: none!important;
+        }
+        @media only screen and (min-device-width: 480px)
+                   and (max-device-width: 800px)
+                   and (orientation: landscape) {
+          padding: 15px 0px 15px 30px;
           box-shadow: none!important;
           border: none!important;
         }
@@ -161,8 +199,14 @@ export default class Menu extends React.Component {
 
       const NotificationSwitch = styled.li`
         display: flex;
+        color: black;
+        font-family: 'Source Code Pro', monospace;
         align-items: center;
         justify-content: space-around;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-around;
+        align-items: center;
 
           input[type=checkbox]{
           	height: 0;
@@ -208,8 +252,8 @@ export default class Menu extends React.Component {
 
             label {
               cursor: pointer;
-              width: 100px;
-              height: 45px;
+              width: 75px;
+              height: 42px;
               background: grey;
               display: block;
               border-radius: 100px;
@@ -220,7 +264,7 @@ export default class Menu extends React.Component {
               content: '';
               position: absolute;
               top: 2px;
-              left: 5px;
+              left: 2px;
               width: 38px;
               height: 38px;
               background: #fff;
@@ -258,7 +302,7 @@ export default class Menu extends React.Component {
                   type="checkbox"
                   id={'notifications'}
                   defaultChecked={this.props.ns}
-                  onChange={this.props.tns}/>
+                  onChange={this.props.mns}/>
                 <label htmlFor={'notifications'} id="notification-toggle"></label>
             </NotificationSwitch>
           </MenuItems>

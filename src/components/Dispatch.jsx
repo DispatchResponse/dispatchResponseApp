@@ -13,26 +13,43 @@ export default class Dispatch extends React.Component {
     this.state = {
       destinationCoords: null,
       userCoords: null,
+      apparatusAssignment: null,
     };
     this.getDestinationData = this.getDestinationData.bind(this);
+    this.setApparatus = this.setApparatus.bind(this);
     this.getCurrentLocation = this.getCurrentLocation.bind(this);
   }
 
   componentDidMount() {
     this.getDestinationData(this.props.dispatchData);
     this.getCurrentLocation();
+    this.setApparatus()
   }
 
   getCurrentLocation() {
+    const options = {
+            timeout: 30000,
+            enableHighAccuracy: true,
+            maximumAge: 75000
+          }
+
     navigator.geolocation.getCurrentPosition(position => {
       let userCoords = {
         userLat: position.coords.latitude,
         userLng: position.coords.longitude
       }
       this.setState({userCoords: userCoords})
-    }, () => {
-      console.log('🐸 ...(denied)');
-    });
+    }, (err) => { console.log('🐸 ...(denied)', err);
+    }, options );
+  }
+
+  setApparatus() {
+    let apparatusData = this.props.dispatchData.assignment
+      .replace(/\s/g, ',')
+      .split(',')
+      .filter(apparatus => { return apparatus !== ',' && apparatus !== '' });
+
+    this.setState({apparatusAssignment: apparatusData})
   }
 
   getDestinationData(dispatchData) {
@@ -55,6 +72,7 @@ export default class Dispatch extends React.Component {
     const DispatchContainer = styled.div`
       display: grid;
       grid-template-columns: 1fr;
+      max-width: 1200px;
     `;
 
     const Title = styled.div`
@@ -68,7 +86,7 @@ export default class Dispatch extends React.Component {
       text-align: center;
       background-color: ${alarmColor};
       letter-spacing: 5px;
-        @media screen and (min-width: 1024px){
+        @media screen and (min-width: 1050px){
           border-radius: 15px 15px 0 0;
         }
     `;
@@ -77,59 +95,74 @@ export default class Dispatch extends React.Component {
       grid-area: description;
       font-size: 3em;
       font-family: 'Podkova';
+      @media screen and (max-device-width: 480px) and (orientation: portrait){
+        font-size: 2em;
+      }
     `;
 
     const Timeout = styled.div`
       grid-area: timeout;
       font-size: 1.5em;
-      font-family: 'Anonymous Pro';
+      font-family: 'Source Code Pro', monospace;
       letter-spacing: 5px;
+      @media screen and (max-device-width: 480px) and (orientation: portrait){
+        font-size: 1em;
+      }
     `;
 
     const DispatchDetails = styled.ul`
       padding: 0;
       list-style: none;
-      font-family: 'Anonymous Pro';
 
       li:nth-child(odd) {
+        font-family: 'Anonymous Pro';
         color: firebrick;
         box-shadow: 0 4px 2px -2px lightgray;
         background-color: white;
         border-top: 2px solid white;
         border-bottom: 2px solid firebrick;
-        padding: 5px 0 5px 10px;
-        font-size: 1.5em;
+        padding: 0 0 5px 10px;
+        font-size: 1.3em;
+        @media screen and (max-device-width: 480px) and (orientation: portrait){
+          font-size: 1em;
+        }
       }
 
       li:nth-child(even) {
+        font-family: 'Source Code Pro', monospace;
         color: black;
-        font-weight: bolder;
         background-color: white;
         padding: 10px 0 0 10px;
         margin-bottom: 2%;
-        font-size: 1.75em;
-
+        font-size: 1.5em;
+        @media screen and (max-device-width: 480px) and (orientation: portrait){
+          font-size: 1.3em;
+        }
       }
     `;
 
     const ApparatusContainer = styled.li`
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
     `;
 
     const Apparatus = styled.div`
+      font-family: 'Source Code Pro', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       color: white;
-      text-align: center;
       background-color: black;
       width: 10%;
-      font-size: 1em;
+      font-size: 1.5em;
       border-radius: 50%;
       margin: 2%;
       padding: 2% 2% 2% 3%;
       letter-spacing: 5px;
+      @media screen and (max-device-width: 480px) and (orientation: portrait){
+        font-size: 1.3em;
+      }
     `;
-
-
 
 
     return (
@@ -145,7 +178,8 @@ export default class Dispatch extends React.Component {
           <li>Apparatus Assigned</li>
           <ApparatusContainer>
             {
-              this.props.dispatchData.assignment.split(', ').map( (apparatus) => {
+              !this.state.apparatusAssignment ? null :
+              this.state.apparatusAssignment.map( (apparatus) => {
                 return <Apparatus key={apparatus}>{apparatus}</Apparatus>
               })
             }

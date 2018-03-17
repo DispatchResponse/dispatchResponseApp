@@ -124,12 +124,11 @@ router.get('/:userId', async function (req, res, next) {
     }
   })
     .then(function (trackDetails) {
+      let allTracks = []
       if (trackDetails !== null && trackDetails.length > 0) {
-        let allTracks = Object.keys(trackDetails).map(k => trackDetails[k].dataValues)
-        res.status(200).send(allTracks)
-      } else {
-        res.sendStatus(404)
+        allTracks = Object.keys(trackDetails).map(k => trackDetails[k].dataValues)
       }
+      res.status(200).send(allTracks)
     })
     .catch(error => {
       console.error(`ERROR in GET: ${error}`)

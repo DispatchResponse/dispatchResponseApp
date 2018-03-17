@@ -57,7 +57,7 @@ export default class App extends React.Component {
 
     //get All Station Apparatus
     await axios.get('/api/apparatus').then((resp) => {
-      console.log("//get All Station Apparatus",resp)
+      // console.log("//get All Station Apparatus",resp)
       this.setAppState(resp.data, 'apparatus');
     })
 
@@ -77,10 +77,8 @@ export default class App extends React.Component {
 
     //get User Tracking
     await axios.get(`/api/tracks/${userID}`).then((resp, err) => {
-      console.log("//get User Tracking",resp)
-      console.log("//ERRORERRORERERERE",err)
       this.setAppState(resp.data, 'userTracking');
-    }).catch((err) => console.log("INCATCH🤡", err))
+    })
 
     this.buildApparatusAssigment()
   }
@@ -111,8 +109,8 @@ export default class App extends React.Component {
 
   buildApparatusAssigment() {
     let userApparatusAssignment = this.state.allApparatus.map( app => {
-      console.log("this.state.userTracking INSIDE BUILD APPARATUS ASSIGNMENT")
-      console.log(this.state.userTracking)
+      // console.log("this.state.userTracking INSIDE BUILD APPARATUS ASSIGNMENT")
+      // console.log(this.state.userTracking)
       if (this.state.userTracking && this.state.userTracking.length > 0) {
         for (let i = 0; i < this.state.userTracking.length; i++) {
           if( this.state.userTracking[i]['apparatus_id'] === app['apparatus_id'] ) {
@@ -133,7 +131,7 @@ export default class App extends React.Component {
     }
 
     await axios.patch(`/api/users/${this.state.userID}`, userUpdate)
-      .catch(err => console.log(err))
+      .catch(err => console.log("ERROR WITH PATCH IN modifyNotificationStatus", err))
 
     await axios.get(`/api/users/${this.state.userID}`).then((resp) => {
       this.setAppState(resp.data, 'userInfo');
@@ -145,8 +143,8 @@ export default class App extends React.Component {
   async modifyApparatusAssignment(e) {
     let { userApparatusAssignment, userID } = this.state;
 
-    console.log("CURRENT APPARATUS ASSIGNMENT")
-    console.log(userApparatusAssignment)
+    // console.log("CURRENT APPARATUS ASSIGNMENT")
+    // console.log(userApparatusAssignment)
 
 
     let appID = e.target.id.split('-').pop();
@@ -159,8 +157,8 @@ export default class App extends React.Component {
       }
     })
 
-    console.log("newApparatusAssignment")
-    console.log(newApparatusAssignment)
+    // console.log("newApparatusAssignment")
+    // console.log(newApparatusAssignment)
 
     let oldAssignmentToDelete = userApparatusAssignment.reduce((acc, item, idx) => {
       if (idx + 1 === userApparatusAssignment.length && item.active) {
@@ -174,8 +172,8 @@ export default class App extends React.Component {
       }
     }, '')
 
-    console.log('oldAssignmentToDelete')
-    console.log(oldAssignmentToDelete)
+    // console.log('oldAssignmentToDelete')
+    // console.log(oldAssignmentToDelete)
     let newAssignmentToAdd = newApparatusAssignment
                                 .filter(apparatus => apparatus.active)
                                 .map(apparatus => apparatus.id)
@@ -186,15 +184,19 @@ export default class App extends React.Component {
       newAssignmentToAdd = newAssignmentToAdd.join('')
     }
 
-    console.log('newAssignmentToAdd')
-    console.log(newAssignmentToAdd)
+    // console.log('newAssignmentToAdd')
+    // console.log(newAssignmentToAdd)
 
     this.setState({userApparatusAssignment: newApparatusAssignment})
 
     if (oldAssignmentToDelete.length > 0) {
       await axios.delete(`/api/tracks/${userID}/${oldAssignmentToDelete}`)
     }
-    await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`).then(resp => console.log('🎾 🎾 🎾 🎾 🎾 🎾 ', resp)).catch(err => console.log('🐸 🐸 🐸 🐸 🐸🐸', err))
+
+    if (newAssignmentToAdd.length > 0) {
+      await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`).then(resp => console.log('🎾 🎾 🎾 🎾 🎾 🎾 ', resp)).catch(err => console.log('🐸 🐸 🐸 🐸 🐸🐸', err))
+    }
+
     await axios.get(`/api/tracks/${userID}`).then((resp) => {
       this.setAppState(resp.data, 'userTracking');
     })

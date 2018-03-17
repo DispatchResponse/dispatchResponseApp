@@ -75,9 +75,9 @@ export default class App extends React.Component {
 
     //get User Tracking
     await axios.get(`/api/tracks/${userID}`).then((resp) => {
-      // console.log("//get User Tracking",resp)
+      console.log("//get User Tracking",resp)
       this.setAppState(resp.data, 'userTracking');
-    })
+    }).catch((err) => console.log(err))
 
     this.buildApparatusAssigment()
   }
@@ -108,14 +108,17 @@ export default class App extends React.Component {
 
   buildApparatusAssigment() {
     let userApparatusAssignment = this.state.allApparatus.map( app => {
-      for (let i = 0; i < this.state.userTracking.length; i++) {
-        if( this.state.userTracking[i]['apparatus_id'] === app['apparatus_id'] ) {
-          return {id: app['apparatus_id'], active: true}
+      if (this.state.userTracking && this.state.userTracking > 0) {
+        for (let i = 0; i < this.state.userTracking.length; i++) {
+          if( this.state.userTracking[i]['apparatus_id'] === app['apparatus_id'] ) {
+            return {id: app['apparatus_id'], active: true}
+          }
         }
       }
+
       return {id: app['apparatus_id'], active: false}
     })
-    console.log('buildApparatusAssigment', userApparatusAssignment)
+
     this.setState({userApparatusAssignment: userApparatusAssignment})
   }
 
@@ -205,7 +208,7 @@ export default class App extends React.Component {
           grid-template-areas: 'app '
                                'menu';
         }
-        
+
         @media only screen and (min-device-width: 480px)
                    and (max-device-width: 800px)
                    and (orientation: landscape) {

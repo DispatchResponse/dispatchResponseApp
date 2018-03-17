@@ -13,11 +13,12 @@ const emailTransporter = require('../util/sendEmailSES')
 const DEBUG = false // Set this to 'true' to suppress sending email-SMS. It will still send to Postgres.
 
 /**
- * Get all calls
+ * Get all calls ordered by created_at DESC
  */
-// TODO:  sort
 router.get('/', function (req, res, next) {
-  db.calls.all()
+  db.calls.all({
+    order: [['created_at', 'DESC']]
+  })
     .then(function (callList) {
       let allCalls = Object.keys(callList).map(function (k) {
         return callList[k].dataValues

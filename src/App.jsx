@@ -10,6 +10,8 @@ import Admin from './components/Admin';
 import Menu from './components/Menu';
 import Logo from './assets/logo.svg';
 
+const GAPI_KEY = process.env.GAPI_KEY;
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -74,10 +76,11 @@ export default class App extends React.Component {
     })
 
     //get User Tracking
-    await axios.get(`/api/tracks/${userID}`).then((resp) => {
+    await axios.get(`/api/tracks/${userID}`).then((resp, err) => {
       console.log("//get User Tracking",resp)
+      console.log("//ERRORERRORERERERE",err)
       this.setAppState(resp.data, 'userTracking');
-    }).catch((err) => console.log(err))
+    }).catch((err) => console.log("INCATCH🤡", err))
 
     this.buildApparatusAssigment()
   }
@@ -108,7 +111,9 @@ export default class App extends React.Component {
 
   buildApparatusAssigment() {
     let userApparatusAssignment = this.state.allApparatus.map( app => {
-      if (this.state.userTracking && this.state.userTracking > 0) {
+      console.log("this.state.userTracking INSIDE BUILD APPARATUS ASSIGNMENT")
+      console.log(this.state.userTracking)
+      if (this.state.userTracking && this.state.userTracking.length > 0) {
         for (let i = 0; i < this.state.userTracking.length; i++) {
           if( this.state.userTracking[i]['apparatus_id'] === app['apparatus_id'] ) {
             return {id: app['apparatus_id'], active: true}
@@ -140,6 +145,10 @@ export default class App extends React.Component {
   async modifyApparatusAssignment(e) {
     let { userApparatusAssignment, userID } = this.state;
 
+    console.log("CURRENT APPARATUS ASSIGNMENT")
+    console.log(userApparatusAssignment)
+
+
     let appID = e.target.id.split('-').pop();
 
     let newApparatusAssignment = userApparatusAssignment.map(appItem => {
@@ -150,8 +159,8 @@ export default class App extends React.Component {
       }
     })
 
-    // console.log("newApparatusAssignment")
-    // console.log(newApparatusAssignment)
+    console.log("newApparatusAssignment")
+    console.log(newApparatusAssignment)
 
     let oldAssignmentToDelete = userApparatusAssignment.reduce((acc, item, idx) => {
       if (idx + 1 === userApparatusAssignment.length && item.active) {
@@ -165,21 +174,27 @@ export default class App extends React.Component {
       }
     }, '')
 
-    // console.log('oldAssignmentToDelete')
-    // console.log(oldAssignmentToDelete)
+    console.log('oldAssignmentToDelete')
+    console.log(oldAssignmentToDelete)
     let newAssignmentToAdd = newApparatusAssignment
                                 .filter(apparatus => apparatus.active)
                                 .map(apparatus => apparatus.id)
 
-    newAssignmentToAdd.length > 1 ? newAssignmentToAdd.join('&') : newAssignmentToAdd.join('');
+    if ( newAssignmentToAdd.length > 1 ) {
+      newAssignmentToAdd = newAssignmentToAdd.join('&')
+    } else {
+      newAssignmentToAdd = newAssignmentToAdd.join('')
+    }
 
-    // console.log('newAssignmentToAdd')
-    // console.log(newAssignmentToAdd)
+    console.log('newAssignmentToAdd')
+    console.log(newAssignmentToAdd)
 
     this.setState({userApparatusAssignment: newApparatusAssignment})
 
-    await axios.delete(`/api/tracks/${userID}/${oldAssignmentToDelete}`)
-    await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`)
+    if (oldAssignmentToDelete.length > 0) {
+      await axios.delete(`/api/tracks/${userID}/${oldAssignmentToDelete}`)
+    }
+    await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`).then(resp => console.log('🎾 🎾 🎾 🎾 🎾 🎾 ', resp)).catch(err => console.log('🐸 🐸 🐸 🐸 🐸🐸', err))
     await axios.get(`/api/tracks/${userID}`).then((resp) => {
       this.setAppState(resp.data, 'userTracking');
     })

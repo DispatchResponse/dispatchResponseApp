@@ -28,7 +28,7 @@ export default class Dispatch extends React.Component {
 
   getCurrentLocation() {
     const options = {
-            timeout: 30000,
+            timeout: 10000,
             enableHighAccuracy: true,
             maximumAge: 75000
           }
@@ -54,12 +54,17 @@ export default class Dispatch extends React.Component {
   }
 
   getDestinationData(dispatchData) {
-    let destinationCoords = {
-      destinationLat: parseFloat(dispatchData.latitude),
-      destinationLng: parseFloat(dispatchData.longitude)
-    }
+    let {latitude, longitude} = dispatchData
+    if (latitude && longitude) {
 
-    this.setState({destinationCoords: destinationCoords})
+      let destinationCoords = {
+        destinationLat: parseFloat(latitude),
+        destinationLng: parseFloat(longitude)
+      }
+
+      this.setState({destinationCoords: destinationCoords})
+    } else {}
+
   }
 
   render() {

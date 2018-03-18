@@ -14,8 +14,6 @@ export default class UserSettings extends React.Component {
   }
 
   componentDidMount() {
-    //TODO: map user mobile carrier to carriers obj and get carrier Name
-    //TODO: map apparatuses to tracking and get trues and falses
     this.determineUserCarrierName()
   }
 

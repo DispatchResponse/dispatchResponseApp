@@ -141,66 +141,16 @@ export default class App extends React.Component {
   }
 
   async modifyApparatusAssignment(e) {
-    let { userApparatusAssignment, userID } = this.state;
-
-    // console.log("CURRENT APPARATUS ASSIGNMENT")
-    // console.log(userApparatusAssignment)
-
-
+    let { userID } = this.state;
     let appID = e.target.id.split('-').pop();
-
-    let newApparatusAssignment = userApparatusAssignment.map(appItem => {
-      if (appItem.id === appID) {
-        return {id: appID, active: !appItem.active}
-      } else {
-        return appItem
-      }
+    await axios.patch(`/api/tracks/${userID}/${appID}`)
+    .then((resp) => {
+      console.log('resp.data: ', resp.data)
+      // this.setAppState(resp.data, 'userTracking');
     })
-
-    // console.log("newApparatusAssignment")
-    // console.log(newApparatusAssignment)
-
-    let oldAssignmentToDelete = userApparatusAssignment.reduce((acc, item, idx) => {
-      if (idx + 1 === userApparatusAssignment.length && item.active) {
-        return `${acc + item.id}`
-      } else if (idx + 1 === userApparatusAssignment.length) {
-        return acc.slice(0, acc.length - 1)
-      } else if (item.active) {
-        return `${acc + item.id}&`
-      } else {
-        return acc
-      }
-    }, '')
-
-    // console.log('oldAssignmentToDelete')
-    // console.log(oldAssignmentToDelete)
-    let newAssignmentToAdd = newApparatusAssignment
-                                .filter(apparatus => apparatus.active)
-                                .map(apparatus => apparatus.id)
-
-    if ( newAssignmentToAdd.length > 1 ) {
-      newAssignmentToAdd = newAssignmentToAdd.join('&')
-    } else {
-      newAssignmentToAdd = newAssignmentToAdd.join('')
-    }
-
-    // console.log('newAssignmentToAdd')
-    // console.log(newAssignmentToAdd)
-
-    this.setState({userApparatusAssignment: newApparatusAssignment})
-
-    if (oldAssignmentToDelete.length > 0) {
-      await axios.delete(`/api/tracks/${userID}/${oldAssignmentToDelete}`)
-    }
-
-    if (newAssignmentToAdd.length > 0) {
-      await axios.post(`/api/tracks/${userID}/${newAssignmentToAdd}`)
-    }
-
-    await axios.get(`/api/tracks/${userID}`).then((resp) => {
-      this.setAppState(resp.data, 'userTracking');
+    .catch((error) => {
+      console.error(`ERROR in PATCH for user/apparatus assignment: ${error}`)
     })
-
   }
 
   render() {
@@ -336,7 +286,7 @@ export default class App extends React.Component {
              <Route
                exact path="/oops"
                render={ routeProps => <Oops {...routeProps}
-               /> } 
+               /> }
              />
 
 

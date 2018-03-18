@@ -36,6 +36,42 @@ router.post('/:userId/:apparatusId', function (req, res, next) {
 })
 
 /**
+ * Create or delete a user's selection of apparatus
+ */
+router.patch('/:userId/:apparatusId', function (req, res, next) {
+  let userId = req.params.userId
+  let apparatusArr = req.params.apparatusId.toUpperCase().split('&')
+  apparatusArr.forEach(eng => {
+    let entry = {
+      apparatus_id: eng,
+      user_id: userId
+    }
+    db.trackings.findOrCreate({ where: entry })
+      .spread((tracking, created) => {
+        if (created) {
+          console.log('Created new tracking entry 😎 ')
+          res.sendStatus(201)
+        } else {
+          db.trackings.destroy({
+            where: {
+              [and]: [
+                { apparatus_id: { [eq]: tracking.apparatus_id } },
+                { user_id: { [eq]: userId } }
+              ]
+            }
+          })
+          console.log('Deleted existing tracking entry 😎 ')
+          return res.sendStatus(204)
+        }
+      })
+      .catch(error => {
+        console.error(`ERROR sending to Postgres: ${error}`)
+        return res.sendStatus(501)
+      })
+  })
+})
+
+/**
  * Get one or more apparatus for a single user
  */
 router.get('/:userId/:apparatusId', function (req, res, next) {
@@ -103,9 +139,9 @@ router.delete('/:userId/:apparatusId', function (req, res, next) {
           }
         })
         console.log('Delete successful 😎 ')
-        res.sendStatus(204)
+        return res.sendStatus(204)
       } else {
-        res.sendStatus(404)
+        return res.sendStatus(404)
       }
     })
     .catch(error => {

@@ -8,6 +8,20 @@ const db = require('../models')
 const Sequelize = require('sequelize')
 const { or, and } = Sequelize.Op
 
+router.get('/admins', function (req, res, next) {
+  db.users.findAll({
+    where: {is_admin: true}
+  })
+    .then(admins => {
+      // console.log('admins.full_name: ', admins.full_name)
+      // console.log('admins.full_mobile: ', admins.full_mobile)
+      res.send(admins)
+    })
+    .catch(error => {
+      console.error(`ERROR in users/admins GET: ${error}`)
+    })
+})
+
 router.get('/:userId', function (req, res, next) {
   db.users.findOne({
     where: {user_id: req.params.userId}
@@ -25,15 +39,15 @@ router.get('/:userId', function (req, res, next) {
 router.get('/', function (req, res, next) {
   console.log('db.users: ', db.apparatus)
   db.users.findAll()
-  .then(userList => {
-    let allUsers = Object.keys(userList).map(function (k) {
-      return userList[k].dataValues
+    .then(userList => {
+      let allUsers = Object.keys(userList).map(function (k) {
+        return userList[k].dataValues
+      })
+      res.send(allUsers)
     })
-    res.send(allUsers)
-  })
-  .catch(error => {
-    console.error(`ERROR in users GET: ${error}`)
-  })
+    .catch(error => {
+      console.error(`ERROR in users GET: ${error}`)
+    })
 })
 
 router.patch('/:userId', function (req, res, next) {

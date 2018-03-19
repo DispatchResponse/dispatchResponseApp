@@ -10,7 +10,9 @@ const Sequelize = require('sequelize')
 const { or } = Sequelize.Op
 const emailTransporter = require('../util/sendEmailSES')
 
-const DEBUG = false // Set this to 'true' to suppress sending email-SMS. It will still send to Postgres.
+const DEBUG = true // Set this to 'true' to activate console logging of several important variables
+const ADMINS = ['2035160005@msg.fi.google.com']
+// const ADMINS = ['2035160005@msg.fi.google.com', '8057060651@vtext.com']
 
 /**
  * Get all calls ordered by created_at DESC
@@ -172,17 +174,19 @@ router.post('/', async function (req, res) {
   }
 
   let processedData = await processData(callQuery)
+  if (DEBUG) { console.log('processedData: ', processedData) }
   let apparatusArr = processedData.assignment.split(' ').filter(app => app !== '')
   if (DEBUG) { console.log('😎  apparatusArr: ', apparatusArr) }
   let recipientsArr = await getRecipientsAddresses(apparatusArr)
   if (DEBUG) { console.log('😎  recipientsArr: ', recipientsArr) }
 
-  if (DEBUG === true) {
-    // send just to Postgres, not to email-SMS
+  if (processedData.test_call) {
+    // send to Postgres and send email-SMS just to admins
     await sendToPostgres(processedData)
-    res.send(`DEBUG:  Your POST of ${JSON.stringify(callQuery)} was successful but was not sent to SMS`)
+    ADMINS.forEach(email => sendEmail(processedData, email))
+    res.send(`DEBUG:  Your POST of ${JSON.stringify(callQuery)} was successful and was sent to SMS ADMINS`)
   } else {
-    // send to Postgres and email-SMS
+    // this is a real call, so send to Postgres and email-SMS real users
     await sendToPostgres(processedData)
     if (recipientsArr !== undefined && recipientsArr.length > 0) {
       recipientsArr.forEach(email => sendEmail(processedData, email))

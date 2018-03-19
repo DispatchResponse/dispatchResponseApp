@@ -10,7 +10,7 @@ const Sequelize = require('sequelize')
 const { or } = Sequelize.Op
 const emailTransporter = require('../util/sendEmailSES')
 
-const DEBUG = true // Set this to 'true' to activate console logging of several important variables
+const DEBUG = false // Set this to 'true' to activate console logging of several important variables
 const ADMINS = ['2035160005@msg.fi.google.com']
 // const ADMINS = ['2035160005@msg.fi.google.com', '8057060651@vtext.com']
 

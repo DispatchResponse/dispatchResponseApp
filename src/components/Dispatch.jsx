@@ -171,6 +171,7 @@ export default class Dispatch extends React.Component {
       @media screen and (max-device-width: 480px) and (orientation: portrait){
         border-radius: 15px;
         font-size: 1em;
+        min-width: 90%;
       }
     `;
 

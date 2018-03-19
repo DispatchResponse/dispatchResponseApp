@@ -15,7 +15,10 @@ export default class Menu extends React.Component {
   }
 
   toggleDisplay(e) {
-      this.setState({display: !this.state.display})
+    //if user hits notification toggle from within Menu,
+    //prevent toggle display from overriding
+    e.target.id === 'notification-toggle' ?
+      null : this.setState({display: !this.state.display})
     return;
   }
 

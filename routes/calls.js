@@ -15,8 +15,8 @@ var today = new Date()
 today = dateformat(today, 'MM-DD-YYYY HH:mm:ss')
 
 const DEBUG = false // Set this to 'true' to activate console logging of several important variables
-const ADMINS = ['2035160005@msg.fi.google.com']
-// const ADMINS = ['2035160005@msg.fi.google.com', '8057060651@vtext.com']
+// const ADMINS = ['2035160005@msg.fi.google.com']
+const ADMINS = ['2035160005@msg.fi.google.com', '8057060651@vtext.com']
 
 /**
  * Get all calls ordered by created_at DESC

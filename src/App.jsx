@@ -8,7 +8,6 @@ import DispatchHistory from './components/DispatchHistory';
 import UserSettings from './components/UserSettings';
 import Admin from './components/Admin';
 import Menu from './components/Menu';
-import Logo from './assets/logo.svg';
 
 const GAPI_KEY = process.env.GAPI_KEY;
 

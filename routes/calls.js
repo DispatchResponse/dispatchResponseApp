@@ -10,9 +10,13 @@ const Sequelize = require('sequelize')
 const { or } = Sequelize.Op
 const emailTransporter = require('../util/sendEmailSES')
 
+var dateformat = require('date-fns/format')
+var today = new Date()
+today = dateformat(today, 'MM-DD-YYYY HH:mm:ss')
+
 const DEBUG = false // Set this to 'true' to activate console logging of several important variables
-const ADMINS = ['2035160005@msg.fi.google.com']
-// const ADMINS = ['2035160005@msg.fi.google.com', '8057060651@vtext.com']
+// const ADMINS = ['2035160005@msg.fi.google.com']
+const ADMINS = ['2035160005@msg.fi.google.com', '8057060651@vtext.com']
 
 /**
  * Get all calls ordered by created_at DESC
@@ -131,10 +135,10 @@ const processData = (data) => {
 const sendToPostgres = (processedData) => {
   db.calls.create(processedData)
     .then(processedData => {
-      console.log('Successful write to Postgres 😎 ')
+      console.log('Successful write to Postgres: ', today)
     })
     .catch(error => {
-      console.error(`ERROR sending to Postgres: ${error}`)
+      console.error(`ERROR sending to Postgres: ${today} :: ${error}`)
     })
 }
 
@@ -187,6 +191,7 @@ router.post('/', async function (req, res) {
     res.send(`DEBUG:  Your POST of ${JSON.stringify(callQuery)} was successful and was sent to SMS ADMINS`)
   } else {
     // this is a real call, so send to Postgres and email-SMS real users
+    console.log(`PRE-POSTGRES-WRITE: ${today} :: ${processedData}`)
     await sendToPostgres(processedData)
     if (recipientsArr !== undefined && recipientsArr.length > 0) {
       recipientsArr.forEach(email => sendEmail(processedData, email))

@@ -20,9 +20,9 @@ const sendDummyCall = () => {
 
   var options = {
     method: 'POST',
-    url: 'http://localhost:1337/calls',
-    // url: 'https://gfd.dispatch.rustybear.com/calls',
-    // url: 'https://testing.dispatch.rustybear.com/calls',
+    // url: 'http://localhost:1337/calls',
+    url: 'https://gfd.gr/calls',
+    // url: 'https://testing.gfd.gr/calls',
     qs: dummyCall,
     headers: {
       'content-type': 'application/json'

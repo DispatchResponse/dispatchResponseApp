@@ -1,26 +1,17 @@
-import React from 'react';
-import { Route, NavLink } from 'react-router-dom';
-import styled from 'styled-components';
-import Menu from './Menu';
-
-
-
-
+import React from 'react'
+import { NavLink } from 'react-router-dom'
+import styled from 'styled-components'
+import Menu from './Menu'
 
 export default class DispatchHistory extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+  constructor (props) {
+    super(props)
+    this.state = {}
   }
 
-  componentDidMount() {
+  componentDidMount () {}
 
-  }
-
-
-
-  render() {
-
+  render () {
     const DispatchHistoryContainer = styled.div`
     width: 100%;
     height: auto;
@@ -43,7 +34,7 @@ export default class DispatchHistory extends React.Component {
       border-radius: none;
       font-size: 1em;
     }
-    `;
+    `
 
     const Title = styled.div`
       grid-area: title;
@@ -55,7 +46,7 @@ export default class DispatchHistory extends React.Component {
       background-color: gray;
       padding: .7% 0;
       font-family: 'Podkova';
-    `;
+    `
 
     const TableData = styled.div`
         @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
@@ -71,13 +62,12 @@ export default class DispatchHistory extends React.Component {
           }
         }
         overflow: auto;
-
-    `;
+    `
 
     const Headers = styled.div`
       grid-area: head;
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       background-color: firebrick;
       color: white;
       font-size: 1em;
@@ -90,6 +80,7 @@ export default class DispatchHistory extends React.Component {
         margin: auto;
         text-align: center;
       }
+
       @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
         &:before{
           content: "";
@@ -113,9 +104,7 @@ export default class DispatchHistory extends React.Component {
           z-index: -1;
         }
       }
-
-    `;
-
+    `
 
     const DispatchTable = styled.div`
       grid-area: records;
@@ -135,90 +124,68 @@ export default class DispatchHistory extends React.Component {
           background-color: royalblue;
           color: white;
         }
-    `;
+    `
 
     const CallListRow = styled.div`
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       padding: 1% 0;
       font-family: 'Anonymous Pro';
-    `;
+    `
 
     const CallListItem = styled.div`
-
       min-width: 50px;
       max-width: 300px;
       word-wrap: break-word;
       text-align: center;
-    `;
+    `
 
     return (
-
-        <DispatchHistoryContainer>
+      <DispatchHistoryContainer>
 
         <Title>Call List</Title>
 
         <TableData>
 
-        <Headers>
-          <div>&nbsp;Timeout</div>
-          <div>Description</div>
-          <div>District</div>
-          <div>Location</div>
-          <div>Premise</div>
-          <div>Cross Streets</div>
-          <div>Assignment</div>
-          <div>Radio</div>
-          <div>Map</div>
-          <div>Remarks</div>
-        </Headers>
+          <Headers>
+            <div>&nbsp;Timeout</div>
+            <div>Description</div>
+            <div>District</div>
+            <div>Location</div>
+            <div>Assignment</div>
+          </Headers>
 
-
-        <DispatchTable>
-          {this.props.dispatchHistory.map((call, idx) => (
-            <CallListRow key={idx}>
-              <CallListItem>
-                { call.timeout.split(' ')[0]}
-              </CallListItem>
-              <CallListItem>
-                { call['call_description'] }
-              </CallListItem>
-              <CallListItem>
-                { call.city }
-              </CallListItem>
-              <CallListItem>
-                { call.location }
-              </CallListItem>
-              <CallListItem>
-                { call.location === call['premise_name'] ?
-                  '' :
-                  call['premise_name']
-                }
-              </CallListItem>
-              <CallListItem>
-                { call['cross_street'] }
-              </CallListItem>
-              <CallListItem>
-                { call.assignment }
-              </CallListItem>
-              <CallListItem>
-                { call['radio_freq'] }
-              </CallListItem>
-              <CallListItem>
-                { call['map_ref'] }
-              </CallListItem>
-              <CallListItem>
-                { call['cfs_remark'] }
-              </CallListItem>
-            </CallListRow>
-          ))}
-        </DispatchTable>
+          <DispatchTable>
+            {this.props.dispatchHistory.map((call, idx) => (
+              <CallListRow key={idx}>
+                <CallListItem>
+                  { call.timeout.split(' ')[1].split(':').slice(0, 2).join(':')}
+                  <br />
+                  { call.timeout.split(' ')[0].split('-').slice(0, 2).join('-')}
+                </CallListItem>
+                <CallListItem>
+                  { call['call_description'] }
+                </CallListItem>
+                <CallListItem>
+                  { call.city }
+                </CallListItem>
+                <CallListItem>
+                  { call.location } <br />
+                  { call.location === call['premise_name']
+                    ? ''
+                    : call['premise_name']
+                  }
+                </CallListItem>
+                <CallListItem>
+                  { call.assignment }
+                </CallListItem>
+              </CallListRow>
+            ))}
+          </DispatchTable>
 
         </TableData>
 
       </DispatchHistoryContainer>
-
     )
-
   }
 }

@@ -148,8 +148,7 @@ const sendToPostgres = (processedData) => {
  */
 const sendEmail = (data, recipient) => {
   emailTransporter.sendMail({
-    // from: 'postmaster@signalclick.com',
-    from: 'no-reply@dispatchresponse.com',
+    from: 'no-reply@dispatchresponse.com <no-reply@dispatchresponse.com>',
     to: recipient,
     subject: 'GFD Call',
     text: `Call type: ${data.call_category}

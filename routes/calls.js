@@ -15,8 +15,6 @@ var today = new Date()
 today = dateformat(today, 'MM-DD-YYYY HH:mm:ss')
 
 const DEBUG = false // Set this to 'true' to activate console logging of several important variables
-// const ADMINS = ['2035160005@msg.fi.google.com']
-const ADMINS = ['2035160005@msg.fi.google.com', '8057060651@vtext.com']
 
 /**
  * Get all calls ordered by created_at DESC
@@ -77,8 +75,11 @@ const getRecipientsAddresses = (apparatusArr) => {
       if (DEBUG) { console.log('😎  userList: ', userList) }
       let userAddresses = Object.keys(userList).map(function (k) {
         if (userList[k].dataValues.is_enabled === true && userList[k].dataValues.is_sleeping === false) {
-          return {'address': userList[k].dataValues.mobile + userList[k].dataValues.carrier,
-            'userId': userList[k].dataValues.user_id}
+          return {
+            'address': userList[k].dataValues.mobile + userList[k].dataValues.carrier,
+            'userId': userList[k].dataValues.user_id,
+            'isAdmin': userList[k].dataValues.is_admin
+          }
         }
       })
       if (DEBUG) { console.log('😎  userAddresses:', userAddresses) }
@@ -147,7 +148,8 @@ const sendToPostgres = (processedData) => {
  */
 const sendEmail = (data, recipient) => {
   emailTransporter.sendMail({
-    from: 'postmaster@signalclick.com',
+    // from: 'postmaster@signalclick.com',
+    from: 'no-reply@dispatchresponse.com',
     to: recipient,
     subject: 'GFD Call',
     text: `Call type: ${data.call_category}
@@ -187,7 +189,13 @@ router.post('/', async function (req, res) {
   if (processedData.test_call) {
     // send to Postgres and send email-SMS just to admins
     await sendToPostgres(processedData)
-    ADMINS.forEach(email => sendEmail(processedData, email))
+    if (recipientsArr !== undefined && recipientsArr.length > 0) {
+      recipientsArr.forEach(email => {
+        if (email.isAdmin) {
+          sendEmail(processedData, email)
+        }
+      })
+    }
     res.send(`DEBUG:  Your POST of ${JSON.stringify(callQuery)} was successful and was sent to SMS ADMINS`)
   } else {
     // this is a real call, so send to Postgres and email-SMS real users

@@ -151,11 +151,16 @@ const sendEmail = (data, recipient) => {
     from: 'no-reply@dispatchresponse.com <no-reply@dispatchresponse.com>',
     to: recipient,
     subject: 'GFD Call',
+    html: `<p>Call type: ${data.call_category}
+Location: ${data.location}  ${data.city}
+Assignment: ${data.assignment}
+Details: https://gfd.gr/${data.slug}/${recipient.userId}
+</p>`,
     text: `Call type: ${data.call_category}
 Location: ${data.location}  ${data.city}
 Assignment: ${data.assignment}
 Details: https://gfd.gr/${data.slug}/${recipient.userId}
-      `
+`
   }, (err, info) => {
     if (err) {
       console.error(err)

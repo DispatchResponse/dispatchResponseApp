@@ -5,6 +5,7 @@ import Menu from './Menu';
 import Map2D from './Map2D';
 import Map3D from './Map3D';
 import UserSettings from './UserSettings';
+import getCoordinates from '../utils/getCoordinates';
 
 
 export default class Dispatch extends React.Component {
@@ -53,9 +54,10 @@ export default class Dispatch extends React.Component {
     this.setState({apparatusAssignment: apparatusData})
   }
 
-  getDestinationData(dispatchData) {
-    let {latitude, longitude} = dispatchData
-    if (latitude && longitude) {
+  async getDestinationData(dispatchData) {
+    let { latitude, longitude, city, location } = dispatchData
+    if (!latitude && longitude) {
+      console.log(dispatchData)
 
       let destinationCoords = {
         destinationLat: parseFloat(latitude),
@@ -63,7 +65,11 @@ export default class Dispatch extends React.Component {
       }
 
       this.setState({destinationCoords: destinationCoords})
-    } else {}
+    } else {
+      console.log('Destination Coordinates not provided.')
+      console.log('Falling back to get coordinates from address.')
+      getCoordinates(location, city, this) //location is address, city is district
+    }
 
   }
 

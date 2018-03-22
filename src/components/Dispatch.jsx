@@ -57,7 +57,6 @@ export default class Dispatch extends React.Component {
   async getDestinationData(dispatchData) {
     let { latitude, longitude, city, location } = dispatchData
     if (latitude && longitude) {
-      console.log(dispatchData)
 
       let destinationCoords = {
         destinationLat: parseFloat(latitude),
@@ -65,6 +64,7 @@ export default class Dispatch extends React.Component {
       }
 
       this.setState({destinationCoords: destinationCoords})
+
     } else {
       console.log('Destination Coordinates not provided.')
       console.log('Falling back to get coordinates from address.')

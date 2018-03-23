@@ -74,7 +74,7 @@ export default class App extends React.Component {
     })
 
     //get User Tracking
-    await axios.get(`/api/tracks/${userID}`).then((resp, err) => {
+    await axios.get(`/api/track_user_apparatus/${userID}`).then((resp, err) => {
       this.setAppState(resp.data, 'userTracking');
     })
 
@@ -141,7 +141,7 @@ export default class App extends React.Component {
   async modifyApparatusAssignment(e) {
     let { userID } = this.state;
     let appID = e.target.id.split('-').pop();
-    await axios.patch(`/api/tracks/${userID}/${appID}`)
+    await axios.patch(`/api/track_user_apparatus/${userID}/${appID}`)
     .then((resp) => {
       console.log('resp.data: ', resp.data)
       // this.setAppState(resp.data, 'userTracking');

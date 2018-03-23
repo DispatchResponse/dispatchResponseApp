@@ -46,6 +46,8 @@ db.carriers = require('./carrier')(sequelize, Sequelize)
 db.stations = require('./station')(sequelize, Sequelize)
 db.apparatus = require('./apparatus')(sequelize, Sequelize)
 db.trackings = require('./tracking')(sequelize, Sequelize)
+db.track_user_apparatus = require('./track_user_apparatus')(sequelize, Sequelize)
+db.track_station_apparatus = require('./track_station_apparatus')(sequelize, Sequelize)
 
 // db.users.belongsToMany(db.apparatus, {through: db.trackings, foreignKey: 'user_id'})
 // db.apparatus.belongsToMany(db.users, {through: db.trackings, foreignKey: 'apparatus_id'})
@@ -54,5 +56,15 @@ db.users.hasMany(db.trackings, { foreignKey: 'user_id' })
 db.trackings.belongsTo(db.users, { foreignKey: 'user_id' })
 db.apparatus.hasMany(db.trackings, { foreignKey: 'apparatus_id' })
 db.trackings.belongsTo(db.apparatus, { foreignKey: 'apparatus_id' })
+
+db.users.hasMany(db.track_user_apparatus, { foreignKey: 'user_id' })
+db.track_user_apparatus.belongsTo(db.users, { foreignKey: 'user_id' })
+db.apparatus.hasMany(db.track_user_apparatus, { foreignKey: 'apparatus_id' })
+db.track_user_apparatus.belongsTo(db.apparatus, { foreignKey: 'apparatus_id' })
+
+db.stations.hasMany(db.track_station_apparatus, { foreignKey: 'station_id' })
+db.track_station_apparatus.belongsTo(db.stations, { foreignKey: 'station_id' })
+db.apparatus.hasMany(db.track_station_apparatus, { foreignKey: 'apparatus_id' })
+db.track_station_apparatus.belongsTo(db.apparatus, { foreignKey: 'apparatus_id' })
 
 module.exports = db

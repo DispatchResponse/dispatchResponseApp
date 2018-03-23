@@ -5,14 +5,21 @@
  * Sends a dummy call
  *
  */
+
 const data = require('./dummy_data')
+// const data = require('./badCall')
+
 const request = require('request')
 
 var dateformat = require('date-fns/format')
 
-const sendDummyCall = () => {
-  var today = new Date()
-  today = dateformat(today, 'MM-DD-YYYY HH:mm:ss')
+const getDate = () => {
+  var d = new Date()
+  return dateformat(d, 'MM-DD-YYYY HH:mm:ss')
+}
+
+const sendDummyCall = async () => {
+  let today = await getDate()
   var randomCallNumber = Math.floor(Math.random() * data.maindata.length + 1)
   var dummyCall = data.maindata[randomCallNumber]
   dummyCall.rec_dt = today

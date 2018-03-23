@@ -11,8 +11,10 @@ const { or } = Sequelize.Op
 const emailTransporter = require('../util/sendEmailSES')
 
 var dateformat = require('date-fns/format')
-var today = new Date()
-today = dateformat(today, 'MM-DD-YYYY HH:mm:ss')
+const getToday = () => {
+  var d = new Date()
+  return dateformat(d, 'MM-DD-YYYY HH:mm:ss')
+}
 
 const DEBUG = false // Set this to 'true' to activate console logging of several important variables
 
@@ -94,6 +96,10 @@ const getRecipientsAddresses = (apparatusArr) => {
  * Prepare and parse data before DB injection and emailing
  * TODO: parse logic to deal with cases of no apparatus assignment but radio
  * freq is listed and other cases during busy times
+ * TODO: is UnitList always comma separated?  sometimes i think not yet we
+ * assume it is. can we deal with it if it is space separated? yes, but what if
+ * it is comma separated between radioFreq and engines but within the engines
+ * it is space separated?  much more difficult.
  */
 const processData = (data) => {
   let slug = cuid.slug()
@@ -136,10 +142,10 @@ const processData = (data) => {
 const sendToPostgres = (processedData) => {
   db.calls.create(processedData)
     .then(processedData => {
-      console.log('Successful write to Postgres: ', today)
+      console.log('Successful write to Postgres: ', getToday())
     })
     .catch(error => {
-      console.error(`ERROR sending to Postgres: ${today} :: ${error}`)
+      console.error('ERROR sending to Postgres: ', getToday(), error)
     })
 }
 
@@ -203,6 +209,9 @@ router.post('/', async function (req, res) {
     callQuery = JSON.parse(req.body)
   }
 
+  // logging to figure out what Dispatch is sending sometimes
+  console.log('HEY DISPATCH SENT THIS: ', callQuery);
+
   let processedData = await processData(callQuery)
   if (DEBUG) { console.log('processedData: ', processedData) }
   let apparatusArr = processedData.assignment.split(' ').filter(app => app !== '')
@@ -220,10 +229,11 @@ router.post('/', async function (req, res) {
         }
       })
     }
+    console.log('PRE-POSTGRES-WRITE: ', getToday(),  processedData)
     res.send(`DEBUG:  Your POST of ${JSON.stringify(callQuery)} was successful and was sent to SMS ADMINS`)
   } else {
     // this is a real call, so send to Postgres and email-SMS real users
-    console.log(`PRE-POSTGRES-WRITE: ${today} :: ${processedData}`)
+    console.log('PRE-POSTGRES-WRITE: ', getToday(),  processedData)
     await sendToPostgres(processedData)
     if (recipientsArr !== undefined && recipientsArr.length > 0) {
       recipientsArr.forEach(email => sendEmail(processedData, email))

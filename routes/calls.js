@@ -147,31 +147,51 @@ const sendToPostgres = (processedData) => {
  * Send processed data to SMS-via-email
  */
 const sendEmail = (data, recipient) => {
-  emailTransporter.sendMail({
-    from: 'no-reply@dispatchresponse.com <no-reply@dispatchresponse.com>',
-    to: recipient,
-    subject: 'GFD Call',
-    html: `<p>Call type: ${data.call_category}
+// Create sendEmail params
+  var params = {
+    Destination: {
+      ToAddresses: [ recipient.address ]
+    },
+    Message: {
+      Body: {
+        Html: {
+         Charset: "UTF-8",
+         Data: `<p>Details: https://gfd.gr/${data.slug}/${recipient.userId}</p>
+          <p>Call type: ${data.call_category}</p>
+          <p>Location: ${data.location}  ${data.city}</p>
+          <p>Assignment: ${data.assignment}</p>`
+        },
+        Text: {
+         Charset: "UTF-8",
+         Data: `Details: https://gfd.gr/${data.slug}/${recipient.userId}
+Call type: ${data.call_category}
 Location: ${data.location}  ${data.city}
-Assignment: ${data.assignment}
-Details: https://gfd.gr/${data.slug}/${recipient.userId}
-</p>`,
-    text: `Call type: ${data.call_category}
-Location: ${data.location}  ${data.city}
-Assignment: ${data.assignment}
-Details: https://gfd.gr/${data.slug}/${recipient.userId}
-`
-  }, (err, info) => {
-    if (err) {
-      console.error(err)
-    } else {
-      console.log(info.envelope)
-      console.log(info.messageId)
-    }
-  })
+Assignment: ${data.assignment}`
+        }
+       },
+       Subject: {
+        Charset: 'UTF-8',
+        Data: 'GFD Call'
+       }
+      },
+    Source: 'no-reply@dispatchresponse.com',
+    ReplyToAddresses: [
+        'no-reply@dispatchresponse.com',
+    ],
+  };
+  // Send the email
+  emailTransporter.sendEmail(params).promise().then(
+    function(data) {
+      console.log(`Email sent successfully: ${data.MessageId}`);
+    }).catch(
+      function(err) {
+      console.error(`ERROR: Email not sent --> ${err} ${err.stack}`);
+    });
 }
 
-// POST calls listing
+/**
+ * Process (POST) a new incoming call
+ */
 router.post('/', async function (req, res) {
   let callQuery = null
 

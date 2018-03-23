@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
-import getCoordinates from './utils/getCoordinates'
 import Dispatch from './components/Dispatch';
 import DispatchHistory from './components/DispatchHistory';
 import UserSettings from './components/UserSettings';

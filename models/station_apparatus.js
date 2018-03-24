@@ -1,10 +1,10 @@
 /**
- * models/tracking.js
+ * models/station_apparatus.js
  *
- * Join table between users and apparatus
+ * Join table between stations and apparatus
  *
  * Sequelize will automatically create this table with foreign keys linked to
- * apparatus.apparatus_id and users.user_id. This is achieved via the
+ * apparatus.apparatus_id and stations.station_id. This is achieved via the
  * belongsToMany commands in the models/index.js file.
  *
  */
@@ -14,9 +14,9 @@ const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    'trackings',
+    'station_apparatus',
     {
-      tracking_id: {
+      sa_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,

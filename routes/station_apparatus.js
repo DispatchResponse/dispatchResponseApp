@@ -1,5 +1,5 @@
 /**
- * routes/tracks.js
+ * routes/station_apparatus.js
  *
  */
 
@@ -10,19 +10,19 @@ const Sequelize = require('sequelize')
 const { and, eq, or } = Sequelize.Op
 
 /**
- * Add one or more apparatus for a single user
+ * Add one or more apparatus to a single station
  */
 // TODO: use spread and think about errors (does it kill the array loop? i don't think so)
 // http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findorcreate-search-for-a-specific-element-or-create-it-if-not-available
-router.post('/:userId/:apparatusId', function (req, res, next) {
-  let userId = req.params.userId
+router.post('/:stationId/:apparatusId', function (req, res, next) {
+  let stationId = req.params.stationId.toUpperCase()
   let apparatusArr = req.params.apparatusId.toUpperCase().split('&')
   apparatusArr.forEach(eng => {
     let entry = {
       apparatus_id: eng,
-      user_id: userId
+      station_id: stationId
     }
-    db.trackings.findOrCreate(
+    db.station_apparatus.findOrCreate(
       { where: entry }
     )
       .then(result => {
@@ -36,52 +36,16 @@ router.post('/:userId/:apparatusId', function (req, res, next) {
 })
 
 /**
- * Create or delete a user's selection of apparatus
+ * Get one or more apparatus for a single station
  */
-router.patch('/:userId/:apparatusId', function (req, res, next) {
-  let userId = req.params.userId
-  let apparatusArr = req.params.apparatusId.toUpperCase().split('&')
-  apparatusArr.forEach(eng => {
-    let entry = {
-      apparatus_id: eng,
-      user_id: userId
-    }
-    db.trackings.findOrCreate({ where: entry })
-      .spread((tracking, created) => {
-        if (created) {
-          console.log('Created new tracking entry 😎 ')
-          res.sendStatus(201)
-        } else {
-          db.trackings.destroy({
-            where: {
-              [and]: [
-                { apparatus_id: { [eq]: tracking.apparatus_id } },
-                { user_id: { [eq]: userId } }
-              ]
-            }
-          })
-          console.log('Deleted existing tracking entry 😎 ')
-          return res.sendStatus(204)
-        }
-      })
-      .catch(error => {
-        console.error(`ERROR sending to Postgres: ${error}`)
-        return res.sendStatus(501)
-      })
-  })
-})
-
-/**
- * Get one or more apparatus for a single user
- */
-router.get('/:userId/:apparatusId', function (req, res, next) {
+router.get('/:stationId/:apparatusId', function (req, res, next) {
   let apparatus = req.params.apparatusId.toUpperCase().split('&')
-  db.trackings.findAll({
+  db.station_apparatus.findAll({
     where: {
       [and]: [
         {
-          user_id: {
-            [eq]: req.params.userId
+          station_id: {
+            [eq]: req.params.stationId.toUpperCase()
           }
         },
         {
@@ -103,19 +67,19 @@ router.get('/:userId/:apparatusId', function (req, res, next) {
 })
 
 /**
- * Delete one or more apparatus for a single user
+ * Delete one or more apparatus for a single station
  */
-router.delete('/:userId/:apparatusId', function (req, res, next) {
+router.delete('/:stationId/:apparatusId', function (req, res, next) {
   let apparatus = req.params.apparatusId.toUpperCase().split('&')
-  db.trackings.findAll({
+  db.station_apparatus.findAll({
     where: {
       [and]: [
         {
           apparatus_id: { [or]: apparatus }
         },
         {
-          user_id: {
-            [eq]: req.params.userId
+          station_id: {
+            [eq]: req.params.stationId.toUpperCase()
           }
         }
       ]
@@ -124,15 +88,15 @@ router.delete('/:userId/:apparatusId', function (req, res, next) {
     .then(function (findResult) {
       console.log('findResult: ', findResult)
       if (findResult.length !== null && findResult.length > 0) {
-        db.trackings.destroy({
+        db.station_apparatus.destroy({
           where: {
             [and]: [
               {
                 apparatus_id: { [or]: apparatus }
               },
               {
-                user_id: {
-                  [eq]: req.params.userId
+                station_id: {
+                  [eq]: req.params.stationId.toUpperCase()
                 }
               }
             ]
@@ -151,12 +115,12 @@ router.delete('/:userId/:apparatusId', function (req, res, next) {
 })
 
 /**
- * Get all tracked apparatus for a single user
+ * Get all apparatus for a single station
  */
-router.get('/:userId', async function (req, res, next) {
-  db.trackings.findAll({
+router.get('/:stationId', async function (req, res, next) {
+  db.station_apparatus.findAll({
     where: {
-      user_id: req.params.userId
+      station_id: req.params.stationId.toUpperCase()
     }
   })
     .then(function (trackDetails) {
@@ -173,10 +137,10 @@ router.get('/:userId', async function (req, res, next) {
 })
 
 /*
- * Get all trackings for all users
+ * Get all apparatus for all stations
  */
 router.get('/', function (req, res, next) {
-  db.trackings.all()
+  db.station_apparatus.all()
     .then(function (trackList) {
       let allTracks = Object.keys(trackList).map(function (k) {
         return trackList[k].dataValues

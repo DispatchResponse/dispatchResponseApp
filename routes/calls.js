@@ -64,7 +64,7 @@ const getRecipientsAddresses = (apparatusArr) => {
   // TODO: what to do about E1 E5 STN5 cases? will it choke on STN5?
   return db.users.findAll({
     include: [{
-      model: db.trackings,
+      model: db.track_user_apparatus,
       where: {
         apparatus_id: { [or]: apparatusArr }
       }

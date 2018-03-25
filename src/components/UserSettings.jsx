@@ -36,7 +36,8 @@ export default class UserSettings extends React.Component {
       background-color: white;
       display: grid;
       grid-template-columns: 100%;
-      grid-template-areas: 'title'
+      grid-template-areas: 'saved'
+                           'title'
                            'usrin'
                            'appar'
                            'notif';
@@ -52,6 +53,21 @@ export default class UserSettings extends React.Component {
          margin-bottom: 50px;
        }
     `;
+
+    const DBChangeSaved = styled.div`
+      grid-area: saved;
+      display: ${this.props.toggleDBSave ? 'flex' : 'none'};
+      position: fixed;
+      align-items: center;
+      justify-content: center;
+      top: 0;
+      transition: display 2s ease-in-out;
+      height: 50px;
+      width: 200px;
+      z-index: 10;
+      margin-left: 40%;
+      background-color: hotpink;
+    `
 
     const UsrTitle = styled.div`
       width: 100%;
@@ -265,6 +281,8 @@ export default class UserSettings extends React.Component {
     return (
 
     <UserSettingsContainer>
+
+      <DBChangeSaved>Saved!</DBChangeSaved>
 
       <UsrTitle>User Settings</UsrTitle>
       <UsrInfo>

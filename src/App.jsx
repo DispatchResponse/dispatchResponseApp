@@ -27,7 +27,8 @@ export default class App extends React.Component {
       userApparatusAssignment: null,
       userIsAdmin: false,
       userID: null,
-      slug: null
+      slug: null,
+      toggleDBSave: false,
     };
 
     this.setAppState = this.setAppState.bind(this);
@@ -142,13 +143,26 @@ export default class App extends React.Component {
     let { userID } = this.state;
     let appID = e.target.id.split('-').pop();
     await axios.patch(`/api/track_user_apparatus/${userID}/${appID}`)
-    .then((resp) => {
-      console.log('resp.data: ', resp.data)
-      // this.setAppState(resp.data, 'userTracking');
+    .then(resp => {console.log("patch has updated track_user_apparatus")})
+    .catch((error) => {console.error(`ERROR in PATCH for user/apparatus assignment: ${error}`)})
+    console.log('patch finished executing, now executing new GET of apparatus')
+    await axios.get(`/api/track_user_apparatus/${userID}`).then((resp, err) => {
+      console.log('setting new state for userTracking')
+      this.setAppState(resp.data, 'userTracking');
     })
-    .catch((error) => {
-      console.error(`ERROR in PATCH for user/apparatus assignment: ${error}`)
-    })
+    console.log('rebuilding assignment')
+    this.buildApparatusAssigment();
+    console.log('toggling save')
+    this.toggleDBSave();
+  }
+
+  async toggleDBSave() {
+    console.log('initiating toggle save')
+    this.setState({toggleDBSave: !this.state.toggleDBSave})
+    await function(){ return new Promise(resolve => setTimeout(resolve(), 3000)); }
+    console.log('timeout has ended, reverting toggle')
+    this.setState({toggleDBSave: !this.state.toggleDBSave})
+    console.log('toggle reverted')
   }
 
   render() {
@@ -257,6 +271,7 @@ export default class App extends React.Component {
                    modifyNotificationStatus={this.modifyNotificationStatus}
                    modifyApparatusAssignment={this.modifyApparatusAssignment}
                    isAdmin={this.state.userIsAdmin}
+                   toggleDBSave={this.state.toggleDBSave}
                  /> }
              />
 

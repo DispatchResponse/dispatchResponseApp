@@ -7,13 +7,15 @@ const express = require('express')
 const router = express.Router()
 const db = require('../models')
 const Sequelize = require('sequelize')
-const { and, eq, or } = Sequelize.Op
+const {and, eq, or} = Sequelize.Op
 
 /**
  * Add one or more stations for a single user
+ *
+ * TODO: a post here should (1) create an entry in the track_user_station table
+ * AND (2) take an array of apparatus from the station and update the
+ * track_user_apparatus table for that user and apparatus array
  */
-// TODO: use spread and think about errors (does it kill the array loop? i don't think so)
-// http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findorcreate-search-for-a-specific-element-or-create-it-if-not-available
 router.post('/:userId/:stationId', function (req, res, next) {
   let userId = req.params.userId
   let stationArr = req.params.stationId.toUpperCase().split('&')
@@ -23,20 +25,23 @@ router.post('/:userId/:stationId', function (req, res, next) {
       user_id: userId
     }
     db.track_user_station.findOrCreate(
-      { where: entry }
+      {
+        where: entry
+      }
     )
       .then(result => {
-        console.log(result)
+        console.log('POST RESULT:  ', result)
       })
       .catch(error => {
-        console.error(`ERROR sending to Postgres: ${error}`)
+        console.error(`ERROR posting to Postgres: ${error}`)
       })
   })
   res.sendStatus(201)
 })
 
 /**
- * Create or delete a user's selection of stations
+ * Create or delete (toggle) a user's selection of stations and all associated
+ * apparatus
  */
 router.patch('/:userId/:stationId', function (req, res, next) {
   let userId = req.params.userId
@@ -46,29 +51,113 @@ router.patch('/:userId/:stationId', function (req, res, next) {
       station_id: station,
       user_id: userId
     }
-    db.track_user_station.findOrCreate({ where: entry })
+    db.track_user_station.findOrCreate({
+      where: entry
+    })
       .spread((tracking, created) => {
         if (created) {
-          console.log('Created new tracking user-station entry 😎 ')
-          res.sendStatus(201)
+          // created a new entry for user-station, now get the apparatus from
+          // that station
+          return db.station_apparatus.findAll({
+            where: {
+              station_id: {
+                [eq]: station
+              }
+            }
+          })
+            .then(result => {
+              // next map user-apparatus relationships with the apparatus array
+              var apparatusArr = Object.keys(result).map(k => result[k].dataValues.apparatus_id)
+              apparatusArr.forEach(eng => {
+                let entry = {
+                  apparatus_id: eng,
+                  user_id: userId
+                }
+                return db.track_user_apparatus.findOrCreate({
+                  where: entry
+                })
+                  .spread((newTracking, created) => {
+                    if (created) {
+                      console.log(`SUCCESS: Created new tracking entry for ${newTracking.dataValues.apparatus_id} and user ${userId}.`)
+                    } else {
+                      console.log(`SUCCESS: Tracking entry for ${newTracking.dataValues.apparatus_id} and user ${userId} previously existed. No action taken.`)
+                    }
+                  })
+                  .catch(error => {
+                    console.error(`ERROR with findOrCreate for user_apparatus: ${error}`)
+                    return res.sendStatus(501)
+                  })
+              })
+              return res.sendStatus(201)
+            })
+            .catch(error => {
+              console.error(`ERROR getting from Postgres: ${error}`)
+            })
         } else {
           db.track_user_station.destroy({
             where: {
               [and]: [
-                { station_id: { [eq]: tracking.station_id } },
-                { user_id: { [eq]: userId } }
+                {
+                  station_id: {
+                    [eq]: tracking.station_id
+                  }
+                },
+                {
+                  user_id: {
+                    [eq]: userId
+                  }
+                }
               ]
             }
           })
+            .then(() => {
+              return db.station_apparatus.findAll({
+                where: {
+                  station_id: {
+                    [eq]: tracking.station_id
+                  }
+                }
+              })
+                .then(result => {
+                  var apparatusArr = Object.keys(result).map(k => result[k].dataValues.apparatus_id)
+                  apparatusArr.forEach(eng => {
+                    let entry = {
+                      apparatus_id: eng,
+                      user_id: userId
+                    }
+                    return db.track_user_apparatus.findOne({
+                      where: entry
+                    })
+                      .then(deleteTarget => {
+                        return db.track_user_apparatus.destroy({
+                          where: {
+                            ua_id: deleteTarget.ua_id
+                          }
+                        })
+                          .then(() => {
+                            console.log(`SUCCESS: Deleted existing ${deleteTarget.apparatus_id} tracking entry`)
+                          })
+                          .catch(error => {
+                            console.error(`ERROR deleting user-apparatus mapping: ${error}`)
+                            return res.sendStatus(501)
+                          })
+                      })
+                      .catch(error => {
+                        console.error(`ERROR finding a specific user-apparatus mapping: ${error}`)
+                        return res.sendStatus(501)
+                      })
+                  })
+                })
+            })
           console.log('Deleted existing tracking user-station entry 😎 ')
           return res.sendStatus(204)
-        }
-      })
+        } // end of destroy section for apparatus
+      }) // end of findOrCreate
       .catch(error => {
         console.error(`ERROR sending to Postgres: ${error}`)
         return res.sendStatus(501)
       })
-  })
+  }) // end of forEach for stations
 })
 
 /**
@@ -111,7 +200,9 @@ router.delete('/:userId/:stationId', function (req, res, next) {
     where: {
       [and]: [
         {
-          station_id: { [or]: stations }
+          station_id: {
+            [or]: stations
+          }
         },
         {
           user_id: {
@@ -127,7 +218,9 @@ router.delete('/:userId/:stationId', function (req, res, next) {
           where: {
             [and]: [
               {
-                station_id: { [or]: stations }
+                station_id: {
+                  [or]: stations
+                }
               },
               {
                 user_id: {

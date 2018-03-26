@@ -78,7 +78,7 @@ const getRecipientsAddresses = (apparatusArr) => {
       let userAddresses = Object.keys(userList).map(function (k) {
         if (userList[k].dataValues.is_enabled === true && userList[k].dataValues.is_sleeping === false) {
           return {
-            'address': userList[k].dataValues.mobile + userList[k].dataValues.carrier,
+            'address': userList[k].dataValues.mobile.trim() + userList[k].dataValues.carrier.trim(),
             'userId': userList[k].dataValues.user_id,
             'isAdmin': userList[k].dataValues.is_admin
           }
@@ -94,6 +94,9 @@ const getRecipientsAddresses = (apparatusArr) => {
 
 /**
  * Prepare and parse data before DB injection and emailing
+ *
+ * TODO: factor this out into a separate module
+ *
  * TODO: parse logic to deal with cases of no apparatus assignment but radio
  * freq is listed and other cases during busy times
  * TODO: is UnitList always comma separated?  sometimes i think not yet we
@@ -156,43 +159,43 @@ const sendEmail = (data, recipient) => {
 // Create sendEmail params
   var params = {
     Destination: {
-      ToAddresses: [ recipient.address ]
+      ToAddresses: [ recipient.address.trim() ]
     },
     Message: {
       Body: {
         Html: {
-         Charset: "UTF-8",
-         Data: `<p>Details: https://gfd.gr/${data.slug}/${recipient.userId}</p>
+          Charset: 'UTF-8',
+          Data: `<p>Details: https://gfd.gr/${data.slug}/${recipient.userId}</p>
           <p>Call type: ${data.call_category}</p>
           <p>Location: ${data.location}  ${data.city}</p>
           <p>Assignment: ${data.assignment}</p>`
         },
         Text: {
-         Charset: "UTF-8",
-         Data: `Details: https://gfd.gr/${data.slug}/${recipient.userId}
+          Charset: 'UTF-8',
+          Data: `Details: https://gfd.gr/${data.slug}/${recipient.userId}
 Call type: ${data.call_category}
 Location: ${data.location}  ${data.city}
 Assignment: ${data.assignment}`
         }
-       },
-       Subject: {
+      },
+      Subject: {
         Charset: 'UTF-8',
         Data: 'GFD Call'
-       }
-      },
+      }
+    },
     Source: 'no-reply@dispatchresponse.com',
     ReplyToAddresses: [
-        'no-reply@dispatchresponse.com',
-    ],
-  };
+      'no-reply@dispatchresponse.com'
+    ]
+  }
   // Send the email
   emailTransporter.sendEmail(params).promise().then(
-    function(data) {
-      console.log(`Email sent successfully: ${data.MessageId}`);
+    function (data) {
+      console.log(`Email sent successfully to ${recipient.address} with msgId of ${data.MessageId}`)
     }).catch(
-      function(err) {
-      console.error(`ERROR: Email not sent --> ${err} ${err.stack}`);
-    });
+    function (err) {
+      console.error(`ERROR: Email not sent to ${recipient.address} --> ${err} ${err.stack}`)
+    })
 }
 
 /**

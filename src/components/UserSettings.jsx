@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Menu from './Menu';
 
 export default class UserSettings extends React.Component {
@@ -28,6 +28,7 @@ export default class UserSettings extends React.Component {
 
   }
 
+
   render() {
 
     const UserSettingsContainer = styled.div`
@@ -51,6 +52,36 @@ export default class UserSettings extends React.Component {
        @media screen and (max-device-width: 480px) and (orientation: portrait){
          margin-bottom: 50px;
        }
+    `;
+
+    const toggleVisibility = keyframes`
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    `;
+
+    const DBChangeSaved = styled.div`
+      display: ${this.props.toggleDBSave ? 'flex' : 'none'};
+      position: fixed;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 1.5em;
+      color: white;
+      bottom: 45%;
+      border-radius: 35px;
+      animation: 1s 1 ${toggleVisibility};
+      height: 50px;
+      width: 200px;
+      z-index: 10;
+      margin-left: 40%;
+      background-color: firebrick;
+           @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+             margin-left: 35%;
+           }
+
+           @media screen and (max-device-width: 480px) and (orientation: portrait){
+             margin-left: 25%;
+           }
     `;
 
     const UsrTitle = styled.div`
@@ -265,6 +296,8 @@ export default class UserSettings extends React.Component {
     return (
 
     <UserSettingsContainer>
+
+      <DBChangeSaved>Saved!</DBChangeSaved>
 
       <UsrTitle>User Settings</UsrTitle>
       <UsrInfo>

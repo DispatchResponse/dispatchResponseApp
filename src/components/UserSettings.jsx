@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Menu from './Menu';
 
 export default class UserSettings extends React.Component {
@@ -28,6 +28,14 @@ export default class UserSettings extends React.Component {
 
   }
 
+  shouldComponentUpdate(nextProps, nextState){
+    console.log('nextProps')
+    console.log(nextProps)
+    console.log('nextState')
+    console.log(nextState)
+   // return !equals(nextProps, this.props);
+  }
+
   render() {
 
     const UserSettingsContainer = styled.div`
@@ -36,8 +44,7 @@ export default class UserSettings extends React.Component {
       background-color: white;
       display: grid;
       grid-template-columns: 100%;
-      grid-template-areas: 'saved'
-                           'title'
+      grid-template-areas: 'title'
                            'usrin'
                            'appar'
                            'notif';
@@ -54,20 +61,39 @@ export default class UserSettings extends React.Component {
        }
     `;
 
+    const toggleVisibility = keyframes`
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+    `;
+
     const DBChangeSaved = styled.div`
-      grid-area: saved;
-      display: ${this.props.toggleDBSave ? 'flex' : 'none'};
+      display: flex;
       position: fixed;
       align-items: center;
       justify-content: center;
-      top: 0;
-      transition: display 2s ease-in-out;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 1.5em;
+      color: white;
+      bottom: 45%;
+      border-radius: 35px;
+      animation: ${toggleVisibility} .5s linear;
       height: 50px;
       width: 200px;
       z-index: 10;
-      margin-left: 40%;
-      background-color: hotpink;
-    `
+      margin-left: 35%;
+      background-color: firebrick;
+           @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+             margin-left: 35%;
+           }
+
+           @media screen and (max-device-width: 480px) and (orientation: portrait){
+             margin-left: 25%;
+           }
+    `;
 
     const UsrTitle = styled.div`
       width: 100%;
@@ -282,7 +308,7 @@ export default class UserSettings extends React.Component {
 
     <UserSettingsContainer>
 
-      <DBChangeSaved>Saved!</DBChangeSaved>
+      {this.props.toggleDBSave ? <DBChangeSaved>Saved!</DBChangeSaved> : null}
 
       <UsrTitle>User Settings</UsrTitle>
       <UsrInfo>

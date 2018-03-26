@@ -157,12 +157,11 @@ export default class App extends React.Component {
   }
 
   async toggleDBSave() {
-    console.log('initiating toggle save')
+    let context = this;
     this.setState({toggleDBSave: !this.state.toggleDBSave})
-    await function(){ return new Promise(resolve => setTimeout(resolve(), 3000)); }
-    console.log('timeout has ended, reverting toggle')
-    this.setState({toggleDBSave: !this.state.toggleDBSave})
-    console.log('toggle reverted')
+    setTimeout(()=>{
+      context.setState({toggleDBSave: !context.state.toggleDBSave});
+    }, 500)
   }
 
   render() {

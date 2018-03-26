@@ -28,6 +28,7 @@ export default class UserSettings extends React.Component {
 
   }
 
+
   render() {
 
     const UserSettingsContainer = styled.div`
@@ -54,16 +55,12 @@ export default class UserSettings extends React.Component {
     `;
 
     const toggleVisibility = keyframes`
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+      0% { opacity: 0; }
+      100% { opacity: 1; }
     `;
 
     const DBChangeSaved = styled.div`
-      display: flex;
+      display: ${this.props.toggleDBSave ? 'flex' : 'none'};
       position: fixed;
       align-items: center;
       justify-content: center;
@@ -72,7 +69,7 @@ export default class UserSettings extends React.Component {
       color: white;
       bottom: 45%;
       border-radius: 35px;
-      animation: ${toggleVisibility} .5s linear;
+      animation: 1s 1 ${toggleVisibility};
       height: 50px;
       width: 200px;
       z-index: 10;
@@ -300,7 +297,7 @@ export default class UserSettings extends React.Component {
 
     <UserSettingsContainer>
 
-      {this.props.toggleDBSave ? <DBChangeSaved>Saved!</DBChangeSaved> : null}
+      <DBChangeSaved>Saved!</DBChangeSaved>
 
       <UsrTitle>User Settings</UsrTitle>
       <UsrInfo>

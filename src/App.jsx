@@ -114,7 +114,7 @@ export default class App extends React.Component {
 
   buildApparatusAssigment() {
     let userApparatusAssignment = this.state.allApparatus.map( app => {
-      
+
       if (this.state.userTracking && this.state.userTracking.length > 0) {
         for (let i = 0; i < this.state.userTracking.length; i++) {
           if( this.state.userTracking[i]['apparatus_id'] === app['apparatus_id'] ) {
@@ -163,7 +163,8 @@ export default class App extends React.Component {
     this.setState({toggleDBSave: !this.state.toggleDBSave})
     setTimeout(()=>{
       context.setState({toggleDBSave: !context.state.toggleDBSave});
-    }, 500)
+    }, 1100)
+
   }
 
   shouldComponentUpdate(nextProps, nextState){

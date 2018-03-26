@@ -30,7 +30,7 @@ export default class Dispatch extends React.Component {
   getCurrentLocation() {
     const options = {
             timeout: 10000,
-            enableHighAccuracy: true,
+            enableHighAccuracy: false,
             maximumAge: 75000
           }
 

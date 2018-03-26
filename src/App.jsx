@@ -17,6 +17,7 @@ export default class App extends React.Component {
 
 
     this.state = {
+      rerender: false,
       allApparatus: null,
       allCarriers: null,
       dispatchData: null,
@@ -48,6 +49,15 @@ export default class App extends React.Component {
       this.setAppState(resp.data[0], 'dispatch');
     })
 
+    //get User Info
+    await axios.get(`/api/users/${userID}`).then((resp) => {
+      // console.log("//get User Info",resp)
+      this.setAppState(resp.data, 'userInfo');
+      this.setAppState(resp.data['is_admin'], 'userIsAdmin');
+      this.setAppState(resp.data['is_sleeping'], 'userNotificationStatus');
+      this.setAppState(true, 'rerender')
+    })
+
     //get Dispatch History
     await axios.get('/api/calls').then((resp) => {
       // console.log("//get Dispatch History",resp)
@@ -66,23 +76,18 @@ export default class App extends React.Component {
       this.setAppState(resp.data, 'carrier');
     })
 
-    //get User Info
-    await axios.get(`/api/users/${userID}`).then((resp) => {
-      // console.log("//get User Info",resp)
-      this.setAppState(resp.data, 'userInfo');
-      this.setAppState(resp.data['is_admin'], 'userIsAdmin');
-      this.setAppState(resp.data['is_sleeping'], 'userNotificationStatus');
-    })
-
     //get User Tracking
     await axios.get(`/api/track_user_apparatus/${userID}`).then((resp, err) => {
       this.setAppState(resp.data, 'userTracking');
     })
 
     this.buildApparatusAssigment()
+
+
   }
 
   setAppState(data, type){
+    let context = this;
     //setState for dispatch data. used in callback from componentDidMount
       if ( type === 'dispatch') {
       this.setState({dispatchData: data});
@@ -93,14 +98,15 @@ export default class App extends React.Component {
     } else if ( type === 'carrier' ) {
       this.setState({allCarriers: data});
     } else if ( type === 'userInfo' ) {
-      this.setState({userInfo: data});
-      this.setState({userID: data['user_id']});
+      this.setState({userInfo: data, userID: data['user_id']});
     } else if ( type === 'userTracking' ) {
       this.setState({userTracking: data});
     } else if ( type === 'userNotificationStatus' ) {
       this.setState({userNotificationStatus: !data});
     } else if ( type === 'userIsAdmin' ) {
       this.setState({userIsAdmin: data});
+    } else if ( type === 'rerender' ) {
+      this.setState({rerender: true}, context.setState({rerender: false}))
     }
 
     return
@@ -108,8 +114,7 @@ export default class App extends React.Component {
 
   buildApparatusAssigment() {
     let userApparatusAssignment = this.state.allApparatus.map( app => {
-      // console.log("this.state.userTracking INSIDE BUILD APPARATUS ASSIGNMENT")
-      // console.log(this.state.userTracking)
+      
       if (this.state.userTracking && this.state.userTracking.length > 0) {
         for (let i = 0; i < this.state.userTracking.length; i++) {
           if( this.state.userTracking[i]['apparatus_id'] === app['apparatus_id'] ) {
@@ -143,16 +148,13 @@ export default class App extends React.Component {
     let { userID } = this.state;
     let appID = e.target.id.split('-').pop();
     await axios.patch(`/api/track_user_apparatus/${userID}/${appID}`)
-    .then(resp => {console.log("patch has updated track_user_apparatus")})
     .catch((error) => {console.error(`ERROR in PATCH for user/apparatus assignment: ${error}`)})
-    console.log('patch finished executing, now executing new GET of apparatus')
+
     await axios.get(`/api/track_user_apparatus/${userID}`).then((resp, err) => {
-      console.log('setting new state for userTracking')
       this.setAppState(resp.data, 'userTracking');
     })
-    console.log('rebuilding assignment')
+
     this.buildApparatusAssigment();
-    console.log('toggling save')
     this.toggleDBSave();
   }
 
@@ -162,6 +164,10 @@ export default class App extends React.Component {
     setTimeout(()=>{
       context.setState({toggleDBSave: !context.state.toggleDBSave});
     }, 500)
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+   return nextState.rerender;
   }
 
   render() {

@@ -28,14 +28,6 @@ export default class UserSettings extends React.Component {
 
   }
 
-  shouldComponentUpdate(nextProps, nextState){
-    console.log('nextProps')
-    console.log(nextProps)
-    console.log('nextState')
-    console.log(nextState)
-   // return !equals(nextProps, this.props);
-  }
-
   render() {
 
     const UserSettingsContainer = styled.div`
@@ -84,7 +76,7 @@ export default class UserSettings extends React.Component {
       height: 50px;
       width: 200px;
       z-index: 10;
-      margin-left: 35%;
+      margin-left: 40%;
       background-color: firebrick;
            @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
              margin-left: 35%;

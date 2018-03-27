@@ -4,11 +4,11 @@
 
 const express = require('express')
 const router = express.Router()
-const cuid = require('cuid')
 const db = require('../models')
 const Sequelize = require('sequelize')
 const { or } = Sequelize.Op
 const emailTransporter = require('../util/sendEmailSES')
+const processData = require('./processCallData')
 
 var dateformat = require('date-fns/format')
 const getToday = () => {
@@ -93,53 +93,6 @@ const getRecipientsAddresses = (apparatusArr) => {
 }
 
 /**
- * Prepare and parse data before DB injection and emailing
- *
- * TODO: factor this out into a separate module
- *
- * TODO: parse logic to deal with cases of no apparatus assignment but radio
- * freq is listed and other cases during busy times
- * TODO: is UnitList always comma separated?  sometimes i think not yet we
- * assume it is. can we deal with it if it is space separated? yes, but what if
- * it is comma separated between radioFreq and engines but within the engines
- * it is space separated?  much more difficult.
- */
-const processData = (data) => {
-  let slug = cuid.slug()
-  let assignment = data.UnitList.split(',').splice(1).join(' ').trim()
-  let radioFreq = data.UnitList.split(',')[0]
-  let crossStreet = data.x_street_name.split(' ').splice(3).join(' ')
-  let mapRef = data.x_street_name.split(' ').splice(0, 3).join(' ')
-  let cfsNo = Number.parseInt(data.cfs_no)
-  let callDetails = {
-    assignment: assignment,
-    radio_freq: radioFreq,
-    apt_no: data.apt_no,
-    call_category: data.call_category,
-    call_description: data.call_description,
-    call_type: data.call_type,
-    cfs_no: cfsNo,
-    cfs_remark: data.cfs_remark,
-    city: data.city,
-    dispatch_fire: data.dispatch_fire,
-    latitude: data.latitude,
-    location: data.location,
-    longitude: data.longitude,
-    premise_name: data.premise_name,
-    priority_amb: data.priority_amb,
-    priority_fire: data.priority_fire,
-    priority_pol: data.priority_pol,
-    timeout: data.rec_dt,
-    cross_street: crossStreet,
-    map_ref: mapRef,
-    test_call: data.test_call,
-    zip: data.zip,
-    slug: slug
-  }
-  return callDetails
-}
-
-/**
  * Send processed data to Postgres
  */
 const sendToPostgres = (processedData) => {
@@ -213,7 +166,7 @@ router.post('/', async function (req, res) {
   }
 
   // logging to figure out what Dispatch is sending sometimes
-  console.log('HEY DISPATCH SENT THIS: ', callQuery);
+  console.log('HEY DISPATCH SENT THIS: ', callQuery)
 
   let processedData = await processData(callQuery)
   if (DEBUG) { console.log('processedData: ', processedData) }
@@ -232,11 +185,11 @@ router.post('/', async function (req, res) {
         }
       })
     }
-    console.log('PRE-POSTGRES-WRITE: ', getToday(),  processedData)
+    console.log('PRE-POSTGRES-WRITE: ', getToday(), processedData)
     res.send(`DEBUG:  Your POST of ${JSON.stringify(callQuery)} was successful and was sent to SMS ADMINS`)
   } else {
     // this is a real call, so send to Postgres and email-SMS real users
-    console.log('PRE-POSTGRES-WRITE: ', getToday(),  processedData)
+    console.log('PRE-POSTGRES-WRITE: ', getToday(), processedData)
     await sendToPostgres(processedData)
     if (recipientsArr !== undefined && recipientsArr.length > 0) {
       recipientsArr.forEach(email => sendEmail(processedData, email))

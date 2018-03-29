@@ -8,7 +8,7 @@ const db = require('../models')
 const Sequelize = require('sequelize')
 const { or } = Sequelize.Op
 const processData = require('./util/processCallData')
-const sendEmail = require('./util/sendEmail')
+const sendEmail = require('./util/sendEmailMailgun')
 
 var dateformat = require('date-fns/format')
 const getToday = () => {
@@ -80,6 +80,8 @@ const getRecipientsAddresses = (apparatusArr) => {
           return {
             'address': userList[k].dataValues.mobile.trim() + userList[k].dataValues.carrier.trim(),
             'userId': userList[k].dataValues.user_id,
+            'firstName': userList[k].dataValues.first_name,
+            'lastName': userList[k].dataValues.last_name,
             'isAdmin': userList[k].dataValues.is_admin
           }
         }

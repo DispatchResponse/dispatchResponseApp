@@ -1,5 +1,7 @@
 /**
  * routes/util/processCallData.js
+ *
+ * This version uses SES sendRawEmail
  */
 
 const emailTransporter = require('../../util/sendEmailSES')
@@ -42,36 +44,7 @@ Content</div>
     Source: 'GFD <no-reply@dispatchresponse.com>',
     RawMessage: {
       Data: rawMailBody
-
-// `
-// Subject: Test Subject
-// MIME-Version: 1.0
-// Content-Type: multipart/alternative;
-// boundary="----=_NextPart_DC7E1BB5_1105_4DB3_BAE3_2A6208EB099D"
-
-// ------=_NextPart_DC7E1BB5_1105_4DB3_BAE3_2A6208EB099D
-// Content-type: text/plain; charset=iso-8859-1
-// Content-Transfer-Encoding: quoted-printable
-
-// Sample Text Content
-// ------=_NextPart_DC7E1BB5_1105_4DB3_BAE3_2A6208EB099D
-// Content-type: text/html; charset=iso-8859-1
-// Content-Transfer-Encoding: quoted-printable
-
-// <html>
-// <head>
-// </head>
-// <body>
-// <div style=3D"FONT-SIZE: 10pt; FONT-FAMILY: Arial">Sample HTML =
-// Content</div>
-// </body>
-// </html>
-
-// ------=_NextPart_DC7E1BB5_1105_4DB3_BAE3_2A6208EB099D--
-// `
-
     }
-
 
     // Message: {
     //   Body: {
@@ -102,6 +75,7 @@ Content</div>
     // ReturnPathArn: 'arn:aws:ses:us-east-1:830432741239:identity/dispatchresponse.com',
     // ReplyToAddresses: [ 'GFD <no-reply@dispatchresponse.com>' ]
   }
+
   // Send the email
   // emailTransporter.sendEmail(params).promise().then(
   emailTransporter.sendRawEmail(params).promise().then(

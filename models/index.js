@@ -3,7 +3,7 @@
  */
 
 const Sequelize = require('sequelize')
-const dotenv = require('dotenv').config()
+const env = require('env2')('./.env')
 
 // Retrieve environment variables
 const NODE_ENV = process.env.NODE_ENV

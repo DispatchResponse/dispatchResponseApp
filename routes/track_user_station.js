@@ -10,11 +10,9 @@ const Sequelize = require('sequelize')
 const {and, eq, or} = Sequelize.Op
 
 /**
- * Add one or more stations for a single user
+ * Add one or more stations for a single user, makes no changes to associated
+ * apparatus (see PATCH)
  *
- * TODO: a post here should (1) create an entry in the track_user_station table
- * AND (2) take an array of apparatus from the station and update the
- * track_user_apparatus table for that user and apparatus array
  */
 router.post('/:userId/:stationId', function (req, res, next) {
   let userId = req.params.userId

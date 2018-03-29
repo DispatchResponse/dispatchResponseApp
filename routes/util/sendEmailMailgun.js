@@ -7,7 +7,7 @@
 const env = require('env2')('./.env')
 const API_KEY_MAILGUN = process.env.API_KEY_MAILGUN
 const EMAIL_DOMAIN = process.env.EMAIL_DOMAIN
-const SENDER_EMAIL_ADDRESS = process.env.SENDER_EMAIL_ADDRESS
+const SENDER_EMAIL_ADDRESS = 'GFD <no-reply@dispatchresponse.com>'
 
 var mailgun = require('mailgun-js')({apiKey: API_KEY_MAILGUN, domain: EMAIL_DOMAIN})
 

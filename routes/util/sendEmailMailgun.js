@@ -4,7 +4,7 @@
  * This version uses Mailgun
  */
 
-const env = require('env2')('./.env')
+const env = require('env2')('.env')
 const API_KEY_MAILGUN = process.env.API_KEY_MAILGUN
 const EMAIL_DOMAIN = process.env.EMAIL_DOMAIN
 const SENDER_EMAIL_ADDRESS = 'GFD <no-reply@dispatchresponse.com>'

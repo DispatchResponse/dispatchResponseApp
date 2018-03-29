@@ -6,12 +6,12 @@
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
-const env = require('env2')('./.env')
 const express = require('express')
 const app = express()
 const favicon = require('serve-favicon')
 const morgan = require('morgan')
 const path = require('path')
+const env = require('env2')('.env')
 const requestIp = require('request-ip')
 
 var apparatus = require('./routes/apparatus')

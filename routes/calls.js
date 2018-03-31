@@ -8,7 +8,8 @@ const db = require('../models')
 const Sequelize = require('sequelize')
 const { or } = Sequelize.Op
 const processData = require('./util/processCallData')
-const sendEmail = require('./util/sendEmailMailgun')
+// const sendEmail = require('./util/sendEmailMailgun')
+const sendEmail = require('./util/sendEmail')
 
 var dateformat = require('date-fns/format')
 const getToday = () => {
